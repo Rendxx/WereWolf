@@ -1,9 +1,9 @@
 {
-  "name": "soccer-board",
+  "name": "werewolf",
   "version": "0.0.0",
   "private": true,
   "license": "see LICENSE file",
-  "description": "Soccer board.",
+  "description": "Were wolf.",
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.4.3",
@@ -12,7 +12,6 @@
   "devDependencies": {
     "babel-core": "*",
     "babel-loader": "*",
-    "babel-preset-react": "*",
     "css-loader": "*",
     "extract-text-webpack-plugin": "*",
     "jsx-loader": "*",
@@ -29,13 +28,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Rendxx/SoccerBoard.git"
+    "url": "https://github.com/Rendxx/werewolf.git"
   },
   "keywords": [
-    "soccer"
-  ],
-  "author": "rendxx",
-  "engines": {
-    "node": "0.12.x"
-  }
+    "werewolf"
+  ]
 }
