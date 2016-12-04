@@ -1,20 +1,9 @@
 {
-  "name": "SoccerBoard",
+  "name": "Werewolf",
   "version": "0.0.0",
-  "homepage": "https://github.com/Rendxx/SoccerBoard",
-  "authors": [
-    "Rendxx <rendxx@gmail.com>"
-  ],
-  "description": "Soccer board",
+  "description": "Werewolf",
   "dependencies": {
     "jQuery":"*"
   },
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ]
+  "license": "MIT"
 }
