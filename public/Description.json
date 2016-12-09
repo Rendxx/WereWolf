@@ -1,8 +1,9 @@
 ﻿{
-  "name": "Template",
+  "name": "WereWolf",
   "version": "0.1.0",
   "authors": [
-    "Name <yourEmailAdd@email.com>"
+    "Rendxx <rendxx@gmail.edu>",
+    "Guhao <gfan2@hawk.iit.edu>"
   ],
-  "description": "This is a Template.<br/>In HTML format."
+  "description": "WereWolf."
 }
