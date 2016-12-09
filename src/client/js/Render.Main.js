@@ -2,36 +2,48 @@
     Main-Screen is the main screen.
     It renders the game.
 */
-
+var ACTION = require('../../global/js/ActionCode.js');
+var InfoBox = require('./js/InfoBox.js');
+var ScrollOption = require('./js/ScrollOption.js');
 ﻿var Style = require('../less/Main.less');
 
 var HTML = {
-    btnWrap: '<div class="_btnWrap"></div>',
-    btn: '<div class="_btn"></div>',
+    panel: {
+      setting: '<div class="_panel _setting"></div>',
+      player: '<div class="_panel _player"></div>',
+      status: '<div class="_panel _status"></div>',
+      info: '<div class="_panel _info"></div>',
+    },
+    playerItem: '<div class="_playerItem"></div>',
     info: '<div class="_info"></div>',
+    name: '<div class="_name"></div>',
+    number: '<div class="_number"></div>',
 };
 
 var CSS = {
-    top: '_top',
-    bottom: '_bottom',
-    left: '_left',
-    right: '_right'
+    dead: '_dead'
 };
 
 var Main = function (container) {
     "use strick";
     // Property -------------------------------------
     var that = this;
-    var // html
-        html = {
+    var html = {
             container: $(container),
-            btnWrap: null,
+            panel:{},
             info: null,
-            btn: {}
+            name: null,
+            number: null,
+            players: {}
         },
 
-        // data
-        currentPlayer = 0;
+    var alive = true,
+        actived = false,
+        infoBox = null,
+        numberSelector = null,
+        roleSelector = null;
+
+    var cache_setupData = null;
 
     // Callback -------------------------------------
     this.message = {};        /* TODO: this is a package of message hander. this.message.action(dat),  this.message.send(dat) */
@@ -39,6 +51,7 @@ var Main = function (container) {
     // interface controll --------------------------------
     this.show = function () {
         /* TODO: show Prepare-Screen */
+        _setupHtml(cache_setupData);
         html['container'].fadeIn();
     };
 
@@ -50,7 +63,9 @@ var Main = function (container) {
     // Update ---------------------------------------
     this.reset = function (setupData) {
         /* TODO: initialize the game */
-        _showMsg('reset');
+        if (setupData==null) return;
+        cache_setupData = setupData;
+        _setupHtml(cache_setupData);
     };
 
     this.updateGame = function (gameData) {
@@ -64,27 +79,64 @@ var Main = function (container) {
         html['info'].text(msg);
     };
 
-    var _move = function (x,y) {
-        that.message.action([x,y]);
+    // Setup -----------------------------------------
+    var _actionEnd = function(){
+        html['panel']['player'].hide();
+        html['panel']['info'].hide();
     };
 
-    // Setup -----------------------------------------
-    var _setupHtml = function () {
-        html['btnWrap'] = $(HTML.btnWrap).appendTo(html['container']);
+    var _setupHtml = function (setupData) {
+        html['container'].empty();
+        html['panel'] = {};
+        html['panel']['setting'] = $(HTML.panel.setting).appendTo(html['container']);
+        html['panel']['player'] = $(HTML.panel.player).appendTo(html['container']);
+        html['panel']['status'] = $(HTML.panel.status).appendTo(html['container']);
+        html['panel']['info'] = $(HTML.panel.info).appendTo(html['container']);
+        infoBox = new InfoBox(html['panel']['info'][0]);
         html['info'] = $(HTML.info).appendTo(html['container']);
-        html['btn'].top = $(HTML.btn).appendTo(html['btnWrap']).addClass(CSS.top).text('Y +');
-        html['btn'].bottom = $(HTML.btn).appendTo(html['btnWrap']).addClass(CSS.bottom).text('Y -');
-        html['btn'].left = $(HTML.btn).appendTo(html['btnWrap']).addClass(CSS.left).text('X -');
-        html['btn'].right = $(HTML.btn).appendTo(html['btnWrap']).addClass(CSS.right).text('X +');
 
-        html['btn'].top.click(function(){_move(0,10);});
-        html['btn'].bottom.click(function(){_move(0,-10);});
-        html['btn'].left.click(function(){_move(-10,0);});
-        html['btn'].right.click(function(){_move(10,0);});
+        if (setupData==null) return;
+        var playerData = setupData[0];
+        var roleList = setupData[1];
+
+        // status
+        html['name'] = $(HTML.name).appendTo(html['panel']['status']);
+        html['number'] = $(HTML.number).appendTo(html['panel']['status']);
+
+        // player
+        html['players'] = {};
+        for (var i=0;i<playerData.length;i++){
+          var p = playerData[i];
+          _addPlayer(p.id,p.name,p.number);
+        }
+
+        // setting
+        html['inputName'] = $(HTML.inputName).appendTo(html['panel']['setting']);
+        html['inputNumber'] = $(HTML.inputNumber).appendTo(html['panel']['setting']);
+        html['inputRole'] = $(HTML.inputRole).appendTo(html['panel']['setting']);
+
+        var numberOptions = [];
+        for (var i=0;i<playerData.length;i++){
+          numberOptions.push({key:i,content:i});
+        }
+
+        numberSelector = new ScrollOption(html['inputNumber'][0], numberOptions);
+    };
+
+    var _addPlayer = function (id, name, number){
+        var ele = $(HTML.playerItem).appendTo(html['panel']['player']);
+        ele.click(function(){
+            if (!actived) return;
+            infoBox.checkSelection(number, name, action, function (){ _select(id);});
+        });
+        html['players'][id] = ele;
+    };
+
+    var _select = function (id){
+
     };
 
     var _init = function () {
-        _setupHtml();
     }();
 };
 
