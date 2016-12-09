@@ -1,44 +1,59 @@
 ﻿.prepare {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    display: none;
-    text-align: center;
-    color:#fff;
-
-    ._nameTag {
-        overflow: hidden;
-        width: 100%;
-        position: absolute;
-        top:50%;
-        left:50%;
-        height:120px;
-        line-height: 120px;
-        font-size: 80px;
-        text-shadow: 0 0 10px #f60;
-        transform: translate(-50%, -50%);
-        border-bottom: 1px solid #3c3c3c;
-        margin-top:-60px;
-    }
+    font-size: 18px;
 
     ._waiting {
         overflow: hidden;
         width: 100%;
-        font-size: 20px;
+        height: 256px;
+        position: absolute;
+        top:50%;
+        left:0;
+        margin-top:-256px;
+        background-image: url('../design/waiting-256.png');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    ._waitingText {
+        overflow: hidden;
+        text-align: center;
+        width: 100%;
+        height:30px;
+        line-height: 30px;
         font-weight: 300;
         position: absolute;
         top:50%;
-        left:50%;
-        transform: translate(-50%, -50%);
-        margin-top:50px;
-        opacity: 0.1;
+        left:0;
+        margin-top:10px;
+        opacity: 1;
+        text-shadow: 0 0 5px #000;
         .blink;
         transition: opacity 0.5s;
+    }
+
+    ._construction {
+        overflow: hidden;
+        width: 80%;
+        position: absolute;
+        top:50%;
+        left:10%;
+        margin-top:60px;
+        border-top:1px dashed #555;
+        padding-top:15px;
+        color:#809e51;
+
+        ._item {
+            text-align: left;
+            margin: 0 10%;
+            padding:10px 0;
+            padding-left:25px;
+            background-image: url('../design/triangle-16.png');
+            background-position: left 13px;
+            background-repeat: no-repeat;
+            line-height: 22px;
+            text-shadow: 0 0 5px #000;
+        }
     }
 }
 

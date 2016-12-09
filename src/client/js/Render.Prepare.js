@@ -6,8 +6,6 @@
 var Style = require('../less/Prepare.less');
 
 var HTML = {
-    nameTag: '<div class="_nameTag"></div>',
-    waiting: '<div class="_waiting">waiting</div>'
 };
 
 var Prepare = function (container, opts_in) {
@@ -15,9 +13,7 @@ var Prepare = function (container, opts_in) {
     // Property -------------------------------------
     var // html
         html = {
-            container: $(container),
-            nameTag: null,
-            waiting: null
+            container: $(container)
         },
 
         // data
@@ -45,8 +41,6 @@ var Prepare = function (container, opts_in) {
 
     // Setup -----------------------------------------
     var _setupHtml = function () {
-        html['nameTag'] = $(HTML.nameTag).appendTo(html['container']).text(clientName);
-        html['waiting'] = $(HTML.waiting).appendTo(html['container']);
     };
 
     var _init = function (opts_in) {

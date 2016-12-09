@@ -7,9 +7,17 @@
     <link href="../Content/client.css" rel="stylesheet" type="text/css" />    <!-- TODO: Style file in absolute path -->
 </head>
 <body>
-    <div id="prepare" class="prepare"></div>    <!--Prepare screen-->
-    <div id="main" class="main"></div>          <!--Main screen-->
-    <div id="end" class="end"></div>            <!--End screen-->
+    <div id="prepare" class="panel prepare">
+        <div class="_waiting"></div>
+        <div class="_waitingText">Waiting for other players ...</div>
+        <div class="_construction">
+          <div class="_item">Keep your cellphone away from other players.</div>
+          <div class="_item">Keep quiet when you wake up at night.</div>
+        </div>
+    </div>    <!--Prepare screen-->
+    <div id="main" class="panel main"></div>          <!--Main screen-->
+    <div id="end" class="panel end"></div>            <!--End screen-->
+    <div class="bg"></div>
 
     <!--Script-->
     <script type="text/javascript" src="/jQuery"></script>                <!-- TODO: load jQuery  -->
