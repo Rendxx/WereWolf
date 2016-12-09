@@ -1,9 +1,8 @@
 {
-  "name": "Werewolf",
+  "name": "bower",
   "version": "0.0.0",
-  "description": "Werewolf",
   "dependencies": {
-    "jQuery":"*"
-  },
-  "license": "MIT"
+    "jQuery":"*",
+    "InfoBox":"*"
+  }
 }

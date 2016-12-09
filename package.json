@@ -1,17 +1,13 @@
 {
-  "name": "werewolf",
+  "name": "package",
   "version": "0.0.0",
   "private": true,
-  "license": "see LICENSE file",
-  "description": "Were wolf.",
-  "main": "server.js",
-  "dependencies": {
-    "body-parser": "^1.4.3",
-    "express": "^4.4.5"
-  },
   "devDependencies": {
+    "body-parser": "^1.4.3",
+    "express": "^4.4.5",
     "babel-core": "*",
     "babel-loader": "*",
+    "babel-preset-react": "*",
     "css-loader": "*",
     "extract-text-webpack-plugin": "*",
     "jsx-loader": "*",
@@ -21,16 +17,5 @@
     "url-loader": "*",
     "file-loader": "*",
     "webpack": "^1.13.2"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Rendxx/werewolf.git"
-  },
-  "keywords": [
-    "werewolf"
-  ]
+  }
 }

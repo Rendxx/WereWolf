@@ -1,21 +1,20 @@
 var webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var node_modules = path.resolve(__dirname, 'node_modules');
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
-var extractTextPlugin = new ExtractTextPlugin("./[name].css")
+var extractTextPlugin = new ExtractTextPlugin("./[name].css");
 
 module.exports = {
     plugins: [
-      commonsPlugin,
+      //commonsPlugin,
       extractTextPlugin
     ],
     entry: {
-        main : './src/main/js/Main',
-        client : './src/client/js/Main'
+        host : './src/host/Index',
+        client : './src/client/Index'
     },
     output: {
-        path: 'public/wwwroot',
+        path: 'public/Content',
         filename: '[name].js'
     },
     module: {
@@ -23,11 +22,7 @@ module.exports = {
             {
               test: /\.js|jsx$/,
               exclude: /node_modules/,
-              loader: 'babel',
-              query:
-                {
-                  presets:['react']
-                }
+              loader: 'babel'
             },
             {
               test: /\.css$/,
@@ -49,8 +44,7 @@ module.exports = {
               exclude: /node_modules/,
               loader : 'file-loader?name=../style/[name].[ext]'
             }
-        ],
-        noParse: [pathToReact]
+        ]
     },
     resolve: {
         extensions: ['', '.js', '.json', '.scss']

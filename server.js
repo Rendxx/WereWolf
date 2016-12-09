@@ -21,6 +21,9 @@ var COMMENTS_FILE = path.join(__dirname, 'comments.json');
 app.set('port', (process.env.PORT || 3002));
 
 app.use('/', express.static(path.join(__dirname, 'public')));
+app.use('/TestEnv/', express.static(path.join(__dirname, 'testEnv')));
+app.use('/jQuery', express.static(path.join(__dirname, 'bower_components/jQuery/dist/jquery.min.js')));
+app.use('/InfoBox', express.static(path.join(__dirname, 'bower_components/InfoBox/js/InfoBox.min.js')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
