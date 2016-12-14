@@ -3,6 +3,7 @@ var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
 var extractTextPlugin = new ExtractTextPlugin("./[name].css");
+var root = path.resolve(__dirname);
 
 module.exports = {
     plugins: [
@@ -47,6 +48,11 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['', '.js', '.json', '.scss']
+        alias: {
+            CLIENT: root+'/src/client',
+            HOST: root+'/src/host',
+            GLOBAL: root+'/src/global',
+        },
+        extensions: ['', '.js', '.json', '.less']
     }
 };

@@ -3,7 +3,7 @@
     You can set game options while waiting for other players.
 */
 
-var Style = require('../less/Prepare.less');
+var Style = require('CLIENT/less/Prepare.less');
 
 var HTML = {
 };

@@ -12,59 +12,14 @@
     color:#fff;
     z-index: 10;
 
-    ._info{
+    ._panel{
+        width: 100%;
+        height: 100%;
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        line-height: 24px;
-        padding: 10px;
-        background-color: rgba(0,0,0,0.5);
-        color:#fff;
-        text-align: center;
+        display: none;
+        z-index: 10;
     }
 
-    ._btnWrap {
-        width:300px;
-        height:300px;
-        position:absolute;
-        top:50%;
-        left:50%;
-        margin-left:-150px;
-        margin-top:-150px;
-        overflow:visible;
-
-        ._btn {
-            width:80px;
-            height:80px;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #000;
-            color: #4f7b11;
-            line-height: 80px;
-            text-align: center;
-            margin-left: -40px;
-            margin-top: -40px;
-            font-size: 24px;
-            position:absolute;
-            cursor: pointer;
-            background-color: #9bd24e;
-
-            &._top{
-              top:25%;
-              left:50%;
-            }
-            &._bottom{
-              top:75%;
-              left:50%;
-            }
-            &._left{
-              top:50%;
-              left:25%;
-            }
-            &._right{
-              top:50%;
-              left:75%;
-            }
-        }
-    }
 }

@@ -1,0 +1,57 @@
+﻿.main {
+  ._setting{
+    .__row {
+      width:100%;
+      height:80px;
+      position:relative;
+      top:0;
+      left:0;
+      border-bottom: 1px solid #333;
+    }
+    ._nameInput{
+        .__row;
+    }
+    ._numberWrap{
+        .__row;
+        ._numberItem{
+          position:absolute;
+          top:0;
+          left:0;
+          width:100%;
+          height:100%;
+          text-align: center;
+          color:#fff;
+          line-height: 80px;
+          text-shadow: 0 0 5px #333;
+
+          &:after{
+            content:'';
+            display: block;
+            position:absolute;
+            top:0;
+            right:0;
+            width:1px;
+            height:100%;
+            background-color: rgba(0,0,0,0.1);
+          }
+
+          &._first{
+            &:before{
+              content:'';
+              display: block;
+              position:absolute;
+              top:0;
+              left:-1px;
+              width:1px;
+              height:100%;
+              background-color: rgba(0,0,0,0.1);
+            }
+          }
+        } 
+    }
+    ._roleWrap{
+        .__row;
+
+    }
+  }
+}

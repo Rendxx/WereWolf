@@ -2,10 +2,11 @@
     Main-Screen is the main screen.
     It renders the game.
 */
-var ACTION = require('../../global/js/ActionCode.js');
-var InfoBox = require('./js/InfoBox.js');
-var ScrollOption = require('./js/ScrollOption.js');
-﻿var Style = require('../less/Main.less');
+var ACTION = require('GLOBAL/js/ActionCode.js');
+var InfoBox = require('CLIENT/js/InfoBox.js');
+var ScrollOption = require('CLIENT/js/ScrollOption.js');
+﻿var Style = require('CLIENT/less/Main.less');
+﻿var Style = require('CLIENT/less/Main.Setting.less');
 
 var HTML = {
     panel: {
@@ -18,6 +19,15 @@ var HTML = {
     info: '<div class="_info"></div>',
     name: '<div class="_name"></div>',
     number: '<div class="_number"></div>',
+    inputNumber: {
+      wrap:'<div class="_numberWrap"></div>',
+      item:'<div class="_numberItem">#content#</div>'
+    },
+    inputRole: {
+      wrap:'<div class="_roleWrap"></div>',
+      item:'<div class="_roleItem">#content#</div>'
+    },
+    inpueName: '<div class="_nameInput"></div>',
 };
 
 var CSS = {
@@ -35,7 +45,7 @@ var Main = function (container) {
             name: null,
             number: null,
             players: {}
-        },
+        };
 
     var alive = true,
         actived = false,
@@ -92,12 +102,13 @@ var Main = function (container) {
         html['panel']['player'] = $(HTML.panel.player).appendTo(html['container']);
         html['panel']['status'] = $(HTML.panel.status).appendTo(html['container']);
         html['panel']['info'] = $(HTML.panel.info).appendTo(html['container']);
-        infoBox = new InfoBox(html['panel']['info'][0]);
+        //infoBox = new InfoBox(html['panel']['info'][0]);
         html['info'] = $(HTML.info).appendTo(html['container']);
 
         if (setupData==null) return;
-        var playerData = setupData[0];
-        var roleList = setupData[1];
+        var id = setupData[0];
+        var playerData = setupData[1];
+        var roleList = setupData[2];
 
         // status
         html['name'] = $(HTML.name).appendTo(html['panel']['status']);
@@ -111,16 +122,20 @@ var Main = function (container) {
         }
 
         // setting
+        _setupHtml_setting(playerData, roleList);
+    };
+
+    var _setupHtml_setting = function (playerData, roleList){
         html['inputName'] = $(HTML.inputName).appendTo(html['panel']['setting']);
-        html['inputNumber'] = $(HTML.inputNumber).appendTo(html['panel']['setting']);
-        html['inputRole'] = $(HTML.inputRole).appendTo(html['panel']['setting']);
+        html['inputNumber'] = $(HTML.inputNumber.wrap).appendTo(html['panel']['setting']);
+        html['inputRole'] = $(HTML.inputRole.wrap).appendTo(html['panel']['setting']);
 
         var numberOptions = [];
         for (var i=0;i<playerData.length;i++){
-          numberOptions.push({key:i,content:i});
+          numberOptions.push({key:i,content:HTML.inputNumber.item.replace(/#content#/g,i)});
         }
-
         numberSelector = new ScrollOption(html['inputNumber'][0], numberOptions);
+
     };
 
     var _addPlayer = function (id, name, number){

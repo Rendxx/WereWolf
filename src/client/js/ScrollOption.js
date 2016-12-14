@@ -1,5 +1,5 @@
 
-﻿var Style = require('../less/ScrollOption.less');
+﻿var Style = require('CLIENT/less/ScrollOption.less');
 
 var HTML = {
     wrap: '<div class="_scrollOption"></div>',
@@ -57,6 +57,8 @@ var ScrollOption = function (container, optionData, para_in){
       for (var i=0; i<optionData.length; i++) {
         _addOpt(i, optionData[i].key, optionData[i].content);
       }
+      html['option'][0].addClass(CSS.first);
+      html['option'][html['option'].length-1].addClass(CSS.first);
       scrollRange = [0, optionData.length*para.width];
   };
 
@@ -65,7 +67,6 @@ var ScrollOption = function (container, optionData, para_in){
       ele.width(para.width);
       ele.html(content);
       ele.css('left',idx*para.width+'px')
-      if (html['option'].length===0) ele.addClass(CSS.first);
       html['option'].push(ele);
   };
 

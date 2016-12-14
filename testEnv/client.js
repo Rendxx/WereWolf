@@ -1,13 +1,21 @@
 // test -----------------------------------------------------------------
 (function(){
-  var playerNum = 0;
+  var playerNum = 6;
   window.test={
     reset : function (){
       window.msg('1|1|SERVER|4|{"clients":{},"obs":{},"status":1,"setup":null}');
     },
     start : function (){
+      var playerData = [];
+      for (var i=0;i<playerNum;i++){
+        playerData[i] = {
+          "id":i+1,
+          "name":'player ' + i,
+          "number":i
+        };
+      }
       window.msg('1|3|SERVER|12|null');
-      window.msg('2|4|HOST|1|{"id":1,"current":-1}');
+      window.msg('2|4|HOST|1|['+1+','+JSON.stringify(playerData)+',[]]');
     },
     client : function (id){
       window.msg('2|5|HOST|2|{"current":'+id+'}');
