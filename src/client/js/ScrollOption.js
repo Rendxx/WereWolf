@@ -9,7 +9,10 @@ var HTML = {
 };
 
 var CSS = {
-  first: '_first'
+  first: '_first',
+  last: '_last',
+  animation: '_animation',
+  actived: '_actived'
 };
 
 var PARA = {
@@ -30,6 +33,7 @@ var ScrollOption = function (container, optionData, para_in){
   };
   var scrollRange = [0,100];
   var currentX = 0;
+  var _lastActive = -1;
 
   // public ---------------------------------------------------------
   this.getSelect = function (){
@@ -48,6 +52,20 @@ var ScrollOption = function (container, optionData, para_in){
       html['optionList'].css('transform', 'translateX(-'+currentX+'px)')
   };
 
+  var setAniamtion = function (isOn){
+      if (isOn) html['optionList'].addClass(CSS.animation);
+      else  html['optionList'].removeClass(CSS.animation);
+      html['optionList'][0].offsetHeight;
+  };
+
+  var updateActive = function (){
+      var t = ~~(currentX/para.width);
+      if (_lastActive === t) return;
+      if (_lastActive!==-1)html['option'][_lastActive].removeClass(CSS.actived);
+      _lastActive = t;
+      html['option'][_lastActive].addClass(CSS.actived);
+  };
+
   // setup ----------------------------------------------------------
   var _setupHtml = function (){
       html['wrap']= $(HTML.wrap).appendTo(html['container']);
@@ -58,8 +76,8 @@ var ScrollOption = function (container, optionData, para_in){
         _addOpt(i, optionData[i].key, optionData[i].content);
       }
       html['option'][0].addClass(CSS.first);
-      html['option'][html['option'].length-1].addClass(CSS.first);
-      scrollRange = [0, optionData.length*para.width];
+      html['option'][html['option'].length-1].addClass(CSS.last);
+      scrollRange = [0, optionData.length*para.width-1];
   };
 
   var _addOpt = function (idx, key, content){
@@ -74,7 +92,7 @@ var ScrollOption = function (container, optionData, para_in){
       var lastX = 0;
       var getMousePos = function (e) {
           if (e.pageX == undefined) {
-              return [e.originalEvent.touches[0].pageX, e.originalEvent.touches[0].pageY];
+              return [e.targetTouches[0].pageX, e.targetTouches[0].pageY];
           } else {
               return [e.pageX, e.pageY];
           }
@@ -83,18 +101,21 @@ var ScrollOption = function (container, optionData, para_in){
       var startDrag = function (e){
         e.preventDefault();
         lastX=getMousePos(e)[0];
+        setAniamtion(false);
       };
 
       var onMove = function (e){
         e.preventDefault();
         var x = getMousePos(e)[0];
-        currentX = Math.max(scrollRange[0],Math.min(scrollRange[1],currentX+x-lastX));
+        currentX = Math.max(scrollRange[0],Math.min(scrollRange[1],currentX-x+lastX));
         lastX=x;
         render();
+        updateActive();
       };
 
       var stopDrag = function (e){
         e.preventDefault();
+        setAniamtion(true);
         checkSelect();
       };
 
@@ -118,6 +139,7 @@ var ScrollOption = function (container, optionData, para_in){
       _setupHtml();
       _setupEvent();
       checkSelect();
+      updateActive();
   };
   _init();
 };

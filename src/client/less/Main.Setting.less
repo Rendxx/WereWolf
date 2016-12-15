@@ -1,57 +1,194 @@
-﻿.main {
-  ._setting{
-    .__row {
-      width:100%;
-      height:80px;
-      position:relative;
-      top:0;
-      left:0;
-      border-bottom: 1px solid #333;
-    }
-    ._nameInput{
-        .__row;
-    }
-    ._numberWrap{
-        .__row;
-        ._numberItem{
-          position:absolute;
-          top:0;
-          left:0;
-          width:100%;
-          height:100%;
-          text-align: center;
-          color:#fff;
-          line-height: 80px;
-          text-shadow: 0 0 5px #333;
+.main {
+    ._setting {
+        font-size: 16px;
 
-          &:after{
-            content:'';
-            display: block;
-            position:absolute;
+        ._title {
+            position:absolute;;
             top:0;
-            right:0;
-            width:1px;
-            height:100%;
-            background-color: rgba(0,0,0,0.1);
-          }
+            left:0;
+            width:100%;
+            height:60px;
+            line-height: 60px;
+            background-color: rgba(0,0,0,0.5);
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            text-align: left;
+            z-index:10;
 
-          &._first{
-            &:before{
-              content:'';
-              display: block;
-              position:absolute;
-              top:0;
-              left:-1px;
-              width:1px;
-              height:100%;
-              background-color: rgba(0,0,0,0.1);
+            span{
+                color:#999;
+                font-size: 24px;
+                padding-left:30px;
             }
-          }
-        } 
-    }
-    ._roleWrap{
-        .__row;
 
+            ._ok {
+                width: 60px;
+                height: 60px;
+                background-color: #809e51;
+                text-align: center;
+                position: absolute;;
+                top: 0;
+                right: 0;
+                color: #333;
+                background-image: url('../design/check-64.png');
+                background-repeat: no-repeat;
+                background-position: center center;
+            }
+        }
+
+        ._inner {
+            height:100%;
+            width:100%;
+            position:absolute;
+            overflow: hidden;
+            z-index:1;
+
+            ._space {
+                width: 100%;
+                height:70px;
+            }
+
+            .__row {
+                width: 90%;
+                margin-left: 5%;
+                border: 1px solid #333;
+                box-sizing: border-box;
+                height: 82px;
+                position: relative;
+                box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
+                top: 0;
+                left: 0;
+            }
+
+            .__line {
+                content: '';
+                display: block;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 1px;
+                height: 40%;
+                background-color: #2d2d2d;
+            }
+
+            .__scrollItem {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                color: #888;
+                line-height: 80px;
+                text-shadow: 0 0 5px #000;
+                transition: color 0.4s;
+            }
+
+            ._tag {
+                width: 100%;
+                padding-top: 30px;
+                height: 50px;
+                line-height: 50px;
+                color: #809e51;
+                text-align: center;
+                position: relative;
+                top: 0;
+                left: 0;
+                text-shadow: 0 0 5px #000;
+            }
+
+            ._nameInput {
+                .__row;
+                background-color: rgba(0, 0, 0, 0.3);
+
+                input {
+                    display: block;
+                    width: 80%;
+                    height: 100%;
+                    background-color: transparent;
+                    border: 0;
+                    text-align: center;
+                    color: #fff;
+                    margin: 0 auto;
+                    font-size: 22px;
+                    @ph-color: #444;
+
+                    &::-webkit-input-placeholder {
+                        /* Chrome/Opera/Safari */
+                        color: @ph-color;
+                    }
+
+                    &::-moz-placeholder {
+                        /* Firefox 19+ */
+                        color: @ph-color;
+                    }
+
+                    &:-ms-input-placeholder {
+                        /* IE 10+ */
+                        color: @ph-color;
+                    }
+
+                    &:-moz-placeholder {
+                        /* Firefox 18- */
+                        color: @ph-color;
+                    }
+                }
+            }
+
+            ._numberWrap {
+                .__row;
+
+                ._numberItem {
+                    .__scrollItem;
+
+                    &:after {
+                        .__line;
+                        right: 0;
+                    }
+                }
+
+                ._first {
+                    ._numberItem {
+                        &:before {
+                            .__line;
+                            left: 0;
+                        }
+                    }
+                }
+
+                ._actived {
+                    ._numberItem {
+                        color: #fff;
+                    }
+                }
+            }
+
+            ._roleWrap {
+                .__row;
+
+                ._roleItem {
+                    .__scrollItem;
+
+                    &:after {
+                        .__line;
+                        right: 0;
+                    }
+                }
+
+                ._first {
+                    ._roleItem {
+                        &:before {
+                            .__line;
+                            left: 0;
+                        }
+                    }
+                }
+
+                ._actived {
+                    ._roleItem {
+                        color: #fff;
+                    }
+                }
+            }
+        }
     }
-  }
 }

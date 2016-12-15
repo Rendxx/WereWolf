@@ -14,8 +14,14 @@
           "number":i
         };
       }
+
+      var roleList = [1,2,3,4,5];
+
+      window.msg('2|4|HOST|1|['+1+','+JSON.stringify(playerData)+','+JSON.stringify(roleList)+']');
       window.msg('1|3|SERVER|12|null');
-      window.msg('2|4|HOST|1|['+1+','+JSON.stringify(playerData)+',[]]');
+    },
+    setting : function (id){
+      window.msg('2|5|HOST|2|[0]');
     },
     client : function (id){
       window.msg('2|5|HOST|2|{"current":'+id+'}');
@@ -36,6 +42,7 @@
   console.group("%c TEST COMMAND ", 'background: #ddeeff; color: #003399;');
   console.log("%c test.reset() ", 'color: #003399;');
   console.log("%c test.start() ", 'color: #003399;');
+  console.log("%c test.setting() ", 'color: #003399;');
   console.log("%c test.client(1) ", 'color: #003399;');
   console.log("%c test.end(true) ", 'color: #003399;');
   console.log("%c test.renew() ", 'color: #003399;');

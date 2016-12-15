@@ -1,46 +1,46 @@
-var ROLECODE = require('./js/RoleCode.js')
-var ROLE = {};
+var ROLECODE = require('GLOBAL/js/RoleCode.js')
+var ROLEDATA = {};
 
-ROLE[ROLECODE.VILLAGER]={
+ROLEDATA[ROLECODE.VILLAGER]={
   code:ROLECODE.VILLAGER,
   name:'Villager',
   description:'Villager'
 };
 
-ROLE[ROLECODE.WEREWOLF]={
+ROLEDATA[ROLECODE.WEREWOLF]={
   code:ROLECODE.WEREWOLF,
   name:'Were Wolf',
   description:'Were Wolf'
 };
 
-ROLE[ROLECODE.SEER]={
+ROLEDATA[ROLECODE.SEER]={
   code:ROLECODE.SEER,
   name:'Seer',
   description:'Seer'
 };
 
-ROLE[ROLECODE.WITCH]={
+ROLEDATA[ROLECODE.WITCH]={
   code:ROLECODE.WITCH,
   name:'Witch',
   description:'Witch'
 };
 
-ROLE[ROLECODE.HUNTER]={
+ROLEDATA[ROLECODE.HUNTER]={
   code:ROLECODE.HUNTER,
   name:'Hunter',
   description:'Hunter'
 };
 
-ROLE[ROLECODE.IDIOT]={
+ROLEDATA[ROLECODE.IDIOT]={
   code:ROLECODE.IDIOT,
   name:'Idiot',
   description:'Idiot'
 };
 
-ROLE[ROLECODE.ELDER]={
+ROLEDATA[ROLECODE.ELDER]={
   code:ROLECODE.ELDER,
   name:'Elder',
   description:'Elder'
 };
 
-module.exports = ROLE;
+module.exports = ROLEDATA;

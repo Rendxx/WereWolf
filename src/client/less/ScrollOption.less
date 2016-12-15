@@ -1,4 +1,4 @@
-.scrollOption{
+._scrollOption{
   position:absolute;
   top:0;
   left:0;
@@ -14,7 +14,7 @@
     position:absolute;
     top:0;
     left:50%;
-    background-image: url('../design/red-pointer.png');
+    background-image: url('../design/green-pointer.png');
     background-repeat: no-repeat;
     background-position: center top;
     width:16px;
@@ -28,7 +28,7 @@
     position:absolute;
     top:0;
     left:50%;
-    overflow: hidden;
+    overflow: visible;
     width:1px;
     height:100%;
 
@@ -36,7 +36,9 @@
       position:absolute;
       top:0;
       height:100%;
-      transition: translate 0.2s;
+      &._animation{
+          transition: transform 0.4s;
+      }
 
       ._option{
         position:absolute;
