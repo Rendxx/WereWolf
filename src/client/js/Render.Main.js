@@ -64,7 +64,7 @@ var Main = function (container) {
 
     var alive = true,
         actived = false,
-        infoBox = null;
+        setuped = false;
 
     var _gameStep = -1;
     var cache_setupData = null;
@@ -121,13 +121,14 @@ var Main = function (container) {
     };
 
     var _setupHtml = function (setupData) {
+        if (setuped) return;
+        setuped=true;
         html['container'].empty();
         html['panel'] = {};
         html['panel']['setting'] = $(HTML.panel.setting).appendTo(html['container']);
         html['panel']['player'] = $(HTML.panel.player).appendTo(html['container']);
         html['panel']['status'] = $(HTML.panel.status).appendTo(html['container']);
         html['panel']['info'] = $(HTML.panel.info).appendTo(html['container']);
-        //infoBox = new InfoBox(html['panel']['info'][0]);
         html['info'] = $(HTML.info).appendTo(html['container']);
 
         if (setupData==null) return;
@@ -214,7 +215,6 @@ var Main = function (container) {
         var ele = $(HTML.playerItem).appendTo(html['panel']['player']);
         ele.click(function(){
             if (!actived) return;
-            infoBox.checkSelection(number, name, action, function (){ _select(id);});
         });
         html['players'][id] = ele;
     };
