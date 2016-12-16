@@ -7,8 +7,8 @@ var Style = require('./less/Index.less');
 
 window.GAME = {
   Render:{
-    Prepare : require('./js/Render.Prepare.js'),
-    Main : require('./js/Render.Main.js'),
-    End : require('./js/Render.End.js')
+    Prepare : require('CLIENT/js/Render.Prepare.js'),
+    Main : require('CLIENT/js/Main/Render.Main.js'),
+    End : require('CLIENT/js/Render.End.js')
   }
 };

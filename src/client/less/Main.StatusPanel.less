@@ -1,0 +1,65 @@
+.main {
+    ._status {
+        font-size: 16px;
+
+        .__item{
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform: translate(-50%, -50%);
+            transition: none;
+            text-align: center;
+            color:#eee;
+            box-sizing: border-box;
+        }
+
+        ._number{
+            .__item;
+            z-index: 40;
+            width: 256px;
+            height: 256px;
+            line-height: 256px;
+            color:#333;
+            text-shadow: inset 0 0 16px #000;
+            font-size: 100px;
+            margin-top: -100px;
+        }
+
+        ._bg{
+            .__item;
+            z-index:30;
+            width: 256px;
+            height: 256px;
+            line-height: 256px;
+            margin-top: -100px;
+            background-color: rgba(255,255,255,0.5);
+            border-radius: 5px;
+            border: 2px solid rgba(255,255,255,0.75);
+            box-shadow: 0 0 16px #000;
+        }
+
+        ._name{
+            .__item;
+            z-index:20;
+            width: 256px;
+            line-height: 40px;
+            color:#eee;
+            text-shadow: inset 0 0 10px #000;
+            font-size: 24px;
+            margin-top: 60px;
+
+        }
+
+        ._role{
+
+        }
+
+        ._roleBtn{
+
+        }
+
+        ._listBtn{
+
+        }
+    }
+}

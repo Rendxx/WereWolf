@@ -21,7 +21,10 @@
       window.msg('1|3|SERVER|12|null');
     },
     setting : function (id){
-      window.msg('2|5|HOST|2|[0]');
+      window.msg('2|5|HOST|2|[1,0]');
+    },
+    inited : function (id){
+      window.msg('2|5|HOST|2|[1,1,6,"高俊敏",3]');
     },
     client : function (id){
       window.msg('2|5|HOST|2|{"current":'+id+'}');
@@ -43,6 +46,7 @@
   console.log("%c test.reset() ", 'color: #003399;');
   console.log("%c test.start() ", 'color: #003399;');
   console.log("%c test.setting() ", 'color: #003399;');
+  console.log("%c test.inited() ", 'color: #003399;');
   console.log("%c test.client(1) ", 'color: #003399;');
   console.log("%c test.end(true) ", 'color: #003399;');
   console.log("%c test.renew() ", 'color: #003399;');
