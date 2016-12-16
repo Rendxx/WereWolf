@@ -19,10 +19,11 @@
             width: 256px;
             height: 256px;
             line-height: 256px;
-            color:#333;
-            text-shadow: inset 0 0 16px #000;
-            font-size: 100px;
-            margin-top: -100px;
+            color:#fff;
+            text-shadow: 0 0 6px #000;
+            font-size: 140px;
+            margin-top: -110px;
+            font-family: "Agency FB";
         }
 
         ._bg{
@@ -31,11 +32,19 @@
             width: 256px;
             height: 256px;
             line-height: 256px;
-            margin-top: -100px;
-            background-color: rgba(255,255,255,0.5);
-            border-radius: 5px;
-            border: 2px solid rgba(255,255,255,0.75);
-            box-shadow: 0 0 16px #000;
+            margin-top: -110px;
+            background-color: rgba(255,255,255,0.2);
+            box-shadow: 0 0 6px #000;
+        }
+
+
+        ._line{
+            .__item;
+            z-index:20;
+            width: 100%;
+            height:1px;
+            margin-top: 60px;
+            border-top:1px dashed #888;
         }
 
         ._name{
@@ -44,18 +53,47 @@
             width: 256px;
             line-height: 40px;
             color:#eee;
-            text-shadow: inset 0 0 10px #000;
+            text-shadow: 0 0 6px #000;
             font-size: 24px;
-            margin-top: 60px;
+            margin-top: 110px;
+            font-family: 微软雅黑, Calibri;
 
         }
 
         ._role{
+            .__item;
+            z-index:20;
+            width: 160px;
+            height:50px;
+            line-height: 50px;
+            color:#fff;
+            text-shadow: 0 0 6px #000;
+            font-size: 16px;
+            margin-top: 110px;
+            border-radius: 25px;
+            background: #222;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
 
+            &._show{
+                visibility: visible;
+                opacity: 1;
+            }
         }
 
         ._roleBtn{
-
+            .__item;
+            z-index:20;
+            width: 160px;
+            height:50px;
+            line-height: 50px;
+            color:#999;
+            text-shadow: 0 0 6px #000;
+            font-size: 16px;
+            margin-top: 190px;
+            border:1px solid #999;
+            border-radius: 25px;
         }
 
         ._listBtn{

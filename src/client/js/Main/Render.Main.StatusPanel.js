@@ -6,15 +6,17 @@ require('CLIENT/less/Main.StatusPanel.less');
 
 var HTML = {
     bg: '<div class="_bg"></div>',
+    line: '<div class="_line"></div>',
     name: '<div class="_name"></div>',
     number: '<div class="_number"></div>',
     role: '<div class="_role"></div>',
-    roleBtn: '<div class="_roleBtn"></div>',
+    roleBtn: '<div class="_roleBtn">Tap to show ROLE</div>',
     listBtn: '<div class="_listBtn"></div>',
 };
 
 var CSS = {
-    dead: '_dead'
+    dead: '_dead',
+    show: '_show'
 };
 
 var StatusPanel = function(container) {
@@ -45,6 +47,7 @@ var StatusPanel = function(container) {
     var setupHtml = function(number, name, role) {
         html['container'].empty();
         html['number'] = $(HTML.number).appendTo(html['container']).text(number);
+        html['line'] = $(HTML.line).appendTo(html['container']);
         html['name'] = $(HTML.name).appendTo(html['container']).text(name);
         html['bg'] = $(HTML.bg).appendTo(html['container']);
         html['role'] = $(HTML.role).appendTo(html['container']).text(ROLEDATA[role].name);
@@ -54,10 +57,10 @@ var StatusPanel = function(container) {
             that.onToggle && that.onToggle();
         });
         var showRole = function (){
-          html['role'].show();
+          html['role'].addClass(CSS.show);
         };
         var hideRole = function (){
-          html['role'].hide();
+          html['role'].removeClass(CSS.show);
         };
         html['roleBtn'][0].addEventListener('mousedown', showRole, false);
         html['roleBtn'][0].addEventListener('touchstart', showRole, false);
