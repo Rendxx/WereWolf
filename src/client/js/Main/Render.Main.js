@@ -41,7 +41,7 @@ var Main = function (container) {
     var alive = true,
         actived = false,
         setuped = false,
-        inited = false;
+        inited = null;
 
     var _msg = {};
     var _send = {};
@@ -91,26 +91,24 @@ var Main = function (container) {
     // Message ---------------------------------------
     var _setupMsg = function (){
         _msg[MSGCODE.HOST.UPDATE] = function (dat){
-        };
+            var isInited = dat[1]===1;
+            var meta = dat[2];
+            var playerInfo = dat[3];
+            var playerStatus = dat[4];
 
-        _msg[MSGCODE.HOST.INIT_DATA] = function (dat){
-            var gameStep = dat[1];
-            if (gameStep!==_gameStep) {
-                if (gameStep===0){
+            if (inited!==isInited) {
+                inited=isInited;
+                if (!inited){
                     settingPanel.show();
                     statusPanel.hide();
                 } else {
                     settingPanel.hide();
                     statusPanel.show();
+                    statusPanel.reset(meta[0],meta[1],meta[2]);
                 }
             };
 
-            if (gameStep===1){
-                var number = dat[2];
-                var name = dat[3];
-                var role = dat[4];
-                statusPanel.reset(number,name,role);
-            }
+
         };
     };
 

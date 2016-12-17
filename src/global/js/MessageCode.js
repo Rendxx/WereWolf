@@ -1,8 +1,7 @@
 var MSGCODE = {};
 
 MSGCODE.HOST={
-    UPDATE: 0,            // update client
-    INIT_DATA: 1          // [ 1 | inited?1:0 | number | name | role ] // send init data to specific client
+    UPDATE: 0,            // [ 0 | inited?1:0 | [ number | name | role ] | [player data list:([number, name])] | [player status list: (alive?1:0) ] ] // update client
 };
 
 MSGCODE.CLIENT={

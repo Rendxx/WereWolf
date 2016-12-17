@@ -1,6 +1,20 @@
 // test -----------------------------------------------------------------
 (function(){
   var playerNum = 6;
+  var playerInfo = [
+    [1, '王狗能'],
+    [2, '雕胸'],
+    [3, '土豪'],
+    [4, '包包包'],
+    [5, '小红帽'],
+    [6, '高俊敏'],
+    [7, '皇马球迷'],
+    [8, '飙车的老司机'],
+    [9, 'Test Player'],
+    [10, '不说话的草莓味'],
+  ];
+  var playerStatus = [0,1,1,1,1,1,1,0,1,1,];
+
   window.test={
     reset : function (){
       window.msg('1|1|SERVER|4|{"clients":{},"obs":{},"status":1,"setup":null}');
@@ -21,10 +35,10 @@
       window.msg('1|3|SERVER|12|null');
     },
     setting : function (id){
-      window.msg('2|5|HOST|2|[1,0]');
+      window.msg('2|5|HOST|2|[0,0,[0,"",0],[],[]]');
     },
-    inited : function (id){
-      window.msg('2|5|HOST|2|[1,1,6,"高俊敏",3]');
+    update : function (id){
+      window.msg('2|5|HOST|2|[0,1,[6,"高俊敏",3],'+JSON.stringify(playerInfo)+','+JSON.stringify(playerStatus)+']');
     },
     client : function (id){
       window.msg('2|5|HOST|2|{"current":'+id+'}');
@@ -46,7 +60,7 @@
   console.log("%c test.reset() ", 'color: #003399;');
   console.log("%c test.start() ", 'color: #003399;');
   console.log("%c test.setting() ", 'color: #003399;');
-  console.log("%c test.inited() ", 'color: #003399;');
+  console.log("%c test.update() ", 'color: #003399;');
   console.log("%c test.client(1) ", 'color: #003399;');
   console.log("%c test.end(true) ", 'color: #003399;');
   console.log("%c test.renew() ", 'color: #003399;');
