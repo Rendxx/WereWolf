@@ -7,13 +7,14 @@ var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var MSGCODE = require('GLOBAL/js/MessageCode.js');
 var SettingPanel = require('CLIENT/js/Main/Render.Main.SettingPanel.js');
 var StatusPanel = require('CLIENT/js/Main/Render.Main.StatusPanel.js');
+var PlayerPanel = require('CLIENT/js/Main/Render.Main.PlayerPanel.js');
 
-require('CLIENT/less/Main.less');
+require('CLIENT/less/Main/Main.less');
 
 var HTML = {
     panel: {
       setting: '<div class="_panel _setting"></div>',
-      player: '<div class="_panel _player"></div>',
+      player: '<div class="_panel _playerList"></div>',
       status: '<div class="_panel _status"></div>',
       info: '<div class="_panel _info"></div>',
     }
@@ -48,7 +49,8 @@ var Main = function (container) {
     var _gameStep = -1;
     var cache_setupData = null;
     var settingPanel = null,
-        statusPanel = null;
+        statusPanel = null,
+        playerPanel = null;
 
     // Callback -------------------------------------
     this.message = {};        /* TODO: this is a package of message hander. this.message.action(dat),  this.message.send(dat) */
@@ -105,6 +107,7 @@ var Main = function (container) {
                     settingPanel.hide();
                     statusPanel.show();
                     statusPanel.reset(meta[0],meta[1],meta[2]);
+                    playerPanel.reset(playerInfo);
                 }
             };
 
@@ -138,7 +141,7 @@ var Main = function (container) {
     var _resetHtml = function (setupData){
           if (setupData==null) return;
           var id = setupData[0];
-          var playerData = setupData[1];
+          var playerNumber = setupData[1];
           var roleList = setupData[2];
 
           // status
@@ -146,12 +149,7 @@ var Main = function (container) {
           html['number'] = $(HTML.number).appendTo(html['panel']['status']);
 
           // player
-          html['players'] = {};
-          for (var i=0;i<playerData.length;i++){
-            var p = playerData[i];
-            _addPlayer(p.id,p.name,p.number);
-          }
-          settingPanel.reset(playerData, roleList);
+          settingPanel.reset(playerNumber, roleList);
     };
 
     var _setupHtml = function (setupData) {
@@ -166,14 +164,6 @@ var Main = function (container) {
         html['info'] = $(HTML.info).appendTo(html['container']);
     };
 
-    var _addPlayer = function (id, name, number){
-        var ele = $(HTML.playerItem).appendTo(html['panel']['player']);
-        ele.click(function(){
-            if (!actived) return;
-        });
-        html['players'][id] = ele;
-    };
-
     var _select = function (id){
 
     };
@@ -183,6 +173,9 @@ var Main = function (container) {
         _setupSend();
         _setupHtml();
         settingPanel = new SettingPanel(html['panel']['setting'][0]);
+        statusPanel = new StatusPanel(html['panel']['status'][0]);
+        playerPanel = new PlayerPanel(html['panel']['player'][0]);
+
         settingPanel.onConfirm = function (data){
           _send[MSGCODE.CLIENT.SET_INIT](data);
           settingPanel.hide();
@@ -190,7 +183,14 @@ var Main = function (container) {
           statusPanel.show();
         };
 
-        statusPanel = new StatusPanel(html['panel']['status'][0]);
+        statusPanel.onToggle = function (data){
+          playerPanel.show();
+          statusPanel.hide();
+        };
+
+        playerPanel.onHide = function (data){
+          statusPanel.show();
+        };
     }();
 };
 

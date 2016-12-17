@@ -9,4 +9,6 @@ MSGCODE.CLIENT={
     GET_INIT: 1,          // [ 1 ] // ask for init data from host
 };
 
+// Client setup:  [ client index |  player number | [ role list ] ]
+
 module.exports = MSGCODE;

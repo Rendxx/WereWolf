@@ -1,8 +1,7 @@
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var InfoBox = require('CLIENT/js/InfoBox.js');
-var ScrollOption = require('CLIENT/js/ScrollOption.js');
 
-require('CLIENT/less/Main.StatusPanel.less');
+require('CLIENT/less/Main/Main.StatusPanel.less');
 
 var HTML = {
     bg: '<div class="_bg"></div>',
@@ -24,7 +23,7 @@ var StatusPanel = function(container) {
     // Property -------------------------------------
     var that = this;
     var html = {
-        container : $(container)
+        container: $(container)
     };
 
     // Callback ------------------------------
@@ -32,11 +31,11 @@ var StatusPanel = function(container) {
 
     // Public --------------------------------
     this.show = function() {
-        html['container'].fadeIn();
+        html['container'].fadeIn(200);
     };
 
     this.hide = function() {
-        html['container'].fadeOut();
+        html['container'].fadeOut(200);
     };
 
     this.reset = function(number, name, role) {
@@ -53,14 +52,14 @@ var StatusPanel = function(container) {
         html['role'] = $(HTML.role).appendTo(html['container']).text(ROLEDATA[role].name);
         html['roleBtn'] = $(HTML.roleBtn).appendTo(html['container']);
         html['listBtn'] = $(HTML.listBtn).appendTo(html['container']);
-        html['listBtn'].click(function(){
+        html['listBtn'].click(function() {
             that.onToggle && that.onToggle();
         });
-        var showRole = function (){
-          html['role'].addClass(CSS.show);
+        var showRole = function() {
+            html['role'].addClass(CSS.show);
         };
-        var hideRole = function (){
-          html['role'].removeClass(CSS.show);
+        var hideRole = function() {
+            html['role'].removeClass(CSS.show);
         };
         html['roleBtn'][0].addEventListener('mousedown', showRole, false);
         html['roleBtn'][0].addEventListener('touchstart', showRole, false);
@@ -69,8 +68,7 @@ var StatusPanel = function(container) {
         html['roleBtn'][0].addEventListener('mouseout', hideRole, false);
     };
 
-    var _init = function() {
-    }();
+    var _init = function() {}();
 };
 
 module.exports = StatusPanel;

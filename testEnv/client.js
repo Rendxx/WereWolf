@@ -20,18 +20,9 @@
       window.msg('1|1|SERVER|4|{"clients":{},"obs":{},"status":1,"setup":null}');
     },
     start : function (){
-      var playerData = [];
-      for (var i=0;i<playerNum;i++){
-        playerData[i] = {
-          "id":i+1,
-          "name":'player ' + i,
-          "number":i
-        };
-      }
-
       var roleList = [1,2,3,4,5];
 
-      window.msg('2|4|HOST|1|['+1+','+JSON.stringify(playerData)+','+JSON.stringify(roleList)+']');
+      window.msg('2|4|HOST|1|['+1+','+10+','+JSON.stringify(roleList)+']');
       window.msg('1|3|SERVER|12|null');
     },
     setting : function (id){

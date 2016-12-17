@@ -2,7 +2,7 @@ var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var InfoBox = require('CLIENT/js/InfoBox.js');
 var ScrollOption = require('CLIENT/js/ScrollOption.js');
 
-require('CLIENT/less/Main.SettingPanel.less');
+require('CLIENT/less/Main/Main.SettingPanel.less');
 
 var HTML = {
     title: '<div class="_title"><span>Input your data</span></div>',
@@ -38,17 +38,17 @@ var SettingPanel = function(container) {
 
     // Public --------------------------------
     this.show = function() {
-        html['container'].fadeIn();
+        html['container'].fadeIn(200);
     };
 
     this.hide = function() {
-        html['container'].fadeOut();
+        html['container'].fadeOut(200);
     };
 
-    this.reset = function(playerData, roleList) {
+    this.reset = function(playerNumber, roleList) {
         setupPanel();
         setupTitle();
-        setupInner(playerData, roleList);
+        setupInner(playerNumber, roleList);
     };
 
     // Private ---------------------------------------
@@ -85,7 +85,7 @@ var SettingPanel = function(container) {
         });
     };
 
-    var setupInner = function(playerData, roleList) {
+    var setupInner = function(playerNumber, roleList) {
         html['sapce'] = $(HTML.space).appendTo(html['inner']);
 
         // name
@@ -96,7 +96,7 @@ var SettingPanel = function(container) {
         html['numberTag'] = $(HTML.tag).appendTo(html['inner']).text("[ select your number ]");
         html['number'] = $(HTML.number.wrap).appendTo(html['inner']);
         var numberOptions = [];
-        for (var i = 1; i <= playerData.length; i++) {
+        for (var i = 1; i <= playerNumber; i++) {
             numberOptions.push({
                 key: i,
                 content: HTML.number.item.replace(/#content#/g, i)

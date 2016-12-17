@@ -1,0 +1,129 @@
+.main {
+    ._playerList {
+        font-size: 16px;
+
+        ._title {
+            position:absolute;;
+            top:0;
+            left:0;
+            width:100%;
+            height:60px;
+            line-height: 60px;
+            background-color: rgba(0,0,0,0.5);
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            text-align: left;
+            z-index:10;
+
+            span{
+                color:#999;
+                font-size: 24px;
+                padding-left:30px;
+            }
+
+            ._hide {
+                width: 60px;
+                height: 60px;
+                background-color: #bf8835;
+                text-align: center;
+                position: absolute;;
+                top: 0;
+                right: 0;
+                color: #333;
+                background-image: url('../../design/back-64.png');
+                background-repeat: no-repeat;
+                background-position: center center;
+            }
+        }
+
+        ._inner {
+            height:100%;
+            width:100%;
+            position:absolute;
+            overflow: hidden;
+            overflow-y: visible;
+            z-index:1;
+
+            ._space {
+                width: 100%;
+                height:70px;
+            }
+
+            ._player {
+                background-color: #ccc;
+                width: auto;
+                height:50px;
+                position:relative;
+                top:0;
+                left:0;
+                margin: 0 20px;
+                margin-bottom:10px;
+                box-shadow: 0 0 5p #000;
+                opacity: 0.8;
+                line-height: 40px;
+
+                &:hover{
+                    opacity: 1;
+                }
+
+                ._number {
+                    display: block;
+                    width: 40px;
+                    height: 40px;
+                    position: absolute;
+                    top:5px;
+                    left:5px;
+                    background-color: #333;
+                    border: 0;
+                    text-align: center;
+                    color: #fff;
+                    margin: 0 auto;
+                    font-size: 22px;
+                    font-family: "Agency FB";
+                    text-shadow: 0 0 5px #000;
+                    box-shadow: inset 0 0 5px #000;
+                    z-index:30;
+                }
+
+                ._name {
+                    display: block;
+                    height: 40px;
+                    text-align: left;
+                    color: #333;
+                    margin:0;
+                    margin-left:70px;
+                    margin-right: 10px;
+                    overflow: visible;
+                    position: relative;
+                    top:5px;
+                    legt:0;
+                    font-size: 20px;
+                    font-family: 微软雅黑, Calibri;
+                    z-index:10;
+                }
+
+                ._vote {
+                    display: block;
+                    height: 40px;
+                    margin:5px;
+                    text-align: right;
+                    position: absolute;
+                    top:0;
+                    left:0;
+                    z-index:20;
+
+                    ._voteMarker{
+                        display: inline-block;;
+                        height: 40px;
+                        width:40px;
+                        text-align: center;
+                        color:#fff;
+                        text-shadow: 0 0 5px #000;
+                        background-color: #333;
+                        border-radius: 4px;
+                        margin-left: 5px;
+                    }
+                }
+            }
+        }
+    }
+}
