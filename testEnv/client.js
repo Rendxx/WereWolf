@@ -13,7 +13,8 @@
     [9, 'Test Player'],
     [10, '不说话的草莓味'],
   ];
-  var playerStatus = [0,1,1,1,1,1,1,0,1,1,];
+  var playerStatus =  parseInt('1101111101', 2);
+  var playerVote = [5,-1,-1,-1,-1,5,-1,-1,-1,3];
 
   window.test={
     reset : function (){
@@ -26,13 +27,13 @@
       window.msg('1|3|SERVER|12|null');
     },
     setting : function (id){
-      window.msg('2|5|HOST|2|[0,0,[0,"",0],[],[]]');
+      window.msg('2|5|HOST|2|[0,0,[0,"",0],[],0,[]]');
     },
     update : function (id){
-      window.msg('2|5|HOST|2|[0,1,[6,"高俊敏",3],'+JSON.stringify(playerInfo)+','+JSON.stringify(playerStatus)+']');
+      window.msg('2|5|HOST|2|[0,2,[6,"高俊敏",2],'+JSON.stringify(playerInfo)+','+playerStatus+','+JSON.stringify(playerVote)+']');
     },
-    client : function (id){
-      window.msg('2|5|HOST|2|{"current":'+id+'}');
+    update2 : function (id){
+      window.msg('2|5|HOST|2|[0,3,[6,"高俊敏",2],'+JSON.stringify(playerInfo)+','+playerStatus+','+JSON.stringify(playerVote)+']');
     },
     end : function (isWin){
       window.msg('2|5|HOST|2|{"end":'+isWin+'}');
@@ -52,7 +53,7 @@
   console.log("%c test.start() ", 'color: #003399;');
   console.log("%c test.setting() ", 'color: #003399;');
   console.log("%c test.update() ", 'color: #003399;');
-  console.log("%c test.client(1) ", 'color: #003399;');
+  console.log("%c test.update2() ", 'color: #003399;');
   console.log("%c test.end(true) ", 'color: #003399;');
   console.log("%c test.renew() ", 'color: #003399;');
   console.groupEnd();

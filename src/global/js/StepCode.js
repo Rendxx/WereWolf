@@ -1,4 +1,5 @@
 var STEP = {
+    NONE: -1,
     INIT: 0,
     DAY: 1,
     WOLF: 2,
@@ -9,4 +10,4 @@ var STEP = {
     ELDER: 7
 };
 
-module.exports = ROLE;
+module.exports = STEP;

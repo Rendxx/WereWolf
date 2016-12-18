@@ -4,7 +4,9 @@
 */
 var ACTION = require('GLOBAL/js/ActionCode.js');
 var ROLECODE = require('GLOBAL/js/RoleCode.js');
+var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var MSGCODE = require('GLOBAL/js/MessageCode.js');
+var STEP = require('GLOBAL/js/StepCode.js');
 var SettingPanel = require('CLIENT/js/Main/Render.Main.SettingPanel.js');
 var StatusPanel = require('CLIENT/js/Main/Render.Main.StatusPanel.js');
 var PlayerPanel = require('CLIENT/js/Main/Render.Main.PlayerPanel.js');
@@ -29,25 +31,23 @@ var Main = function (container) {
     // Property -------------------------------------
     var that = this;
     var html = {
-            container: $(container),
-            panel:{},
-            info: null,
-            name: null,
-            number: null,
-            players: {},
+        container: $(container),
+        panel:{},
+        info: null,
+        name: null,
+        number: null,
+        players: {},
 
-            setting:{}
-        };
+        setting:{}
+    };
 
     var alive = true,
-        actived = false,
-        setuped = false,
-        inited = null;
+        inited = false,
+        currentStep = STEP.NONE,
+        roleCode = null;
 
     var _msg = {};
     var _send = {};
-    var _gameStep = -1;
-    var cache_setupData = null;
     var settingPanel = null,
         statusPanel = null,
         playerPanel = null;
@@ -58,7 +58,6 @@ var Main = function (container) {
     // interface controll --------------------------------
     this.show = function () {
         /* TODO: show Prepare-Screen */
-        //_resetHtml(cache_setupData);
         html['container'].fadeIn();
     };
 
@@ -71,8 +70,7 @@ var Main = function (container) {
     this.reset = function (setupData) {
         /* TODO: initialize the game */
         if (setupData==null) return;
-        cache_setupData = setupData;
-        _resetHtml(cache_setupData);
+        _resetHtml(setupData);
 
         _send[MSGCODE.CLIENT.GET_INIT]();
     };
@@ -93,25 +91,42 @@ var Main = function (container) {
     // Message ---------------------------------------
     var _setupMsg = function (){
         _msg[MSGCODE.HOST.UPDATE] = function (dat){
-            var isInited = dat[1]===1;
+            var step = dat[1];
             var meta = dat[2];
             var playerInfo = dat[3];
             var playerStatus = dat[4];
+            var playerVote = dat[5];
+            var isActived = inited && ROLEDATA[roleCode].step.indexOf(step)>=0;
 
-            if (inited!==isInited) {
-                inited=isInited;
-                if (!inited){
+            if (currentStep!==step) {
+                currentStep=step;
+                if (currentStep===STEP.NONE){    // init setting
                     settingPanel.show();
                     statusPanel.hide();
-                } else {
+                } else if (!inited){  // just after setting
+                    inited=true;
+                    roleCode=meta[2];
                     settingPanel.hide();
                     statusPanel.show();
                     statusPanel.reset(meta[0],meta[1],meta[2]);
                     playerPanel.reset(playerInfo);
+                    isActived = ROLEDATA[roleCode].step.indexOf(step)>=0;
+                } else {
+                }
+                playerPanel.setVote(null);
+                if (isActived){
+                    playerPanel.show();
+                    statusPanel.hide();
+                    playerPanel.enable(true);
+                }else{
+                    playerPanel.enable(false);
                 }
             };
 
-
+            if (isActived){
+                playerPanel.setVote(playerVote);
+            }
+            playerPanel.updateStatus(playerStatus);
         };
     };
 
@@ -153,8 +168,6 @@ var Main = function (container) {
     };
 
     var _setupHtml = function (setupData) {
-        if (setuped) return;
-        setuped=true;
         html['container'].empty();
         html['panel'] = {};
         html['panel']['setting'] = $(HTML.panel.setting).appendTo(html['container']);

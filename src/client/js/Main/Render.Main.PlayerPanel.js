@@ -19,6 +19,7 @@ var HTML = {
 };
 
 var CSS = {
+    alive: '_alive'
 };
 
 var PlayerPanel = function(container) {
@@ -28,8 +29,10 @@ var PlayerPanel = function(container) {
     var html = {
         container : $(container)
     };
-    var actionCode = null;
+    var isEnabled = false;
     var playerNum = 0;
+    var playerAlive = [];
+    var _playerInfo = null;
 
     // Callback ------------------------------
     this.onHide = null;
@@ -45,58 +48,55 @@ var PlayerPanel = function(container) {
     };
 
     this.reset = function(playerInfo) {
+        _playerInfo = playerInfo;
         playerNum = playerInfo.length;
         setupHtml(playerInfo);
         setupVoteCache(playerInfo);
     };
 
-    this.startAction = function(code) {
-        actionCode = code;
-        this.show();
+    this.enable = function (isEnable){
+        isEnabled = isEnable;
     };
 
-    this.stopAction = function() {
-        actionCode = null;
-        this.hide();
-    };
-
-    this.setNote = function(noteArr) {
+    this.updateStatus = function(status) {
         for (var i=0;i<playerNum;i++){
-            setVote(i,noteArr[i]);
+            playerAlive[i] = ((1<<i)&status)>0;
+            if (playerAlive[i]) html['player'][i].wrap.addClass(CSS.alive);
+            else html['player'][i].wrap.removeClass(CSS.alive);
         }
     };
 
-    this.clearMarker = function() {
+    this.setVote = function(voteArr) {
         for (var i=0;i<playerNum;i++){
-            setVote(i);
+            html['player'][i].vote.empty();
+        }
+        if (voteArr==null) return;
+        for (var i=0;i<playerNum;i++){
+            if (voteArr[i]===-1) continue;
+            html['player'][voteArr[i]].vote.append(html['voteCache'][i]);
         }
     };
 
     // Private ---------------------------------------
-    var setVote = function (idx, vote){
-        var pkg = html['player'][idx];
-        pkg.vote.empty();
-        if (vote===0) return;
-        var i = 0;
-        var t = 1;
-        while (i<playerNum){
-            if ((vote&t)>0){
-                pkg.vote.append(html['voteCache'][i]);
-            }
-            i++;
-            t=t<<1;
-        }
-    };
-
     var selectPlayer = function (idx){
-        if (actionCode===null) return;
-        that.onSelect && that.onSelect(idx);
+        if (!isEnabled || !playerAlive[idx]) return;
+        var number = _playerInfo[idx][0];
+        var name = _playerInfo[idx][1];
+
+        InfoBox.check({
+            content: '<div style="color:#666;">Your selection is:</div>' +
+                     '<div class="_checkBox_player_number">' + number + '</div>'+
+                     '<div class="_checkBox_player_name">' + name + '</div>',
+            callbackYes: function() {
+                that.onSelect && that.onSelect(idx);
+            }
+        });
     };
 
     var setupVoteCache = function (playerInfo){
         html['voteCache'] = [];
         for (var i=0;i<playerInfo.length;i++){
-            html['voteCache'].push($(HTML.player.voteMarker).text(playerInfo[i].number));
+            html['voteCache'].push($(HTML.player.voteMarker).text(playerInfo[i][0]));
         }
     };
 
@@ -104,7 +104,7 @@ var PlayerPanel = function(container) {
         html['container'].empty();
         html['title'] = $(HTML.title).appendTo(html['container']);
         html['inner'] = $(HTML.inner).appendTo(html['container']);
-        html['sapce'] = $(HTML.space).appendTo(html['inner']);
+        html['space'] = $(HTML.space).appendTo(html['inner']);
         html['hide'] = $(HTML.hide).appendTo(html['title']);
         html['hide'].click(function() {
           that.hide();
@@ -115,7 +115,7 @@ var PlayerPanel = function(container) {
         for (var i=0;i<playerNum;i++){
             addPlayer(i, playerInfo[i][0],playerInfo[i][1]);
         }
-        html['sapce2'] = $(HTML.space).appendTo(html['inner']);
+        html['space2'] = $(HTML.space).appendTo(html['inner']);
     };
 
     var addPlayer = function (idx, number, name){

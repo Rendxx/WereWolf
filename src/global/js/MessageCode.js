@@ -1,7 +1,7 @@
 var MSGCODE = {};
 
 MSGCODE.HOST={
-    UPDATE: 0,            // [ 0 | inited?1:0 | [ number | name | role ] | [player data list:([number, name])] | [player status list: (alive?1:0) ] ] // update client
+    UPDATE: 0,            // [ 0 | step code | [ number | name | role ] | [player data list:([number, name])] | [player status list: (alive?1:0) ] | [vote list:(target idx | -1)] ] // update client
 };
 
 MSGCODE.CLIENT={
