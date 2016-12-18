@@ -7,6 +7,7 @@ MSGCODE.HOST={
 MSGCODE.CLIENT={
     SET_INIT: 0,          // [ 0 |  number | name | role ] // send init data to host, once per game
     GET_INIT: 1,          // [ 1 ] // ask for init data from host
+    SELECT: 2,          // [ 2 | target idx ] // select a player by its index
 };
 
 // Client setup:  [ client index |  player number | [ role list ] ]

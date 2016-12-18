@@ -20,7 +20,7 @@ var InfoBox = function (){
 
         $$.info({
           content: wrap,
-          bg: "rgba(0, 0, 0, 0.75)"
+          bg: "rgba(0, 0, 0, 0.9)"
         });
     };
 
@@ -50,7 +50,7 @@ var InfoBox = function (){
 
         $$.info({
           content: wrap,
-          bg: "rgba(0, 0, 0, 0.75)"
+          bg: "rgba(0, 0, 0, 0.9)"
         });
     };
 

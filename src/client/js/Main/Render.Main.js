@@ -145,6 +145,13 @@ var Main = function (container) {
               MSGCODE.CLIENT.GET_INIT
             ]);
         };
+
+        _send[MSGCODE.CLIENT.SELECT] = function (idx){
+            that.message.action([
+              MSGCODE.CLIENT.SELECT,
+              idx
+            ]);
+        };
     };
 
     // Setup -----------------------------------------
@@ -203,6 +210,10 @@ var Main = function (container) {
 
         playerPanel.onHide = function (data){
           statusPanel.show();
+        };
+
+        playerPanel.onSelect = function (idx){
+          _send[MSGCODE.CLIENT.SELECT](idx);
         };
     }();
 };
