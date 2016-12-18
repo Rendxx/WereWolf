@@ -24,6 +24,8 @@ var Core = function () {
         _playerMap = null,  // hash table player base info
         _playerPos = [];
 
+    var cd = null;
+
     var playerNum = 0;
 
     var GamePhase = [];
@@ -305,11 +307,13 @@ var Core = function () {
     }
 
     var preNight = function () {
+        dayNum++;
         console.log("entering preNight");
 
         GetAliveStatus();
 
         phaseIdx = 3;
+        cd.start();
         GamePhase[phaseIdx]();
 
     }
@@ -342,6 +346,7 @@ var Core = function () {
         }
         else {
             console.log("player ",dat," is already dead");
+            return 0;
         }
 
         that.clientUpdate(AliveWerewolf, werewolfVote);
@@ -547,11 +552,49 @@ var Core = function () {
         }
     }
 
+    var phaseIncreament = function() {
+        if (phaseIdx == 3) {
+            phaseIdx = 4;
+        }
+        else if (phaseIdx == 4) {
+            phaseIdx = 5;
+        }
+        else if (phaseIdx == 5) {
+            phaseIdx = 6;
+        }
+        else if (phaseIdx == 6) {
+            phaseIdx = 1;
+        }
+        console.log("phaseIdx",phaseIdx);
+        GamePhase[phaseIdx]();
+    }
+
     // setup -----------------------------------------------
     var _init = function () {
         //that.handler.win = win;
+        cd = new countdown(5000,phaseIncreament);
         GamePhase = [setupRole, daytime, preNight, werewolf, seer, witch_res, witch_des, end];
     }();
+
+};
+
+var countdown = function (time, callback) {
+    var that = this;
+    var ref = null;
+    this.time = time;
+    this.callback = callback;
+
+    this.start = function(){
+        if(ref!=null) clearTimeout(ref);
+            ref = setTimeout(function(){
+            that.callback();
+        },this.time)
+    }
+
+    this.stop = function(){
+      if(ref) clearTimeout(ref);
+    }
+
 };
 
 module.exports = Core;
