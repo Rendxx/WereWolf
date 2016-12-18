@@ -50,7 +50,7 @@ var PlayerPanel = function(container) {
     this.reset = function(playerInfo) {
         _playerInfo = playerInfo;
         playerNum = playerInfo.length;
-        setupHtml(playerInfo);
+        setupPlayer(playerInfo);
         setupVoteCache(playerInfo);
     };
 
@@ -100,7 +100,7 @@ var PlayerPanel = function(container) {
         }
     };
 
-    var setupHtml = function(playerInfo) {
+    var setupHtml = function() {
         html['container'].empty();
         html['title'] = $(HTML.title).appendTo(html['container']);
         html['inner'] = $(HTML.inner).appendTo(html['container']);
@@ -110,7 +110,9 @@ var PlayerPanel = function(container) {
           that.hide();
           that.onHide && that.onHide();
         });
+    };
 
+    var setupPlayer = function(playerInfo) {
         html['player'] = [];
         for (var i=0;i<playerNum;i++){
             addPlayer(i, playerInfo[i][0],playerInfo[i][1]);
@@ -130,6 +132,7 @@ var PlayerPanel = function(container) {
     };
 
     var _init = function() {
+        setupHtml();
     }();
 };
 

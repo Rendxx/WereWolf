@@ -42,7 +42,7 @@ var Main = function (container) {
     };
 
     var alive = true,
-        inited = false,
+        inited = null,
         currentStep = STEP.NONE,
         roleCode = null;
 
@@ -90,29 +90,37 @@ var Main = function (container) {
 
     // Message ---------------------------------------
     var _setupMsg = function (){
-        _msg[MSGCODE.HOST.UPDATE] = function (dat){
-            var step = dat[1];
+        _msg[MSGCODE.HOST.INIT_DATA] = function (dat){
+            if (inited) return;
+            var isInited = dat[1];
             var meta = dat[2];
             var playerInfo = dat[3];
-            var playerStatus = dat[4];
-            var playerVote = dat[5];
-            var isActived = inited && ROLEDATA[roleCode].step.indexOf(step)>=0;
 
-            if (currentStep!==step) {
-                currentStep=step;
-                if (currentStep===STEP.NONE){    // init setting
+            if (!isInited){
+                if (inited===null){
+                    inited = false;
                     settingPanel.show();
                     statusPanel.hide();
-                } else if (!inited){  // just after setting
-                    inited=true;
-                    roleCode=meta[2];
+                }
+            }else{
+                if (inited!==true){
+                    inited = true;
                     settingPanel.hide();
                     statusPanel.show();
                     statusPanel.reset(meta[0],meta[1],meta[2]);
                     playerPanel.reset(playerInfo);
-                    isActived = ROLEDATA[roleCode].step.indexOf(step)>=0;
-                } else {
                 }
+            }
+        };
+
+        _msg[MSGCODE.HOST.UPDATE] = function (dat){
+            var step = dat[1];
+            var isActived = dat[2];
+            var playerStatus = dat[3];
+            var playerVote = dat[4];
+
+            if (currentStep!==step) {
+                currentStep=step;
                 playerPanel.setVote(null);
                 if (isActived){
                     playerPanel.show();
@@ -140,7 +148,7 @@ var Main = function (container) {
             ]);
         };
 
-        _send[MSGCODE.CLIENT.GET_INIT] = function (dat){
+        _send[MSGCODE.CLIENT.GET_INIT] = function (){
             that.message.action([
               MSGCODE.CLIENT.GET_INIT
             ]);

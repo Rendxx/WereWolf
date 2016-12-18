@@ -26,14 +26,17 @@
       window.msg('2|4|HOST|1|['+1+','+10+','+JSON.stringify(roleList)+']');
       window.msg('1|3|SERVER|12|null');
     },
-    setting : function (id){
-      window.msg('2|5|HOST|2|[0,0,[0,"",0],[],0,[]]');
+    init : function (id){
+      window.msg('2|5|HOST|2|[0,0,[0,"",0],[]]');
+    },
+    inited : function (id){
+      window.msg('2|5|HOST|2|[0,1,[6,"高俊敏",2],'+JSON.stringify(playerInfo)+']');
     },
     update : function (id){
-      window.msg('2|5|HOST|2|[0,2,[6,"高俊敏",2],'+JSON.stringify(playerInfo)+','+playerStatus+','+JSON.stringify(playerVote)+']');
+      window.msg('2|5|HOST|2|[1,2,1,'+playerStatus+','+JSON.stringify(playerVote)+']');
     },
     update2 : function (id){
-      window.msg('2|5|HOST|2|[0,3,[6,"高俊敏",2],'+JSON.stringify(playerInfo)+','+playerStatus+','+JSON.stringify(playerVote)+']');
+      window.msg('2|5|HOST|2|[1,3,0,'+playerStatus+',[]]');
     },
     end : function (isWin){
       window.msg('2|5|HOST|2|{"end":'+isWin+'}');
@@ -51,7 +54,8 @@
   console.group("%c TEST COMMAND ", 'background: #ddeeff; color: #003399;');
   console.log("%c test.reset() ", 'color: #003399;');
   console.log("%c test.start() ", 'color: #003399;');
-  console.log("%c test.setting() ", 'color: #003399;');
+  console.log("%c test.init() ", 'color: #003399;');
+  console.log("%c test.inited() ", 'color: #003399;');
   console.log("%c test.update() ", 'color: #003399;');
   console.log("%c test.update2() ", 'color: #003399;');
   console.log("%c test.end(true) ", 'color: #003399;');
