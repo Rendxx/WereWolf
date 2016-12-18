@@ -39,7 +39,7 @@
       window.msg('2|5|HOST|2|[1,3,0,'+playerStatus+',[]]');
     },
     end : function (isWin){
-      window.msg('2|5|HOST|2|{"end":'+isWin+'}');
+      window.msg('2|5|HOST|2|[2,'+(isWin?1:0)+']');
       window.msg('1|6|SERVER|13|null');
     },
     renew : function (){

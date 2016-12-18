@@ -2,34 +2,65 @@
 .end{
     display:none;
     z-index: 10;
-    
-    ._result{
-        width:100%;
-        height:100%;;
+
+    .__rst{
         position:absolute;
-        top:0;
+        top:50%;
+        left:50%;
+        transform: translate(-50%, -50%);
+        transition: none;
+        text-align: center;
+        color:#eee;
+        box-sizing: border-box;
+        width:100%;
+        height:100%;
+        font-size: 80px;
+        color:#fff;
+    }
+
+    ._villager{
+        .__rst;
+        text-shadow: 0 0 30px #007dff;
+        ._line{
+            box-shadow: 0 0 30px #007dff;
+        }
+    }
+
+    ._werewolf{
+        .__rst;
+        text-shadow: 0 0 30px #8f3838;
+        ._line{
+            box-shadow: 0 0 30px #8f3838;
+        }
+    }
+
+    ._winner{
+        position:absolute;
+        top:50%;
         left:0;
-        background-color: rgba(180,0,0,0.3);
+        width:100%;
+        line-height: 120px;
+        font-size:70px;
+        margin-top:-90px;
+    }
 
-        span{
-          display: block;
-          position: absolute;
-          top:50%;
-          left:50%;
-          height:80px;
-          line-height: 80px;
-          color:#fff;
-          text-align: center;
-          font-size: 80px;
-          transform: translate(-50%, -50%);
-          text-shadow: 0 0 10px #f00;
-        }
+    ._line{
+        position:absolute;
+        top:50%;
+        left:5%;
+        width:90%;
+        height:1px;
+        background-color: #444;
+        margin-top:17px;
+    }
 
-        &._win{
-          background-color: rgba(0,120,60,0.3);
-          span{
-            text-shadow: 0 0 10px #0f9;
-          }
-        }
+    ._win{
+        position:absolute;
+        top:50%;
+        left:0;
+        width:100%;
+        line-height: 40px;
+        font-size:40px;
+        margin-top:30px;
     }
 }

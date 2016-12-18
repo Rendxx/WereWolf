@@ -7,7 +7,8 @@ var STEP = {
     WITCH: 4,
     HUNTER: 5,
     IDIOT: 6,
-    ELDER: 7
+    ELDER: 7,
+    END: 8
 };
 
 module.exports = STEP;
