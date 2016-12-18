@@ -15,31 +15,32 @@
   ];
   var playerStatus =  parseInt('1101111101', 2);
   var playerVote = [5,-1,-1,-1,-1,5,-1,-1,-1,3];
+  var roleList = [1,2,3,4,5];
 
   window.test={
     reset : function (){
-      window.msg('1|1|SERVER|4|{"clients":{},"obs":{},"status":1,"setup":null}');
+      window.msg('1|1|SERVER|4|null');
     },
     start : function (){
-      var roleList = [1,2,3,4,5];
-
-      window.msg('2|4|HOST|1|['+1+','+10+','+JSON.stringify(roleList)+']');
       window.msg('1|3|SERVER|12|null');
     },
     init : function (id){
-      window.msg('2|5|HOST|2|[0,0,[0,"",0],[]]');
+      window.msg('2|4|HOST|1|[0,5,'+10+','+JSON.stringify(roleList)+',[],[]]');
     },
     inited : function (id){
-      window.msg('2|5|HOST|2|[0,1,[6,"高俊敏",2],'+JSON.stringify(playerInfo)+']');
+      window.msg('2|4|HOST|1|[1,5,'+10+','+JSON.stringify(roleList)+',[6,"高俊敏",2],[]]');
+    },
+    inited2 : function (id){
+      window.msg('2|4|HOST|1|[2,5,'+10+','+JSON.stringify(roleList)+',[6,"高俊敏",2],'+JSON.stringify(playerInfo)+']');
     },
     update : function (id){
-      window.msg('2|5|HOST|2|[1,2,1,'+playerStatus+','+JSON.stringify(playerVote)+']');
+      window.msg('2|5|HOST|2|[0,2,1,'+playerStatus+','+JSON.stringify(playerVote)+']');
     },
     update2 : function (id){
-      window.msg('2|5|HOST|2|[1,3,0,'+playerStatus+',[]]');
+      window.msg('2|5|HOST|2|[0,3,0,'+playerStatus+',[]]');
     },
     end : function (isWin){
-      window.msg('2|5|HOST|2|[2,'+(isWin?1:0)+']');
+      window.msg('2|5|HOST|2|[1,'+(isWin?1:0)+']');
       window.msg('1|6|SERVER|13|null');
     },
     renew : function (){
@@ -52,14 +53,17 @@
   console.log('');
 
   console.group("%c TEST COMMAND ", 'background: #ddeeff; color: #003399;');
-  console.log("%c test.reset() ", 'color: #003399;');
-  console.log("%c test.start() ", 'color: #003399;');
   console.log("%c test.init() ", 'color: #003399;');
   console.log("%c test.inited() ", 'color: #003399;');
-  console.log("%c test.update() ", 'color: #003399;');
-  console.log("%c test.update2() ", 'color: #003399;');
-  console.log("%c test.end(true) ", 'color: #003399;');
-  console.log("%c test.renew() ", 'color: #003399;');
+  console.log("%c test.inited2() ", 'color: #003399;');
+
+  console.log("%c test.update() ", 'color: #330099;');
+  console.log("%c test.update2() ", 'color: #330099;');
+
+  console.log("%c test.reset() ", 'color: #009933;');
+  console.log("%c test.start() ", 'color: #009933;');
+  console.log("%c test.end(true) ", 'color: #009933;');
+  console.log("%c test.renew() ", 'color: #009933;');
   console.groupEnd();
   console.log('');
 })();
