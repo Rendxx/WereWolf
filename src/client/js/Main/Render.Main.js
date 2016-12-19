@@ -8,6 +8,7 @@ var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var MSGCODE = require('GLOBAL/js/MessageCode.js');
 var INITCODE = require('GLOBAL/js/InitCode.js');
 var PHASE = require('GLOBAL/js/StepCode.js');
+var RoleFactory = require('CLIENT/js/Role/RoleFactory.js');
 var SettingPanel = require('CLIENT/js/Main/Render.Main.SettingPanel.js');
 var StatusPanel = require('CLIENT/js/Main/Render.Main.StatusPanel.js');
 var PlayerPanel = require('CLIENT/js/Main/Render.Main.PlayerPanel.js');
@@ -43,7 +44,6 @@ var Main = function (container) {
     };
 
     var index = -1,
-        alive = true,
         currentStep = PHASE.NONE,
         roleCode = null;
 
@@ -53,6 +53,7 @@ var Main = function (container) {
     var settingPanel = null,
         statusPanel = null,
         playerPanel = null;
+    var roleInstance = null;
 
     // Callback -------------------------------------
     this.message = {};        /* TODO: this is a package of message hander. this.message.action(dat),  this.message.send(dat) */
@@ -157,9 +158,10 @@ var Main = function (container) {
             var initData = setupData[4];
             var playerInfo = setupData[5];
 
+            roleInstance = RoleFactory(initData[2]);
             settingPanel.hide();
             statusPanel.show();
-            statusPanel.reset(initData[0],initData[1],initData[2]);
+            statusPanel.reset(initData[0],initData[1],initData[2],roleInstance);
         };
 
         _initFunc[INITCODE.ALLDONE] = function (setupData){

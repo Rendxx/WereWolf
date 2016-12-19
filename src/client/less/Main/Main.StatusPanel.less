@@ -47,7 +47,7 @@
             border-top:1px dashed #888;
         }
 
-        ._name{
+        ._playerName{
             .__item;
             z-index:20;
             width: 256px;
@@ -61,20 +61,17 @@
         }
 
         ._role{
-            .__item;
-            z-index:20;
-            width: 160px;
-            height:50px;
-            line-height: 50px;
-            color:#fff;
-            text-shadow: 0 0 6px #000;
-            font-size: 16px;
-            margin-top: 110px;
-            border-radius: 25px;
-            background: #222;
+            z-index:100;
+            width: 100%;
+            height:100%;
+            position:fixed;
+            top:0;
+            left:0;
             visibility: hidden;
             opacity: 0;
             transition: 0.2s;
+            pointer-events: none;
+            background-color: rgba(0,0,0,0.25);
 
             &._show{
                 visibility: visible;

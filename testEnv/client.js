@@ -27,11 +27,12 @@
     init : function (id){
       window.msg('2|4|HOST|1|[0,5,'+10+','+JSON.stringify(roleList)+',[],[]]');
     },
-    inited : function (id){
-      window.msg('2|4|HOST|1|[1,5,'+10+','+JSON.stringify(roleList)+',[6,"高俊敏",2],[]]');
+    inited : function (role){
+      role=role||2;
+      window.msg('2|4|HOST|1|[1,5,'+10+','+JSON.stringify(roleList)+',[6,"高俊敏",'+role+'],[]]');
     },
-    inited2 : function (id){
-      window.msg('2|4|HOST|1|[2,5,'+10+','+JSON.stringify(roleList)+',[6,"高俊敏",2],'+JSON.stringify(playerInfo)+']');
+    inited2 : function (role){
+      window.msg('2|4|HOST|1|[2,5,'+10+','+JSON.stringify(roleList)+',[6,"高俊敏",'+role+'],'+JSON.stringify(playerInfo)+']');
     },
     update : function (id){
       window.msg('2|5|HOST|2|[0,2,1,'+playerStatus+','+JSON.stringify(playerVote)+',[]]');

@@ -6,7 +6,7 @@ require('CLIENT/less/Main/Main.StatusPanel.less');
 var HTML = {
     bg: '<div class="_bg"></div>',
     line: '<div class="_line"></div>',
-    name: '<div class="_name"></div>',
+    name: '<div class="_playerName"></div>',
     number: '<div class="_number"></div>',
     role: '<div class="_role"></div>',
     roleBtn: '<div class="_roleBtn">Tap to show ROLE</div>',
@@ -38,8 +38,9 @@ var StatusPanel = function(container) {
         html['container'].fadeOut(200);
     };
 
-    this.reset = function(number, name, role) {
+    this.reset = function(number, name, role, roleInstance) {
         setupHtml(number, name, role);
+        roleInstance.initInfoPanel(html['role']);
     };
 
     // Private ---------------------------------------
@@ -49,7 +50,7 @@ var StatusPanel = function(container) {
         html['line'] = $(HTML.line).appendTo(html['container']);
         html['name'] = $(HTML.name).appendTo(html['container']).text(name);
         html['bg'] = $(HTML.bg).appendTo(html['container']);
-        html['role'] = $(HTML.role).appendTo(html['container']).text(ROLEDATA[role].name);
+        html['role'] = $(HTML.role).appendTo(html['container']);
         html['roleBtn'] = $(HTML.roleBtn).appendTo(html['container']);
         html['listBtn'] = $(HTML.listBtn).appendTo(html['container']);
         html['listBtn'].click(function() {
