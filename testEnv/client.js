@@ -34,10 +34,10 @@
       window.msg('2|4|HOST|1|[2,5,'+10+','+JSON.stringify(roleList)+',[6,"高俊敏",2],'+JSON.stringify(playerInfo)+']');
     },
     update : function (id){
-      window.msg('2|5|HOST|2|[0,2,1,'+playerStatus+','+JSON.stringify(playerVote)+']');
+      window.msg('2|5|HOST|2|[0,2,1,'+playerStatus+','+JSON.stringify(playerVote)+',[]]');
     },
     update2 : function (id){
-      window.msg('2|5|HOST|2|[0,3,0,'+playerStatus+',[]]');
+      window.msg('2|5|HOST|2|[0,3,0,'+playerStatus+',[],[]]');
     },
     end : function (isWin){
       window.msg('2|5|HOST|2|[1,'+(isWin?1:0)+']');

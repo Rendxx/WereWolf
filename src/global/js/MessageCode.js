@@ -1,15 +1,16 @@
 var MSGCODE = {};
 
 MSGCODE.HOST={
-    UPDATE: 0,            // [ 0 | step code | actived?1:0 | [player status list: (alive?1:0) ] | [vote list:(target idx | -1)] ] // update client
-    END: 1,            // [ 1 | villager win ? 1:0 ] // send game result
+    END: 0,            // [ 0 | villager win ? 1:0 ] // send game result
+    UPDATE: 1,         // [ 1 | phase code | actived?1:0 | [player alive list: (alive?1:0) ] | [player status ] | [ action data ] ] // update client
+    RESULT: 2          // [ 2 | data ]
 };
 
 MSGCODE.CLIENT={
-    SET_INIT: 0,          // [ 0 |  number | name | role ] // send init data to host, once per game
-    SELECT: 1,          // [ 1 | target idx ] // select a player by its index
+    SET_INIT: 0,          // [ 0 | number | name | role ] // send init data to host, once per game
+    DECISION: 1,          // [ 1 | decision ] // select a player by its index
 };
 
-// Client setup:  [ init: (0:1:2） | client index |  player number | [ role list ] | [ number | name | role ] | [player data list:([number, name])] ]
+// Client setup:  [ init: (0:1:2） | player index |  player amount | [ role list ] | [ number | name | role ] | [player data list:([number, name])] ]
 
 module.exports = MSGCODE;

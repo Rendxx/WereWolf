@@ -7,7 +7,7 @@ var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var MSGCODE = require('GLOBAL/js/MessageCode.js');
 var INITCODE = require('GLOBAL/js/InitCode.js');
-var STEP = require('GLOBAL/js/StepCode.js');
+var PHASE = require('GLOBAL/js/StepCode.js');
 var SettingPanel = require('CLIENT/js/Main/Render.Main.SettingPanel.js');
 var StatusPanel = require('CLIENT/js/Main/Render.Main.StatusPanel.js');
 var PlayerPanel = require('CLIENT/js/Main/Render.Main.PlayerPanel.js');
@@ -44,7 +44,7 @@ var Main = function (container) {
 
     var index = -1,
         alive = true,
-        currentStep = STEP.NONE,
+        currentStep = PHASE.NONE,
         roleCode = null;
 
     var _msg = {};
@@ -130,9 +130,9 @@ var Main = function (container) {
             ]);
         };
 
-        _send[MSGCODE.CLIENT.SELECT] = function (idx){
+        _send[MSGCODE.CLIENT.DECISION] = function (idx){
             that.message.action([
-              MSGCODE.CLIENT.SELECT,
+              MSGCODE.CLIENT.DECISION,
               idx
             ]);
         };
@@ -167,6 +167,7 @@ var Main = function (container) {
             var playerInfo = setupData[5];
 
             settingPanel.hide();
+            playerPanel.hide();
             statusPanel.show();
             statusPanel.reset(initData[0],initData[1],initData[2]);
             playerPanel.reset(playerInfo);
@@ -213,7 +214,7 @@ var Main = function (container) {
         };
 
         playerPanel.onSelect = function (idx){
-          _send[MSGCODE.CLIENT.SELECT](idx);
+          _send[MSGCODE.CLIENT.DECISION](idx);
         };
     }();
 };

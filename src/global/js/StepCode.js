@@ -1,4 +1,4 @@
-var STEP = {
+var PHASE = {
     NONE: -1,
     INIT: 0,
     DAY: 1,
@@ -11,4 +11,4 @@ var STEP = {
     END: 8
 };
 
-module.exports = STEP;
+module.exports = PHASE;
