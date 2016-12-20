@@ -13,17 +13,14 @@ var Hunter = function () {
 Hunter.prototype = Object.create(Basic.prototype);
 Hunter.prototype.constructor = Basic;
 
-Hunter.prototype.actived = function (dat){
-
-};
-
 Hunter.prototype.update = function (dat){
   this.gun = dat[0]===1;
 };
 
 Hunter.prototype.initInfoPanel = function (container){
     Basic.prototype.initInfoPanel.call(this,container);
-    this._html['wrap'].addClass('_role_hunter');
+    this._html.info['gun'] = $('<div class="_gun">You can shot someone when you die.</div>').appendTo(this._html.info['wrap']);
+    this._html.info['wrap'].addClass('_role_hunter');
 };
 
 

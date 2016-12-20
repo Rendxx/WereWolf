@@ -14,7 +14,7 @@ var Seer = function () {
 Seer.prototype = Object.create(Basic.prototype);
 Seer.prototype.constructor = Basic;
 
-Seer.prototype.actived = function (dat){
+Seer.prototype.active = function (dat){
 
 };
 
@@ -24,8 +24,8 @@ Seer.prototype.update = function (dat){
 
 Seer.prototype.initInfoPanel = function (container){
     Basic.prototype.initInfoPanel.call(this,container);
-    this._html['msg'] = $('<div class="_msg">[You haven\'t seen yet]</div>').appendTo(this._html['wrap']);
-    this._html['wrap'].addClass('_role_seer');
+    this._html.info['msg'] = $('<div class="_msg">[You haven\'t seen yet]</div>').appendTo(this._html.info['wrap']);
+    this._html.info['wrap'].addClass('_role_seer');
 };
 
 module.exports = Seer;

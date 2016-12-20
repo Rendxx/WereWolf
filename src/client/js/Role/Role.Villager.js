@@ -15,7 +15,7 @@ Villager.prototype.constructor = Basic;
 
 Villager.prototype.initInfoPanel = function (container){
     Basic.prototype.initInfoPanel.call(this,container);
-    this._html['wrap'].addClass('_role_villager');
+    this._html.info['wrap'].addClass('_role_villager');
 };
 
 module.exports = Villager;

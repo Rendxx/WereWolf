@@ -12,16 +12,9 @@ var Elder = function () {
 Elder.prototype = Object.create(Basic.prototype);
 Elder.prototype.constructor = Basic;
 
-Elder.prototype.actived = function (dat){
-
-};
-
-Elder.prototype.update = function (dat){
-};
-
 Elder.prototype.initInfoPanel = function (container){
     Basic.prototype.initInfoPanel.call(this,container);
-    this._html['wrap'].addClass('_role_elder');
+    this._html.info['wrap'].addClass('_role_elder');
 };
 
 

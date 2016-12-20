@@ -12,9 +12,7 @@ var HTML = {
     player: {
       wrap: '<div class="_player"></div>',
       number: '<div class="_number"></div>',
-      name: '<div class="_name"></div>',
-      vote: '<div class="_vote"></div>',
-      voteMarker: '<div class="_voteMarker"></div>',
+      name: '<div class="_name"></div>'
     },
 };
 
@@ -51,54 +49,21 @@ var PlayerPanel = function(container) {
         _playerInfo = playerInfo;
         playerNum = playerInfo.length;
         setupPlayer(playerInfo);
-        setupVoteCache(playerInfo);
     };
 
     this.enable = function (isEnable){
         isEnabled = isEnable;
     };
 
-    this.updateStatus = function(status) {
+    this.updateStatus = function(alive) {
         for (var i=0;i<playerNum;i++){
-            playerAlive[i] = ((1<<i)&status)>0;
+            playerAlive[i] = alive[i]==='1';
             if (playerAlive[i]) html['player'][i].wrap.addClass(CSS.alive);
             else html['player'][i].wrap.removeClass(CSS.alive);
         }
     };
 
-    this.setVote = function(voteArr) {
-        for (var i=0;i<playerNum;i++){
-            html['player'][i].vote.empty();
-        }
-        if (voteArr==null) return;
-        for (var i=0;i<playerNum;i++){
-            if (voteArr[i]===-1) continue;
-            html['player'][voteArr[i]].vote.append(html['voteCache'][i]);
-        }
-    };
-
     // Private ---------------------------------------
-    var selectPlayer = function (idx){
-        if (!isEnabled || !playerAlive[idx]) return;
-        var number = _playerInfo[idx][0];
-        var name = _playerInfo[idx][1];
-
-        InfoBox.check({
-            content: '<div style="color:#666;">Your selection is:</div>' +
-                     '<div class="_checkBox_player_number">' + number + '</div>'+
-                     '<div class="_checkBox_player_name">' + name + '</div>',
-            callbackYes: function() {
-                that.onSelect && that.onSelect(idx);
-            }
-        });
-    };
-
-    var setupVoteCache = function (playerInfo){
-        html['voteCache'] = [];
-        for (var i=0;i<playerInfo.length;i++){
-            html['voteCache'].push($(HTML.player.voteMarker).text(playerInfo[i][0]));
-        }
-    };
 
     var setupHtml = function() {
         html['container'].empty();
@@ -125,7 +90,6 @@ var PlayerPanel = function(container) {
         pkg['wrap'] = $(HTML.player.wrap).appendTo(html['inner']);
         pkg['number'] = $(HTML.player.number).appendTo(pkg['wrap']).text(number);
         pkg['name'] = $(HTML.player.name).appendTo(pkg['wrap']).text(name);
-        pkg['vote'] = $(HTML.player.vote).appendTo(pkg['wrap']);
         html['player'][idx] = pkg;
         pkg['wrap'].click(function(e){ selectPlayer(idx); });
         return pkg;

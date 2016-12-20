@@ -13,17 +13,13 @@ var Idiot = function () {
 Idiot.prototype = Object.create(Basic.prototype);
 Idiot.prototype.constructor = Basic;
 
-Idiot.prototype.actived = function (dat){
-
-};
-
 Idiot.prototype.update = function (dat){
   this.stiupid = dat[0]===1;
 };
 
 Idiot.prototype.initInfoPanel = function (container){
     Basic.prototype.initInfoPanel.call(this,container);
-    this._html['wrap'].addClass('_role_idiot');
+    this._html.info['wrap'].addClass('_role_idiot');
 };
 
 

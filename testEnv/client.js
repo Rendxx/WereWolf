@@ -13,7 +13,7 @@
     [9, 'Test Player'],
     [10, '不说话的草莓味'],
   ];
-  var playerStatus =  parseInt('1101111101', 2);
+  var playerAlive =  '1101111101';
   var playerVote = [5,-1,-1,-1,-1,5,-1,-1,-1,3];
   var roleList = [1,2,3,4,5];
 
@@ -34,11 +34,41 @@
     inited2 : function (role){
       window.msg('2|4|HOST|1|[2,5,'+10+','+JSON.stringify(roleList)+',[6,"高俊敏",'+role+'],'+JSON.stringify(playerInfo)+']');
     },
-    update : function (id){
-      window.msg('2|5|HOST|2|[0,2,1,'+playerStatus+','+JSON.stringify(playerVote)+',[]]');
-    },
+    // update : function (phase){
+    //   phase=phase||2;
+    //   window.msg('2|5|HOST|2|[0,'+phase+',1,'+playerStatus+','+JSON.stringify(playerVote)+',[]]');
+    // },
     update2 : function (id){
+      phase=phase||3;
       window.msg('2|5|HOST|2|[0,3,0,'+playerStatus+',[],[]]');
+    },
+    update : {
+      0: function (){   // not active
+        window.msg('2|5|HOST|2|[1,2,0,"'+playerAlive+'",[],[]]');
+      },
+      1: function (){   // villager
+        window.msg('2|5|HOST|2|[1,1,0,"'+playerAlive+'",[],[]]');
+      },
+      2: function (){   // werewolf
+        window.msg('2|5|HOST|2|[1,2,1,"'+playerAlive+'",[],'+JSON.stringify(playerVote)+']');
+      },
+      3: function (){   // seer
+        window.msg('2|5|HOST|2|[1,3,1,"'+playerAlive+'",[2,0],[]]');
+      },
+      4: function (k){   // witch
+        if (k===1) window.msg('2|5|HOST|2|[1,4,1,"'+playerAlive+'",[0,1],[]]');
+        else if (k===2) window.msg('2|5|HOST|2|[1,4,1,"'+playerAlive+'",[0,0],[]]');
+        else  window.msg('2|5|HOST|2|[1,4,1,"'+playerAlive+'",[1,1],[2]]');
+      },
+      5: function (){   // hunter
+        window.msg('2|5|HOST|2|[1,5,1,"'+playerAlive+'",[1],[]]');
+      },
+      6: function (){   // idiot
+        window.msg('2|5|HOST|2|[1,6,1,"'+playerAlive+'",[1],[]]');
+      },
+      7: function (){   // elder
+        window.msg('2|5|HOST|2|[1,7,1,"'+playerAlive+'",[],[]]');
+      },
     },
     end : function (isWin){
       window.msg('2|5|HOST|2|[1,'+(isWin?1:0)+']');
@@ -58,7 +88,13 @@
   console.log("%c test.inited() ", 'color: #003399;');
   console.log("%c test.inited2() ", 'color: #003399;');
 
-  console.log("%c test.update() ", 'color: #330099;');
+  console.log("%c test.update[1]() ", 'color: #330099;');
+  console.log("%c test.update[2]() ", 'color: #330099;');
+  console.log("%c test.update[3]() ", 'color: #330099;');
+  console.log("%c test.update[4]() ", 'color: #330099;');
+  console.log("%c test.update[5]() ", 'color: #330099;');
+  console.log("%c test.update[6]() ", 'color: #330099;');
+  console.log("%c test.update[7]() ", 'color: #330099;');
   console.log("%c test.update2() ", 'color: #330099;');
 
   console.log("%c test.reset() ", 'color: #009933;');

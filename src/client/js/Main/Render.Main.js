@@ -14,13 +14,14 @@ var StatusPanel = require('CLIENT/js/Main/Render.Main.StatusPanel.js');
 var PlayerPanel = require('CLIENT/js/Main/Render.Main.PlayerPanel.js');
 
 require('CLIENT/less/Main/Main.less');
+require('CLIENT/less/Main/Main.ActionPanel.less');
 
 var HTML = {
     panel: {
       setting: '<div class="_panel _setting"></div>',
       player: '<div class="_panel _playerList"></div>',
       status: '<div class="_panel _status"></div>',
-      info: '<div class="_panel _info"></div>',
+      action: '<div class="_panel _action"></div>',
     }
 };
 
@@ -35,12 +36,6 @@ var Main = function (container) {
     var html = {
         container: $(container),
         panel:{},
-        info: null,
-        name: null,
-        number: null,
-        players: {},
-
-        setting:{}
     };
 
     var index = -1,
@@ -88,36 +83,30 @@ var Main = function (container) {
     };
 
     // Private ---------------------------------------
-    var _showMsg = function (msg) {
-        html['info'].text(msg);
-    };
 
     // Message ---------------------------------------
     var _setupMsg = function (){
         _msg[MSGCODE.HOST.UPDATE] = function (dat){
             var step = dat[1];
             var isActived = dat[2];
-            var playerStatus = dat[3];
-            var playerVote = dat[4];
+            var aliveList = dat[3];
+            var playerStatus = dat[4];
+            var actionData = dat[5];
 
+            roleInstance && roleInstance.update(playerStatus);
             if (currentStep!==step) {
                 currentStep=step;
-                playerPanel.setVote(null);
-                if (isActived){
-                    playerPanel.show();
-                    statusPanel.hide();
-                    playerPanel.enable(true);
-                }else{
-                    playerPanel.hide();
-                    statusPanel.show();
-                    playerPanel.enable(false);
+                if (currentStep===PHASE.DAY){
+                    roleInstance && roleInstance.dayTime();
                 }
             };
 
             if (isActived){
-                playerPanel.setVote(playerVote);
+                roleInstance && roleInstance.active(aliveList, actionData);
+            } else{
+                roleInstance && roleInstance.inactive();
             }
-            playerPanel.updateStatus(playerStatus);
+            playerPanel.updateStatus(aliveList);
         };
     };
 
@@ -142,7 +131,6 @@ var Main = function (container) {
     // Setup -----------------------------------------
     var _actionEnd = function(){
         html['panel']['player'].hide();
-        html['panel']['info'].hide();
     };
 
     var _setupInit = function () {
@@ -159,6 +147,9 @@ var Main = function (container) {
             var playerInfo = setupData[5];
 
             roleInstance = RoleFactory(initData[2]);
+            roleInstance.onActionEnd = function (idx){
+              _send[MSGCODE.CLIENT.DECISION](idx);
+            };
             settingPanel.hide();
             statusPanel.show();
             statusPanel.reset(initData[0],initData[1],initData[2],roleInstance);
@@ -167,11 +158,18 @@ var Main = function (container) {
         _initFunc[INITCODE.ALLDONE] = function (setupData){
             var initData = setupData[4];
             var playerInfo = setupData[5];
+            if (roleInstance==null) {
+                roleInstance = RoleFactory(initData[2]);
+                roleInstance.onActionEnd = function (idx){
+                  _send[MSGCODE.CLIENT.DECISION](idx);
+                };
+            }
+            roleInstance.initActionPanel(html['panel']['action'], playerInfo);
 
             settingPanel.hide();
             playerPanel.hide();
             statusPanel.show();
-            statusPanel.reset(initData[0],initData[1],initData[2]);
+            statusPanel.reset(initData[0],initData[1],initData[2],roleInstance);
             playerPanel.reset(playerInfo);
         };
     };
@@ -182,8 +180,7 @@ var Main = function (container) {
         html['panel']['setting'] = $(HTML.panel.setting).appendTo(html['container']);
         html['panel']['player'] = $(HTML.panel.player).appendTo(html['container']);
         html['panel']['status'] = $(HTML.panel.status).appendTo(html['container']);
-        html['panel']['info'] = $(HTML.panel.info).appendTo(html['container']);
-        html['info'] = $(HTML.info).appendTo(html['container']);
+        html['panel']['action'] = $(HTML.panel.action).appendTo(html['container']);
     };
 
     var _select = function (id){

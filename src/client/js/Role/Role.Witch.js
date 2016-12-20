@@ -14,7 +14,7 @@ var Witch = function () {
 Witch.prototype = Object.create(Basic.prototype);
 Witch.prototype.constructor = Basic;
 
-Witch.prototype.actived = function (dat){
+Witch.prototype.active = function (dat){
 
 };
 
@@ -24,9 +24,9 @@ Witch.prototype.update = function (dat){
 
 Witch.prototype.initInfoPanel = function (container){
     Basic.prototype.initInfoPanel.call(this,container);
-    this._html['healer'] = $('<div class="_potion _healer">?</div>').appendTo(this._html['wrap']);
-    this._html['poison'] = $('<div class="_potion _poison">?</div>').appendTo(this._html['wrap']);
-    this._html['wrap'].addClass('_role_witch');
+    this._html.info['healer'] = $('<div class="_potion _healer">?</div>').appendTo(this._html.info['wrap']);
+    this._html.info['poison'] = $('<div class="_potion _poison">?</div>').appendTo(this._html.info['wrap']);
+    this._html.info['wrap'].addClass('_role_witch');
 };
 
 module.exports = Witch;
