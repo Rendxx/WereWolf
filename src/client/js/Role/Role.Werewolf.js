@@ -27,7 +27,6 @@ var WereWolf = function () {
     this.code = ROLECODE.WEREWOLF;
     this.name = ROLEDATA[this.code].name;
     this.description = ROLEDATA[this.code].description;
-    this._aliveList = null;
 };
 WereWolf.prototype = Object.create(Basic.prototype);
 WereWolf.prototype.constructor = Basic;

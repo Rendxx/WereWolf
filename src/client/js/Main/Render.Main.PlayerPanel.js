@@ -91,7 +91,6 @@ var PlayerPanel = function(container) {
         pkg['number'] = $(HTML.player.number).appendTo(pkg['wrap']).text(number);
         pkg['name'] = $(HTML.player.name).appendTo(pkg['wrap']).text(name);
         html['player'][idx] = pkg;
-        pkg['wrap'].click(function(e){ selectPlayer(idx); });
         return pkg;
     };
 
@@ -101,37 +100,3 @@ var PlayerPanel = function(container) {
 };
 
 module.exports = PlayerPanel;
-
-
-
-
-
-
-
-
-
-
-
-// var CountDown = function (){
-//     var that = this;
-//     var ref = null;
-//
-//     this.start = function (time, callback){
-//         if (ref!==null) clearTimeout(ref);
-//         ref = setTimeout(time, function(){
-//           ref = null;
-//           callback && callback();
-//         });
-//     };
-//
-//     this.stop = function (){
-//         if (ref!==null) clearTimeout(ref);
-//     };
-//
-//     this.dispose = function (){
-//         ref = null;
-//     }
-// };
-//
-// var cd = new CountDown();
-// cs.start(10000, function(){ /* do things... */});

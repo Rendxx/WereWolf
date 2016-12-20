@@ -52,8 +52,9 @@
       2: function (){   // werewolf
         window.msg('2|5|HOST|2|[1,2,1,"'+playerAlive+'",[],'+JSON.stringify(playerVote)+']');
       },
-      3: function (){   // seer
-        window.msg('2|5|HOST|2|[1,3,1,"'+playerAlive+'",[2,0],[]]');
+      3: function (k){   // seer
+        if (k===1) window.msg('2|5|HOST|2|[1,2,0,"'+playerAlive+'",[2,3],[]]');
+        else window.msg('2|5|HOST|2|[1,3,1,"'+playerAlive+'",[2,3],[]]');
       },
       4: function (k){   // witch
         if (k===1) window.msg('2|5|HOST|2|[1,4,1,"'+playerAlive+'",[0,1],[]]');
