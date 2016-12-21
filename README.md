@@ -29,3 +29,8 @@ Run webpack and make it work automatically on any modification
 ```
 webpack -d --watch
 ```
+
+Run webpack to minimize the files
+```
+webpack -d --optimize-minimize
+```
