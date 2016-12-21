@@ -143,7 +143,7 @@ Rendxx.Game = Rendxx.Game || {};
         this.onclose = null;
 
         this.start = function () {
-            if (ws != null) ws.close();
+            //if (ws != null) ws.close();
             ws = {conn:wsConnStr};
             ws.onopen = function (evt) {
                 if (that.onopen != null) that.onopen(evt);
@@ -229,6 +229,7 @@ Rendxx.Game = Rendxx.Game || {};
             'CLIENT_SETUP': 1,
             'CLIENT_UPDATE': 2,
             'ACTION': 3
+            'CLIENT_UPDATE_TMP': 4
         },
         CUSTOMIZED: 'CUSTOMIZED'
     };
@@ -413,11 +414,11 @@ Rendxx.Game = Rendxx.Game || {};
                         content: JSON.stringify(clientData)
                     }));
                 };
-                component.game.clientUpdate = function (targets, clientData) {
+                component.game.clientUpdate = function (targets, clientData, isTmp) {
                     component.websocket.send(Message.Encode({
                         type: Message.TYPE.HOST,
                         target: targets,
-                        code: Message.CODE.HOST.CLIENT_UPDATE,
+                        code: (isTmp===true)?Message.CODE.HOST.CLIENT_UPDATE_TMP:Message.CODE.HOST.CLIENT_UPDATE,
                         content: JSON.stringify(clientData)
                     }));
                 };
