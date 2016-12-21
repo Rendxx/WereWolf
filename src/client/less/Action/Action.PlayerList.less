@@ -5,48 +5,50 @@
     overflow: hidden;
     margin: 0;
     border: 0;
-    padding:0;
+    padding: 0;
     opacity: 0;
     visibility: hidden;
     transition: 0.2s;
     backface-visibility: hidden;
 
-    &:after{
-      content:'';
-      display: block;
-      position: absolute;
-      bottom:0;
-      left:0;
-      width:100%;
-      height:1px;
-      background-color: #111;
-      box-shadow: 0 0 10px 2px #000;
-      z-index:9;
-      pointer-events: none;
+    &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #111;
+        box-shadow: 0 0 10px 2px #000;
+        z-index: 9;
+        pointer-events: none;
     }
 
-    &._show{
+    &._show {
         opacity: 1;
         visibility: visible;
     }
-    ._title{
-        position:absolute;
-        top:0;
-        left:0;
-        width:100%;
-        height:50px;
-        line-height:50px;
+
+    ._title {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
         overflow: hidden;
         background-color: #111;
         box-shadow: 0 0 10px 2px #000;
-        z-index:10;
+        z-index: 10;
+        color: #999;
 
         span {
             display: block;
             text-align: center;
-            margin:0 30px;
+            margin: 0 30px;
             font-size: 24px;
-            color:#fff;
+            color: #fff;
             text-shadow: 0 0 5px #000;
         }
     }
@@ -60,7 +62,6 @@
         z-index: 1;
         padding-top: 50px;
         box-sizing: border-box;
-
 
         ._space {
             width: 100%;
@@ -153,6 +154,18 @@
 
                 &:hover {
                     opacity: 1;
+                }
+            }
+
+            &._abstain {
+                background-color: #b99999 !important;
+                ._number {
+                    background-color: rgba(100,10,10,0.25);
+                    background-image: url('../../design/abstain.png');
+                    box-shadow: inset 0 0 5px #300;
+                }
+                ._name {
+                    color: #300;
                 }
             }
         }

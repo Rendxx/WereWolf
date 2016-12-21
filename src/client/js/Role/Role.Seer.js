@@ -29,8 +29,8 @@ Seer.prototype.active = function (aliveListArr){
         InfoBox.alert({
             content: INFO.SEER,
         });
+        this._action.playerList.update(aliveListArr);
     }
-    this._action.playerList.update(aliveListArr);
 };
 
 Seer.prototype.inactive = function (){
@@ -53,14 +53,24 @@ Seer.prototype.initInfoPanel = function (container){
 Seer.prototype.initActionPanel = function (container, playerInfo){
     var that = this;
     this._html.action['container']=$(container);
-    this._action.playerList.setup(container, playerInfo);
+    this._action.playerList.setup(container, playerInfo, 'Choose your target');
     this._action.playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
 
         InfoBox.check({
             content: INFO.CHECKPLAYER(number, name),
             callbackYes: function() {
-                that.onActionEnd && that.onActionEnd(idx);
+                that.onActionEnd && that.onActionEnd([idx]);
+            }
+        });
+    };
+    this._action.playerList.onAbstain = function (){
+        if (!that.actived) return;
+
+        InfoBox.check({
+            content: 'Are you sure you want give up this opportunity?',
+            callbackYes: function() {
+                that.onActionEnd && that.onActionEnd([-1]);
             }
         });
     };

@@ -46,14 +46,24 @@ WereWolf.prototype.initInfoPanel = function (container){
 WereWolf.prototype.initActionPanel = function (container, playerInfo){
     var that = this;
     this._html.action['container']=$(container);
-    this._action.playerList.setup(container, playerInfo);
+    this._action.playerList.setup(container, playerInfo, 'Choose your target');
     this._action.playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
 
         InfoBox.check({
             content: INFO.CHECKPLAYER(number, name),
             callbackYes: function() {
-                that.onActionEnd && that.onActionEnd(idx);
+                that.onActionEnd && that.onActionEnd([idx]);
+            }
+        });
+    };
+    this._action.playerList.onAbstain = function (){
+        if (!that.actived) return;
+
+        InfoBox.check({
+            content: 'Are you sure you want to abstain?<br/>Noobdy will be murdered if all werewolvies abstain.',
+            callbackYes: function() {
+                that.onActionEnd && that.onActionEnd([-1]);
             }
         });
     };

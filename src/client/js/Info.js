@@ -60,10 +60,10 @@ var INFO = {
         '<div class="_text">&quot; Hey, You. Just shut up. &quot;</div>',
       '</div>'
     ].join(''),
-    CHECKPLAYER: function (number, name){
+    CHECKPLAYER: function (number, name, content){
       return [
         '<div class="info_client_checkPlayer">',
-          '<div style="color:#666;">Your selection is:</div>',
+          '<div style="color:#666;">'+(content || 'Your selection is:')+'</div>',
            '<div class="_checkBox_player_number">' + number + '</div>',
            '<div class="_checkBox_player_name">' + name + '</div>',
          '</div>'

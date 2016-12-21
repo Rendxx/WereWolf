@@ -17,7 +17,8 @@ var HTML = {
 
 var CSS = {
     alive: '_alive',
-    show: '_show'
+    show: '_show',
+    abstain:'_abstain'
 };
 
 var PlayerList = function (){
@@ -28,11 +29,12 @@ var PlayerList = function (){
 
     // callback ----------------------------------
     this.onSelect = null;
+    this.onAbstain = null;
 
     // public ------------------------------------
-    this.setup = function (container_in, playerInfo){
+    this.setup = function (container_in, playerInfo, title){
         container = $(container_in);
-        setupHtml(playerInfo);
+        setupHtml(playerInfo, title);
     };
 
     this.update = function (playerAliveArr, voteArr){
@@ -57,15 +59,16 @@ var PlayerList = function (){
     };
 
     // private -----------------------------------
-    var setupHtml = function (playerInfo){
+    var setupHtml = function (playerInfo, title){
         _html['wrap']=$(HTML.wrap).appendTo(container);
-        _html['_title']=$(HTML.title).appendTo(_html['wrap']);
+        _html['_title']=$(HTML.title).appendTo(_html['wrap']).html(title||'');
         _html['list']=$(HTML.list).appendTo(_html['wrap']);
         _html['player']=[];
         _html['space'] = $(HTML.space).appendTo(_html['list']);
         for (var i=0;i<playerInfo.length;i++){
             addPlayer(i, playerInfo[i][0],playerInfo[i][1]);
         }
+        addAbstain();
         _html['space2'] = $(HTML.space).appendTo(_html['list']);
 
         _html['voteCache'] = [];
@@ -86,6 +89,20 @@ var PlayerList = function (){
             that.onSelect && that.onSelect (idx, number, name);
         });
         _html['player'][idx] = pkg;
+    };
+
+    var addAbstain = function (){
+        var pkg = {};
+        pkg['wrap'] = $(HTML.player.wrap).appendTo(_html['list']).addClass(CSS.abstain);
+        pkg['number'] = $(HTML.player.number).appendTo(pkg['wrap']);
+        pkg['name'] = $(HTML.player.name).appendTo(pkg['wrap']).text('Abstain');
+        pkg['vote'] = $(HTML.player.vote).appendTo(pkg['wrap']);
+        pkg['wrap'].addClass(CSS.alive);
+        pkg['wrap'].click(function(e){
+            if (!pkg['wrap'].hasClass(CSS.alive)) return false;
+            that.onAbstain && that.onAbstain ();
+        });
+        _html['player']['abstain'] = pkg;
     };
 };
 
