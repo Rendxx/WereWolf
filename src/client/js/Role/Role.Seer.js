@@ -3,22 +3,10 @@ var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var INFO = require('CLIENT/js/Info.js');
 var InfoBox = require('CLIENT/js/InfoBox.js');
 var Basic = require('./Role.Basic.js');
+var Action = {
+    PlayerList : require('CLIENT/js/Action/Action.PlayerList.js')
+};
 require('CLIENT/less/Role/Role.Seer.less');
-
-var HTML = {
-    wrap: '<div class="_playerList"></div>',
-    space: '<div class="_space"></div>',
-
-    player: {
-      wrap: '<div class="_player"></div>',
-      number: '<div class="_number"></div>',
-      name: '<div class="_name"></div>'
-    },
-};
-
-var CSS = {
-    alive: '_alive'
-};
 
 var Seer = function () {
     Basic.call(this);
@@ -26,11 +14,14 @@ var Seer = function () {
     this.name = ROLEDATA[this.code].name;
     this.description = ROLEDATA[this.code].description;
     this.lastRoleInfo = null;
+    this._action = {
+        playerList :new Action.PlayerList()
+    };
 };
 Seer.prototype = Object.create(Basic.prototype);
 Seer.prototype.constructor = Basic;
 
-Seer.prototype.active = function (aliveList){
+Seer.prototype.active = function (aliveListArr){
     if (!this.alive) return;
     if (!this.actived){
         this.actived = true;
@@ -39,10 +30,7 @@ Seer.prototype.active = function (aliveList){
             content: INFO.SEER,
         });
     }
-    for (var i=0;i<this._html.action['player'].length;i++){
-        if (aliveList[i]==='1') this._html.action['player'][i].wrap.addClass(CSS.alive);
-        else this._html.action['player'][i].wrap.removeClass(CSS.alive);
-    }
+    this._action.playerList.update(aliveListArr);
 };
 
 Seer.prototype.inactive = function (){
@@ -63,12 +51,10 @@ Seer.prototype.initInfoPanel = function (container){
 };
 
 Seer.prototype.initActionPanel = function (container, playerInfo){
-    this._html.action['container']=$(container);
-    this._html.action['wrap']=$(HTML.wrap).appendTo(this._html.action['container']);
-    this._html.action['player']=[];
-
     var that = this;
-    var selectPlayer = function (idx, number, name){
+    this._html.action['container']=$(container);
+    this._action.playerList.setup(container, playerInfo);
+    this._action.playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
 
         InfoBox.check({
@@ -78,25 +64,7 @@ Seer.prototype.initActionPanel = function (container, playerInfo){
             }
         });
     };
-
-    var addPlayer = function (idx, number, name){
-        var pkg = {};
-        pkg['wrap'] = $(HTML.player.wrap).appendTo(that._html.action['wrap']);
-        pkg['number'] = $(HTML.player.number).appendTo(pkg['wrap']).text(number);
-        pkg['name'] = $(HTML.player.name).appendTo(pkg['wrap']).text(name);
-        pkg['wrap'].addClass(CSS.alive);
-        that._html.action['player'][idx] = pkg;
-        pkg['wrap'].click(function(e){
-          if (!pkg['wrap'].hasClass(CSS.alive)) return false;
-          selectPlayer(idx, number, name);
-         });
-        return pkg;
-    };
-    this._html.action['space'] = $(HTML.space).appendTo(this._html.action['wrap']);
-    for (var i=0;i<playerInfo.length;i++){
-        addPlayer(i, playerInfo[i][0],playerInfo[i][1]);
-    }
-    this._html.action['space2'] = $(HTML.space).appendTo(this._html.action['wrap']);
+    this._action.playerList.show();
 };
 
 module.exports = Seer;

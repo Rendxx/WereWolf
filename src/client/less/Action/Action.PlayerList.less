@@ -1,0 +1,160 @@
+.action_playerList {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    overflow: hidden;
+    margin: 0;
+    border: 0;
+    padding:0;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.2s;
+    backface-visibility: hidden;
+
+    &:after{
+      content:'';
+      display: block;
+      position: absolute;
+      bottom:0;
+      left:0;
+      width:100%;
+      height:1px;
+      background-color: #111;
+      box-shadow: 0 0 10px 2px #000;
+      z-index:9;
+      pointer-events: none;
+    }
+
+    &._show{
+        opacity: 1;
+        visibility: visible;
+    }
+    ._title{
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:50px;
+        line-height:50px;
+        overflow: hidden;
+        background-color: #111;
+        box-shadow: 0 0 10px 2px #000;
+        z-index:10;
+
+        span {
+            display: block;
+            text-align: center;
+            margin:0 30px;
+            font-size: 24px;
+            color:#fff;
+            text-shadow: 0 0 5px #000;
+        }
+    }
+
+    ._playerList {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        overflow: hidden;
+        overflow-y: visible;
+        z-index: 1;
+        padding-top: 50px;
+        box-sizing: border-box;
+
+
+        ._space {
+            width: 100%;
+            height: 20px;
+        }
+
+        ._player {
+            background-color: #888;
+            width: auto;
+            height: 50px;
+            position: relative;
+            top: 0;
+            left: 0;
+            margin: 0 20px 10px;
+            box-shadow: 0 0 5p #000;
+            opacity: 0.4;
+            line-height: 40px;
+            border-radius: 3px;
+
+            ._number {
+                display: block;
+                width: 40px;
+                height: 40px;
+                position: absolute;
+                top: 5px;
+                left: 5px;
+                background-color: #555;
+                border: 0;
+                text-align: center;
+                color: #fff;
+                margin: 0 auto;
+                font-size: 22px;
+                font-family: "Agency FB";
+                text-shadow: 0 0 5px #000;
+                box-shadow: inset 0 0 5px #000;
+                z-index: 30;
+                border-radius: 3px;
+            }
+
+            ._name {
+                display: block;
+                height: 40px;
+                text-align: left;
+                color: #444;
+                margin: 0 10px 0 70px;
+                overflow: visible;
+                position: relative;
+                top: 5px;
+                legt: 0;
+                font-size: 20px;
+                font-family: 微软雅黑, Calibri;
+                z-index: 10;
+            }
+
+            ._vote {
+                display: block;
+                height: 40px;
+                text-align: right;
+                position: absolute;
+                top: 5px;
+                left: 5px;
+                right: 5px;
+                bottom: 5px;
+                z-index: 20;
+
+                ._voteMarker {
+                    display: inline-block;
+                    height: 40px;
+                    width: 30px;
+                    text-align: center;
+                    color: #380505;
+                    text-shadow: 0 0 5px #f00;
+                    background-color: rgba(152, 16, 16, 0.24);
+                    border-radius: 3px;
+                    margin-left: 5px;
+                }
+            }
+
+            &._alive {
+                background-color: #ccc;
+                opacity: 0.8;
+
+                ._number {
+                    background-color: #333;
+                }
+
+                ._name {
+                    color: #333;
+                }
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
