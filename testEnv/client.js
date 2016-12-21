@@ -152,7 +152,6 @@ Rendxx.Game = Rendxx.Game || {};
         this.onclose = null;
 
         this.start = function () {
-            if (ws != null) ws.close();
             ws = {conn:wsConnStr};
             ws.onopen = function (evt) {
                 if (that.onopen != null) that.onopen(evt);
@@ -167,6 +166,7 @@ Rendxx.Game = Rendxx.Game || {};
                 if (that.onclose != null) that.onclose(evt);
             };
             window.msg = function (msg){
+              console.log("%c"+msg, "color:#000066; background: #ddddff");
               ws.onmessage({data:msg});
             };
             ws.onopen();
@@ -180,7 +180,6 @@ Rendxx.Game = Rendxx.Game || {};
 
         var _init = function (opts) {
             window.onbeforeunload = function () {
-                if (ws != null) ws.close();
             };
             if (opts == null || opts.type == null || opts.id == null) throw new Error('WebSocket Parameter Missing');
 
