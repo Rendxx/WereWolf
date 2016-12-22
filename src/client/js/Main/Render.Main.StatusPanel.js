@@ -43,6 +43,11 @@ var StatusPanel = function(container) {
         roleInstance.initInfoPanel(html['role'][0]);
     };
 
+    this.updateAlive = function(isAlive) {
+        if (isAlive) html['container'].removeClass(CSS.dead);
+        else html['container'].addClass(CSS.dead);
+    };
+
     // Private ---------------------------------------
     var setupHtml = function(number, name, role) {
         html['container'].empty();

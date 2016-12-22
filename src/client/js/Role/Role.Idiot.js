@@ -13,7 +13,8 @@ var Idiot = function () {
 Idiot.prototype = Object.create(Basic.prototype);
 Idiot.prototype.constructor = Basic;
 
-Idiot.prototype.update = function (dat){
+Idiot.prototype.update = function (aliveListArr, dat){
+  Basic.prototype.update.call(this,aliveListArr, dat);
   this.stiupid = dat[0]===1;
 };
 

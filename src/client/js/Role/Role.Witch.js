@@ -58,7 +58,8 @@ Witch.prototype.active = function (aliveListArr, killedArr){
     }
 };
 
-Witch.prototype.update = function (dat){
+Witch.prototype.update = function (aliveListArr, dat){
+  Basic.prototype.update.call(this,aliveListArr, dat);
     if (dat==null) return;
     this.potion = dat;
 };

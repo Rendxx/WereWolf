@@ -1,5 +1,7 @@
 var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
+var INFO = require('CLIENT/js/Info.js');
+var InfoBox = require('CLIENT/js/InfoBox.js');
 var Basic = require('./Role.Basic.js');
 require('CLIENT/less/Role/Role.Hunter.less');
 
@@ -13,8 +15,15 @@ var Hunter = function () {
 Hunter.prototype = Object.create(Basic.prototype);
 Hunter.prototype.constructor = Basic;
 
-Hunter.prototype.update = function (dat){
-  this.gun = dat[0]===1;
+Hunter.prototype.update = function (aliveListArr, dat){
+    this.gun = dat[0]===1;
+    var t = aliveListArr[this.playerIdx]==='1';
+    if (t===false && this.alive){
+        InfoBox.alert({
+            content: (this.gun ? INFO.DAED_HUNTER : INFO.DAED_HUNTER2),
+        });
+    }
+    this.alive = t;
 };
 
 Hunter.prototype.initInfoPanel = function (container){

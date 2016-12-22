@@ -8,6 +8,7 @@ var Basic = function () {
     this.code = ROLECODE.NONE;
     this.name = ROLEDATA[this.code].name;
     this.description = ROLEDATA[this.code].description;
+    this.playerIdx = -1;
     this.onActionEnd = null;
     this._html = {
         info:{},
@@ -19,6 +20,11 @@ var Basic = function () {
 };
 Basic.prototype = Object.create(null);
 Basic.prototype.constructor = Basic;
+
+Basic.prototype.setup = function (playerIdx){
+    this.playerIdx = playerIdx;
+};
+
 
 Basic.prototype.dayTime = function (dat){
     InfoBox.alert({
@@ -34,8 +40,14 @@ Basic.prototype.inactive = function (){
     this.actived = false;
 };
 
-Basic.prototype.update = function (dat){
-
+Basic.prototype.update = function (aliveListArr, dat){
+    var t = aliveListArr[this.playerIdx]==='1';
+    if (t===false && this.alive){
+        InfoBox.alert({
+            content: INFO.DAED,
+        });
+    }
+    this.alive = t;
 };
 
 Basic.prototype.showRst = function (dat){

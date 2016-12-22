@@ -99,13 +99,13 @@ var Main = function (container) {
             var playerStatus = dat[4];
             var actionData = dat[5];
 
-            roleInstance && roleInstance.update(playerStatus);
+            if (currentStep!==step) InfoBox.hide();
+            roleInstance && roleInstance.update(aliveList, playerStatus);
             if (currentStep!==step) {
                 currentStep=step;
                 if (currentStep===PHASE.DAY){
                     roleInstance && roleInstance.dayTime();
                 }
-                InfoBox.hide();
             };
 
             if (isActived){
@@ -114,6 +114,7 @@ var Main = function (container) {
                 roleInstance && roleInstance.inactive();
             }
             playerPanel.updateStatus(aliveList);
+            statusPanel.updateAlive(roleInstance.alive);
         };
 
         _msg[MSGCODE.HOST.RESULT] = function (dat){
@@ -154,10 +155,12 @@ var Main = function (container) {
         };
 
         _initFunc[INITCODE.DONE] = function (setupData){
+            var playerIdx = setupData[1];
             var initData = setupData[4];
             var playerInfo = setupData[5];
 
             roleInstance = RoleFactory(initData[2]);
+            roleInstance.setup(playerIdx);
             roleInstance.onActionEnd = function (idx){
               _send[MSGCODE.CLIENT.DECISION](idx);
             };
@@ -167,10 +170,12 @@ var Main = function (container) {
         };
 
         _initFunc[INITCODE.ALLDONE] = function (setupData){
+            var playerIdx = setupData[1];
             var initData = setupData[4];
             var playerInfo = setupData[5];
             if (roleInstance==null) {
                 roleInstance = RoleFactory(initData[2]);
+                roleInstance.setup(playerIdx);
                 roleInstance.onActionEnd = function (idx){
                   _send[MSGCODE.CLIENT.DECISION](idx);
                 };

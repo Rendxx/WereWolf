@@ -87,6 +87,10 @@
           else window.msg('2|5|HOST|2|[2,[-1,-1]]');
         }
     },
+    die : function (gun){
+      gun=gun||0;
+      window.msg('2|5|HOST|2|[1,2,0,"1111001101",['+gun+'],[]]');
+    },
     end : function (isWin){
       window.msg('2|5|HOST|2|[1,'+(isWin?1:0)+']');
       window.msg('1|6|SERVER|13|null');
@@ -118,6 +122,8 @@
   console.log("%c test.rst[2](4) ", 'color: #330099;');
   console.log("%c test.rst[3](1) ", 'color: #330099;');
   console.log("%c test.rst[4](1) ", 'color: #330099;');
+  console.log('');
+  console.log("%c test.die(1) ", 'color: #330099;');
   console.log('');
 
   console.log("%c test.reset() ", 'color: #009933;');

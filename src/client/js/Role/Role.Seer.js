@@ -40,7 +40,8 @@ Seer.prototype.inactive = function (){
     this._html.action['container'].fadeOut(200);
 };
 
-Seer.prototype.update = function (dat){
+Seer.prototype.update = function (aliveListArr, dat){
+    Basic.prototype.update.call(this,aliveListArr, dat);
     if (dat==null) return;
     this.lastRoleInfo = dat;
     this._html.info['msg'].html('Player [No.'+dat[0]+'] is <b>'+ROLEDATA[dat[1]].name+'</b>');
