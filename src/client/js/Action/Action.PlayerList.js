@@ -52,6 +52,7 @@ var PlayerList = function (){
 
     this.show = function (){
         _html['wrap'].addClass(CSS.show);
+        resize();
     };
 
     this.hide = function (){
@@ -104,6 +105,14 @@ var PlayerList = function (){
         });
         _html['player']['abstain'] = pkg;
     };
+
+    var resize = function (){
+        if (_html['list']) _html['list'].width(~~(_html['wrap'].width()/120)*120);
+    };
+
+    var _init = function() {
+        $( window ).resize(resize);
+    }();
 };
 
 module.exports = PlayerList;

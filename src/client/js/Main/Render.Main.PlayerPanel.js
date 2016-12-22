@@ -97,7 +97,7 @@ var PlayerPanel = function(container) {
     };
 
     var resize = function (){
-        html['inner'].width(~~(html['container'].width()/130)*130);
+        html['inner'].width(~~(html['container'].width()/120)*120);
     };
 
     var _init = function() {

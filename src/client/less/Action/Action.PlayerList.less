@@ -20,7 +20,7 @@
         width: 100%;
         height: 1px;
         background-color: #111;
-        box-shadow: 0 0 10px 2px #000;
+        box-shadow: 0 0 10px 2px rgba(0,0,0, 0.4);
         z-index: 9;
         pointer-events: none;
     }
@@ -39,7 +39,7 @@
         line-height: 50px;
         overflow: hidden;
         background-color: #111;
-        box-shadow: 0 0 10px 2px #000;
+        box-shadow: 0 0 10px 2px rgba(0,0,0, 0.4);
         z-index: 10;
         color: #999;
 
@@ -55,117 +55,168 @@
 
     ._playerList {
         height: 100%;
-        width: 100%;
-        position: absolute;
+        margin:0 auto;
+        position:relative;
         overflow: hidden;
         overflow-y: visible;
         z-index: 1;
-        padding-top: 50px;
+        overflow: hidden;
         box-sizing: border-box;
 
         ._space {
+            overflow: visible;
             width: 100%;
-            height: 20px;
+            height:70px;
+            clear:both;
+            position:relative;
+            top:0;
+            left:0;
+
+            &:after{
+              content: '';
+              position:absolute;
+              top: -1px;
+              left: 0;
+              width:100%;
+              height:1px;
+              background-color: #1e1e1e;
+              z-index:1;
+            }
         }
 
         ._player {
-            background-color: #888;
-            width: auto;
-            height: 50px;
-            position: relative;
-            top: 0;
-            left: 0;
-            margin: 0 20px 10px;
-            box-shadow: 0 0 5p #000;
-            opacity: 0.4;
+            width: 90px;
+            height:90px;
+            position:relative;
+            top:0;
+            left:0;
             line-height: 40px;
-            border-radius: 3px;
+            padding:15px 15px 40px;
+            overflow: hidden;
+            float:left;
+            border-bottom: 1px solid #1e1e1e;
+
+            &:before{
+              content: '';
+              position:absolute;
+              top: 10px;
+              left: 50%;
+              width:100px;
+              height:100px;
+              margin-left:-50px;
+              background-image: url('../../design/slash.png');
+              background-size: contain;
+              z-index:100;
+            }
+
+            &:after{
+              opacity: 0.2;
+              content: '';
+              position:absolute;
+              top: 15px;
+              left: 50%;
+              width:90px;
+              height:90px;
+              margin-left:-45px;
+              background-image: url('../../../global/design/Portrait-Bg.png');
+              background-size: contain;
+              z-index:1;
+            }
 
             ._number {
                 display: block;
-                width: 40px;
-                height: 40px;
-                position: absolute;
-                top: 5px;
-                left: 5px;
-                background-color: #555;
+                line-height: 90px;
+                height:80px;
                 border: 0;
                 text-align: center;
-                color: #fff;
+                color: #444;
                 margin: 0 auto;
-                font-size: 22px;
+                font-size: 40px;
                 font-family: "Agency FB";
                 text-shadow: 0 0 5px #000;
-                box-shadow: inset 0 0 5px #000;
-                z-index: 30;
-                border-radius: 3px;
+                z-index:30;
+                opacity: 0.75;
             }
 
             ._name {
+                overflow: hidden;
                 display: block;
-                height: 40px;
-                text-align: left;
+                width: 100px;
+                height:20px;
+                line-height: 20px;
+                text-align: center;
                 color: #444;
-                margin: 0 10px 0 70px;
-                overflow: visible;
-                position: relative;
-                top: 5px;
-                legt: 0;
-                font-size: 20px;
+                margin:0;
+                overflow: hidden;
+                position: absolute;
+                top:110px;
+                left:50%;
+                margin-left:-50px;
+                font-size: 16px;
                 font-family: Calibri, 微软雅黑;
-                z-index: 10;
+                z-index:10;
             }
 
             ._vote {
                 display: block;
-                height: 40px;
-                text-align: right;
+                text-align: left;
                 position: absolute;
                 top: 5px;
-                left: 5px;
-                right: 5px;
-                bottom: 5px;
-                z-index: 20;
+                left: 50%;
+                width:96px;
+                margin-left:-48px;
+                z-index: 60;
 
                 ._voteMarker {
                     display: inline-block;
-                    height: 40px;
-                    width: 30px;
+                    height: 20px;
+                    width: 20px;
+                    line-height: 20px;
                     text-align: center;
-                    color: #380505;
-                    text-shadow: 0 0 5px #f00;
-                    background-color: rgba(152, 16, 16, 0.24);
-                    border-radius: 3px;
-                    margin-left: 5px;
+                    color: #ccc;
+                    text-shadow: 0 0 3px #200;
+                    background-image: url('../../design/vote-bg.png');
+                    background-position: center center;
+                    background-size: 22px 22px;
+                    background-repeat: no-repeat;
+                    padding:5px 2px;
+                    font-size: 12px;
+                    font-family: "Agency FB";
                 }
             }
 
             &._alive {
-                background-color: #ccc;
-                opacity: 0.8;
-
+                &:before{
+                  display: none;
+                }
+                &:after{
+                  opacity: 0.75;
+                }
                 ._number {
-                    background-color: #333;
+                    color:#fff;
+                    opacity: 1;
                 }
-
                 ._name {
-                    color: #333;
+                    color: #999;
                 }
-
-                &:hover {
+                &:hover{
                     opacity: 1;
                 }
             }
 
             &._abstain {
-                background-color: #b99999 !important;
+                &:before{
+                  display: none;
+                }
+                &:after{
+                  opacity: 0.75;
+                }
                 ._number {
-                    background-color: rgba(100,10,10,0.25);
                     background-image: url('../../design/abstain.png');
-                    box-shadow: inset 0 0 5px #300;
+                    opacity: 1;
                 }
                 ._name {
-                    color: #300;
+                    color: #777;
                 }
             }
         }

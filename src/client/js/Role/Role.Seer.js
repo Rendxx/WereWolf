@@ -30,6 +30,7 @@ Seer.prototype.active = function (aliveListArr){
         InfoBox.alert({
             content: INFO.SEER,
         });
+        this._action.playerList.show();
         this._action.playerList.update(aliveListArr);
     }
 };

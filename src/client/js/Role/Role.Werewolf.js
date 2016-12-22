@@ -29,6 +29,7 @@ WereWolf.prototype.active = function (aliveListArr, voteArr){
         InfoBox.alert({
             content: INFO.WEREWOLF,
         });
+        this._action.playerList.show();
     }
     this._action.playerList.update(aliveListArr, voteArr);
 };
@@ -84,7 +85,7 @@ WereWolf.prototype.initActionPanel = function (container, playerInfo){
             }
         });
     };
-    this._action.playerList.show();
+    this._action.playerList.hide();
 };
 
 module.exports = WereWolf;
