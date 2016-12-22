@@ -39,6 +39,7 @@ var PlayerPanel = function(container) {
     // Public --------------------------------
     this.show = function() {
         html['container'].fadeIn(200);
+        resize();
     };
 
     this.hide = function() {
@@ -95,8 +96,14 @@ var PlayerPanel = function(container) {
         return pkg;
     };
 
+    var resize = function (){
+        html['inner'].width(~~(html['container'].width()/130)*130);
+    };
+
     var _init = function() {
         setupHtml();
+        $( window ).resize(resize);
+        resize();
     }();
 };
 
