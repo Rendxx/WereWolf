@@ -122,16 +122,27 @@ Witch.prototype.initActionPanel = function (container, playerInfo){
               callbackYes: function() {
                   that._action.choice.hide();
                   that._action.playerList.show();
+                  setTimeout(function(){
+                    InfoBox.alert({
+                        content: INFO.WITCH_POISON,
+                    });
+                  },1);
               }
           });
         }else{
             that._action.choice.hide();
             that._action.playerList.show();
+            InfoBox.alert({
+                content: INFO.WITCH_POISON,
+            });
         }
     };
     this._action.choice.onOk = function (){
         that._action.choice.hide();
         that._action.playerList.show();
+        InfoBox.alert({
+            content: INFO.WITCH_POISON,
+        });
     };
 
     // player list

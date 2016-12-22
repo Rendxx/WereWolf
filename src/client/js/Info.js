@@ -49,6 +49,11 @@ var INFO = {
         '<div class="_text">Now is the time for potion.</div>',
       '</div>'
     ].join(''),
+    WITCH_POISON: [
+      '<div class="info_client">',
+        '<div class="_text">You can kill a player with poison.<br/>Please choose your target.</div>',
+      '</div>'
+    ].join(''),
     SEER: [
       '<div class="info_client">',
         '<div class="_icon" style="background-image:url(\''+ImgSrc.seer+'\')"></div>',
