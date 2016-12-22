@@ -7,8 +7,8 @@ var MSGCODE = require('GLOBAL/js/MessageCode.js');
 require('../less/End.less');
 
 var HTML = {
-    villager: '<div class="_villager"><div class="_winner">VILLAGER</div><div class="_line"></div><div class="_win">WIN</div></div>',
-    werewolf: '<div class="_werewolf"><div class="_winner">WEREWOLF</div><div class="_line"></div><div class="_win">WIN</div></div>'
+    villager: '<div class="_villager"><div class="_icon"></div><div class="_text"></div></div>',
+    werewolf: '<div class="_werewolf"><div class="_icon"></div><div class="_text"></div></div>'
 };
 
 var CSS = {

@@ -120,6 +120,9 @@ var Main = function (container) {
         _msg[MSGCODE.HOST.RESULT] = function (dat){
             roleInstance && roleInstance.showRst(dat[1]);
         };
+
+        _msg[MSGCODE.HOST.END] = function (dat){
+        };
     };
 
     var _setupSend = function (){

@@ -2,6 +2,8 @@
 .end{
     display:none;
     z-index: 10;
+    background-color: rgba(0,0,0,0.5);
+    box-shadow: inset 0 0 180px rgba(0, 0, 0, 0.2);
 
     .__rst{
         position:absolute;
@@ -13,54 +15,53 @@
         color:#eee;
         box-sizing: border-box;
         width:100%;
-        height:100%;
-        font-size: 80px;
-        color:#fff;
+        padding-top:20px;
+        padding-bottom:130px;
+        overflow: hidden;
+    }
+
+    ._icon {
+        width:200px;
+        height:200px;
+        margin:0 auto;
+        background-position: center center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        box-shadow: 0 0 10px #000;
+    }
+
+    ._text{
+        position:absolute;
+        top:240px;
+        left:5%;
+        width:90%;
+        height:100px;
+        background-position: center top;
+        background-size: contain;
+        background-repeat: no-repeat;
     }
 
     ._villager{
         .__rst;
-        text-shadow: 0 0 30px #007dff;
-        ._line{
-            box-shadow: 0 0 30px #007dff;
+        ._icon {
+            background-color:rgba(58, 81, 95, 0.2);
+            background-image: url('../../global/design/Role/villager.png');
+        }
+        ._text {
+            background-image: url('../../global/design/end_villager.png');
         }
     }
 
     ._werewolf{
         .__rst;
-        text-shadow: 0 0 30px #8f3838;
-        ._line{
-            box-shadow: 0 0 30px #8f3838;
+        ._icon {
+            background-color:rgba(80, 48, 48, 0.2);
+            background-image: url('../../global/design/Role/werewolf.png');
         }
-    }
-
-    ._winner{
-        position:absolute;
-        top:50%;
-        left:0;
-        width:100%;
-        line-height: 120px;
-        font-size:70px;
-        margin-top:-90px;
-    }
-
-    ._line{
-        position:absolute;
-        top:50%;
-        left:5%;
-        width:90%;
-        height:1px;
-        background-color: #444;
-        margin-top:17px;
-    }
-
-    ._win{
-        position:absolute;
-        top:50%;
-        left:0;
-        width:100%;
-        line-height: 40px;
-        font-size:40px;
-        margin-top:30px;
+        ._text {
+            background-image: url('../../global/design/end_werewolf.png');
+        }
     }
 }

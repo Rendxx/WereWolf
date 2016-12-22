@@ -92,7 +92,7 @@
       window.msg('2|5|HOST|2|[1,2,0,"1111001101",['+gun+'],[]]');
     },
     end : function (isWin){
-      window.msg('2|5|HOST|2|[1,'+(isWin?1:0)+']');
+      window.msg('2|5|HOST|2|[0,'+(isWin?1:0)+']');
       window.msg('1|6|SERVER|13|null');
     },
     renew : function (){
