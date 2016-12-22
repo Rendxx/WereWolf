@@ -15,11 +15,11 @@ var Witch = function () {
     this.name = ROLEDATA[this.code].name;
     this.description = ROLEDATA[this.code].description;
     this.potion = [0, 0];
+    this._playerInfo = null;
     this._action = {
         choice: new Action.Choice(),
         playerList :new Action.PlayerList()
     };
-    this._playerInfo = null;
 };
 Witch.prototype = Object.create(Basic.prototype);
 Witch.prototype.constructor = Basic;
@@ -59,7 +59,33 @@ Witch.prototype.active = function (aliveListArr, killedArr){
 };
 
 Witch.prototype.update = function (dat){
+    if (dat==null) return;
     this.potion = dat;
+};
+
+Witch.prototype.showRst = function (dat){
+    if (dat==null||dat.length==0) {
+      this._html.action['container'].fadeOut(200);
+      return;
+    }
+    if (dat[0]==-1 && dat[1]==-1) {
+      InfoBox.alert({
+          content: 'Nothing happened.',
+          callback: function() {
+              this._html.action['container'].fadeOut(200);
+          }.bind(this)
+      });
+      return;
+    }
+    var idx = dat[0]==-1?dat[1]:dat[0];
+    var isHealed = dat[0]!=-1;
+    var p = this._playerInfo[idx];
+    InfoBox.alert({
+        content: INFO.WITCH_RESULT(p[0], p[1],isHealed),
+        callback: function() {
+            this._html.action['container'].fadeOut(200);
+        }.bind(this)
+    });
 };
 
 Witch.prototype.initInfoPanel = function (container){
@@ -80,7 +106,7 @@ Witch.prototype.initActionPanel = function (container, playerInfo){
         if (!that.actived) return;
 
         InfoBox.check({
-            content: INFO.CHECKPLAYER(playerInfo[idx][0], playerInfo[idx][1], 'Make sure you want to heal this player?'),
+            content: INFO.SHOWPLAYER(playerInfo[idx][0], playerInfo[idx][1], 'Make sure you want to heal this player?'),
             callbackYes: function() {
                 that.onActionEnd && that.onActionEnd([idx,-1]);
                 that._action.choice.hide();
@@ -115,7 +141,7 @@ Witch.prototype.initActionPanel = function (container, playerInfo){
 
         if (that.potion[1]>0){
           InfoBox.check({
-              content: INFO.CHECKPLAYER(number, name, 'Make sure you want to poison this player?'),
+              content: INFO.SHOWPLAYER(number, name, 'Make sure you want to poison this player?'),
               callbackYes: function() {
                   that.onActionEnd && that.onActionEnd([-1, idx]);
                   that._action.playerList.hide();

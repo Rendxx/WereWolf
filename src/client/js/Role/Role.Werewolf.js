@@ -13,6 +13,7 @@ var WereWolf = function () {
     this.code = ROLECODE.WEREWOLF;
     this.name = ROLEDATA[this.code].name;
     this.description = ROLEDATA[this.code].description;
+    this._playerInfo = null;
     this._action = {
         playerList :new Action.PlayerList()
     };
@@ -38,6 +39,21 @@ WereWolf.prototype.inactive = function (){
     this._html.action['container'].fadeOut(200);
 };
 
+WereWolf.prototype.showRst = function (dat){
+    this._action.playerList.hide();
+    if (dat==null||dat.length==0) {
+      this._html.action['container'].fadeOut(200);
+      return;
+    }
+    var p = this._playerInfo[dat[0]];
+    InfoBox.alert({
+        content: INFO.SHOWPLAYER(p[0], p[1],'This player has been murdered'),
+        callback: function() {
+          this._html.action['container'].fadeOut(200);
+        }.bind(this)
+    });
+};
+
 WereWolf.prototype.initInfoPanel = function (container){
     Basic.prototype.initInfoPanel.call(this,container);
     this._html.info['wrap'].addClass('_role_werewolf');
@@ -45,13 +61,14 @@ WereWolf.prototype.initInfoPanel = function (container){
 
 WereWolf.prototype.initActionPanel = function (container, playerInfo){
     var that = this;
+    this._playerInfo=playerInfo;
     this._html.action['container']=$(container);
     this._action.playerList.setup(container, playerInfo, 'Choose your target');
     this._action.playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
 
         InfoBox.check({
-            content: INFO.CHECKPLAYER(number, name),
+            content: INFO.SHOWPLAYER(number, name),
             callbackYes: function() {
                 that.onActionEnd && that.onActionEnd([idx]);
             }

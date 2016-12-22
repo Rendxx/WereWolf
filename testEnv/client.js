@@ -71,6 +71,22 @@
         window.msg('2|5|HOST|2|[1,7,1,"'+playerAlive+'",[],[]]');
       },
     },
+    rst : {
+        2: function (id){
+          id=id||4;
+          window.msg('2|5|HOST|2|[2,['+id+']]');
+        },
+        3: function (isGood){
+          var t = isGood===1?0:1;
+          window.msg('2|5|HOST|2|[2,[4,'+t+']]');
+        },
+        4: function (k){
+          k=k||0;
+          if (k==1) window.msg('2|5|HOST|2|[2,[1,-1]]');
+          else if (k==2) window.msg('2|5|HOST|2|[2,[-1,1]]');
+          else window.msg('2|5|HOST|2|[2,[-1,-1]]');
+        }
+    },
     end : function (isWin){
       window.msg('2|5|HOST|2|[1,'+(isWin?1:0)+']');
       window.msg('1|6|SERVER|13|null');
@@ -88,6 +104,7 @@
   console.log("%c test.init() ", 'color: #003399;');
   console.log("%c test.inited() ", 'color: #003399;');
   console.log("%c test.inited2() ", 'color: #003399;');
+  console.log('');
 
   console.log("%c test.update[1]() ", 'color: #330099;');
   console.log("%c test.update[2]() ", 'color: #330099;');
@@ -97,6 +114,11 @@
   console.log("%c test.update[6]() ", 'color: #330099;');
   console.log("%c test.update[7]() ", 'color: #330099;');
   console.log("%c test.update2() ", 'color: #330099;');
+  console.log('');
+  console.log("%c test.rst[2](4) ", 'color: #330099;');
+  console.log("%c test.rst[3](1) ", 'color: #330099;');
+  console.log("%c test.rst[4](1) ", 'color: #330099;');
+  console.log('');
 
   console.log("%c test.reset() ", 'color: #009933;');
   console.log("%c test.start() ", 'color: #009933;');

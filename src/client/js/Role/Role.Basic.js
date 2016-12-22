@@ -35,10 +35,10 @@ Basic.prototype.inactive = function (){
 };
 
 Basic.prototype.update = function (dat){
+
 };
 
-Basic.prototype.die = function (){
-    this.alive = false;
+Basic.prototype.showRst = function (dat){
 };
 
 Basic.prototype.initInfoPanel = function (container){
@@ -49,6 +49,10 @@ Basic.prototype.initInfoPanel = function (container){
 };
 
 Basic.prototype.initActionPanel = function (container){
+};
+
+Basic.prototype.dispose=function(){
+
 };
 
 module.exports = Basic;

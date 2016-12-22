@@ -1,4 +1,6 @@
 .info_client{
+    color:#ccc;
+
     ._icon{
         width:160px;
         height:160px;
@@ -14,12 +16,64 @@
     }
 
     ._text{
-        color:#ccc;
+        font-family:  Calibri, 微软雅黑;
+        color:#bbb;
         padding:0 40px;
+
+        b{
+          color:#fff;
+        }
+    }
+
+    ._number{
+      font-size:50px;
+      line-height:90px;
+      width:90px;
+      height:90px;
+      color:#ccc;
+      margin:5px auto;
+      margin-top:25px;
+      font-family: "Agency FB";
+      border-radius: 3px;
+      border:1px solid #ccc;
+      box-sizing: border-box;
+
+      &._red{
+          color: #c76868;
+          border:1px solid #c76868;
+      }
+
+      &._green{
+          color: #809e51;
+          border:1px solid #809e51;
+      }
+
+      &._gray{
+          color: #777;
+          border:1px solid #777;
+      }
+    }
+
+    ._name{
+      font-size:20px;
+      line-height:30px;
+      font-family: Calibri, 微软雅黑;
+
+      &._red{
+          color: #c76868;
+      }
+
+      &._green{
+          color: #809e51;
+      }
+
+      &._gray{
+          color: #777;
+      }
     }
 }
 
-.info_client_checkPlayer{
+.info_client_showPlayer{
     ._checkBox_player_number {
       font-size:50px;
       line-height:90px;
@@ -36,6 +90,6 @@
     ._checkBox_player_name {
       font-size:20px;
       line-height:30px;
-      font-family: 微软雅黑, Calibri;
+      font-family: Calibri, 微软雅黑;
     }
 }

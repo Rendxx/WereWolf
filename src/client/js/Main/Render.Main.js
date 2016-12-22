@@ -8,6 +8,7 @@ var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var MSGCODE = require('GLOBAL/js/MessageCode.js');
 var INITCODE = require('GLOBAL/js/InitCode.js');
 var PHASE = require('GLOBAL/js/StepCode.js');
+var InfoBox = require('CLIENT/js/InfoBox.js');
 var RoleFactory = require('CLIENT/js/Role/RoleFactory.js');
 var SettingPanel = require('CLIENT/js/Main/Render.Main.SettingPanel.js');
 var StatusPanel = require('CLIENT/js/Main/Render.Main.StatusPanel.js');
@@ -68,6 +69,11 @@ var Main = function (container) {
     this.reset = function (setupData) {
         /* TODO: initialize the game */
         if (setupData==null) return;
+        _resetHtml();
+        if (roleInstance!=null) {
+          roleInstance.dispose();
+          roleInstance=null;
+        }
         var initCode = setupData[0];
         index = setupData[1];
         if (!_initFunc.hasOwnProperty(initCode)) return;
@@ -99,6 +105,7 @@ var Main = function (container) {
                 if (currentStep===PHASE.DAY){
                     roleInstance && roleInstance.dayTime();
                 }
+                InfoBox.hide();
             };
 
             if (isActived){
@@ -107,6 +114,10 @@ var Main = function (container) {
                 roleInstance && roleInstance.inactive();
             }
             playerPanel.updateStatus(aliveList);
+        };
+
+        _msg[MSGCODE.HOST.RESULT] = function (dat){
+            roleInstance && roleInstance.showRst(dat[1]);
         };
     };
 
@@ -181,6 +192,12 @@ var Main = function (container) {
         html['panel']['player'] = $(HTML.panel.player).appendTo(html['container']);
         html['panel']['status'] = $(HTML.panel.status).appendTo(html['container']);
         html['panel']['action'] = $(HTML.panel.action).appendTo(html['container']);
+    };
+    var _resetHtml = function (setupData) {
+        html['panel']['setting'].empty().hide();
+        html['panel']['player'].empty().hide();
+        html['panel']['status'].empty().hide();
+        html['panel']['action'].empty().hide();
     };
 
     var _select = function (id){

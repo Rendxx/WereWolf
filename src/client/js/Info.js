@@ -7,7 +7,8 @@ var ImgSrc = {
     seer: require('GLOBAL/design/Role/seer.png'),
     hunter: require('GLOBAL/design/Role/hunter.png'),
     witch: require('GLOBAL/design/Role/witch.png'),
-    elder: require('GLOBAL/design/Role/elder.png')
+    elder: require('GLOBAL/design/Role/elder.png'),
+    villager: require('GLOBAL/design/Role/villager.png')
 }
 
 var INFO = {
@@ -60,13 +61,30 @@ var INFO = {
         '<div class="_text">&quot; Hey, You. Just shut up. &quot;</div>',
       '</div>'
     ].join(''),
-    CHECKPLAYER: function (number, name, content){
+    SHOWPLAYER: function (number, name, content, cssClass){
       return [
-        '<div class="info_client_checkPlayer">',
+        '<div class="info_client_showPlayer">',
           '<div style="color:#666;">'+(content || 'Your selection is:')+'</div>',
            '<div class="_checkBox_player_number">' + number + '</div>',
            '<div class="_checkBox_player_name">' + name + '</div>',
          '</div>'
+       ].join('');
+    },
+    SEER_RESULT: function (number, name, isGood){
+      return [
+        '<div class="info_client">',
+          '<div class="_icon" style="background-image:url(\''+(isGood===true?ImgSrc.villager:ImgSrc.werewolf)+'\')"></div>',
+          '<div class="_text"><b>['+number+'] ' + name +'</b> is a '+(isGood?'human':'werewolf')+ '.</div>',
+        '</div>'
+       ].join('');
+    },
+    WITCH_RESULT: function (number, name, isHeal){
+      return [
+        '<div class="info_client">',
+          '<div class="_text">This player has been '+(isHeal?'healed':'killed')+ '.</div>',
+          '<div class="_number '+(isHeal?'_green':'_gray')+'">'+number+'</div>',
+          '<div class="_name '+(isHeal?'_green':'_gray')+'">'+name+'</div>',
+        '</div>'
        ].join('');
     }
 }

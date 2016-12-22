@@ -14,6 +14,7 @@ var Seer = function () {
     this.name = ROLEDATA[this.code].name;
     this.description = ROLEDATA[this.code].description;
     this.lastRoleInfo = null;
+    this._playerInfo = null;
     this._action = {
         playerList :new Action.PlayerList()
     };
@@ -40,8 +41,24 @@ Seer.prototype.inactive = function (){
 };
 
 Seer.prototype.update = function (dat){
+    if (dat==null) return;
     this.lastRoleInfo = dat;
     this._html.info['msg'].html('Player [No.'+dat[0]+'] is <b>'+ROLEDATA[dat[1]].name+'</b>');
+};
+
+Seer.prototype.showRst = function (dat){
+    if (dat==null||dat.length==0) {
+      this._html.action['container'].fadeOut(200);
+      return;
+    }
+    var p = this._playerInfo[dat[0]];
+    var isGood = dat[1]===0;
+    InfoBox.alert({
+        content: INFO.SEER_RESULT(p[0], p[1], isGood),
+        callback: function() {
+          this._html.action['container'].fadeOut(200);
+        }.bind(this)
+    });
 };
 
 Seer.prototype.initInfoPanel = function (container){
@@ -52,15 +69,17 @@ Seer.prototype.initInfoPanel = function (container){
 
 Seer.prototype.initActionPanel = function (container, playerInfo){
     var that = this;
+    this._playerInfo = playerInfo;
     this._html.action['container']=$(container);
     this._action.playerList.setup(container, playerInfo, 'Choose your target');
     this._action.playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
 
         InfoBox.check({
-            content: INFO.CHECKPLAYER(number, name),
+            content: INFO.SHOWPLAYER(number, name),
             callbackYes: function() {
                 that.onActionEnd && that.onActionEnd([idx]);
+                that._action.playerList.hide();
             }
         });
     };
@@ -71,6 +90,7 @@ Seer.prototype.initActionPanel = function (container, playerInfo){
             content: 'Are you sure you want give up this opportunity?',
             callbackYes: function() {
                 that.onActionEnd && that.onActionEnd([-1]);
+                that._action.playerList.hide();
             }
         });
     };
