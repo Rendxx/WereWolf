@@ -3,7 +3,14 @@
     It renders the game.
 */
 
-﻿var Style = require('../less/Main.less');
+var ACTION = require('GLOBAL/js/ActionCode.js');
+var ROLECODE = require('GLOBAL/js/RoleCode.js');
+var ROLEDATA = require('GLOBAL/js/RoleData.js');
+var PHASE = require('GLOBAL/js/PhaseCode.js');
+var InfoBox = require('CLIENT/js/InfoBox.js');
+var PlayerPanel = require('CLIENT/js/Main/Render.Main.PlayerPanel.js');
+
+require('HOST/less/Main/Main.less');
 
 var HTML = {
     player: '<div class="_player"></div>',

@@ -3,8 +3,8 @@
     You can set game options while waiting for other players.
 */
 
-var RoleSelectPanel = require('./RoleSelectPanel.js');
-var Style = require('../less/Prepare.less');
+var RoleSelectPanel = require('HOST/js/Prepare/Render.Prepare.RoleSelectPanel.js');
+require('HOST/less/Prepare/Prepare.less');
 
 var HTML = {
     logo: '<div class="_logo"></div>',

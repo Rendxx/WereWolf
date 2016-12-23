@@ -9,7 +9,7 @@
 var ACTION = require('GLOBAL/js/ActionCode.js');
 var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var MSGCODE = require('GLOBAL/js/MessageCode.js');
-var STEPCODE = require('GLOBAL/js/StepCode.js');
+var PHASECODE = require('GLOBAL/js/PhaseCode.js');
 
 var charactor = function (id, number, role, name) {
     this.id = id;
@@ -393,17 +393,17 @@ var Core = function () {
             }
 
             // update active
-            if (phase == STEPCODE.WOLF) {
+            if (phase == PHASECODE.WOLF) {
                 if (playerList[idx].role == ROLECODE.WEREWOLF) {
                     active = 1;
                 }
             }
-            else if (phase == STEPCODE.SEER) {
+            else if (phase == PHASECODE.SEER) {
                 if (playerList[idx].role == ROLECODE.SEER) {
                     active = 1;
                 }
             }
-            else if (phase == STEPCODE.WITCH) {
+            else if (phase == PHASECODE.WITCH) {
                 if (playerList[idx].role == ROLECODE.WITCH) {
                     active = 1;
                 }

@@ -1,7 +1,7 @@
 var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 
-require('../less/RoleSelectPanel.less');
+require('HOST/less/Prepare/Prepare.RoleSelectPanel.less');
 
 var HTML = {
     wrap: '<div class="roleSelectPanel"></div>',

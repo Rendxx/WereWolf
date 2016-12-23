@@ -10,8 +10,8 @@ window.GAME = {
   ClientList:require('./js/ClientList.js'),
   Core:require('./js/Core.js'),
   Render:{
-    Prepare : require('./js/Render.Prepare.js'),
-    Main : require('./js/Render.Main.js'),
-    End : require('./js/Render.End.js')
+    Prepare : require('HOST/js/Prepare/Render.Prepare.js'),
+    Main : require('HOST/js/Main/Render.Main.js'),
+    End : require('HOST/js/Render.End.js')
   }
 };
