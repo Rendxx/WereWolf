@@ -340,7 +340,6 @@ var Core = function() {
             GamePhase[phaseIdx]();
             that.onUpdated([
                 phaseIdx,
-                getPlayerInfoArr(),
                 getAliveStr(),
                 getStatusArr()
             ]);
