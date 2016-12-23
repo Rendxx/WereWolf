@@ -51,7 +51,7 @@ var Core = function() {
     var AliveChara = [];
 
     // SPECIAL ID INFO
-    var MarkOfTheWolf = "";
+    var MarkOfTheWolf = -1;
     var seerID;
     var witchID;
     var hunterID;
@@ -78,7 +78,7 @@ var Core = function() {
         },
         setAlive:function (playerIdx, isAlive){
             playerList[playerIdx].alive = isAlive;
-            if (GamePhaseOrder[phaseIdx]===PHASECODE.DAY) generalUpdate(phaseIdx);
+            if (GamePhaseOrder[phaseIdx]===PHASECODE.DAY) {GetAliveStatus();generalUpdate();}
         }
     }; /* TODO: this is a package of hander for Render.Main */
 
@@ -398,17 +398,31 @@ var Core = function() {
         lockWitch = false;
     };
 
-    var generalUpdate = function(phaseId_in) {
-        phase= GamePhaseOrder[phaseId_in];
-        for (var idx = 0; idx < playerList.length; idx++) {
-            var active = (phase!=PHASECODE.DAY && ROLEDATA[playerList[idx].role].activedPhase.indexOf(phase)>0)?1:0;
+    var generalUpdate = function() {
+        // phase= GamePhaseOrder[phaseId_in];
+        // for (var idx = 0; idx < playerList.length; idx++) {
+        //     var active = (phase!=PHASECODE.DAY && ROLEDATA[playerList[idx].role].activedPhase.indexOf(phase)>0)?1:0;
+        //
+        //     _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[idx]],{
+        //        actived: active,
+        //        alive: cache_aliveList,
+        //        status: playerList[idx].status,
+        //        action:[]
+        //      });
+        // }
+        that.onUpdated([
+            GamePhaseOrder[phaseIdx] ,
+            cache_aliveList,
+            getStatusArr()
+        ]);
 
-            _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[idx]],{
-               actived: active,
+        for (var i=0;i<playerList.length;i++){
+            _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[i]],{
+               actived: 0,
                alive: cache_aliveList,
-               status: playerList[idx].status,
+               status: playerList[i].status,
                action:[]
-             });
+            });
         }
     };
 
@@ -436,10 +450,16 @@ var Core = function() {
         // tell all alive werewolfs who can be voted
 
         if (playerIdx == null) {
-            generalUpdate(phaseIdx);
             console.log("=========================");
             console.log("=       狼人请睁眼       =");
             console.log("=========================");
+
+            _send[MSGCODE.HOST.UPDATE](AliveWerewolf,{
+               actived: 1,
+               alive: cache_aliveList,
+               status: playerList[AliveWerewolf[0]].status,
+               action:werewolfVote
+            });
             return 0;
         }
 
@@ -448,20 +468,22 @@ var Core = function() {
             return 0;
         }
 
-        var victim = dat[1];
-
-        if (!(_playersId.indexOf(_playerIDXtoID[victim]) > -1)) {
-            console.log(dat + " is not in playerID list");
-            return 0;
-        }
-        //if (!_playersId.include(dat)) { return 0; }
-        if (playerList[victim].alive) {
+        var victim = dat[1][0];
+        if (victim!==-1 ){
+            if (!(_playersId.indexOf(_playerIDXtoID[victim]) > -1)) {
+                console.log(dat + " is not in playerID list");
+                return 0;
+            }
+            //if (!_playersId.include(dat)) { return 0; }
+            if (playerList[victim].alive) {
+                werewolfVote[playerIdx] = victim;
+            } else {
+                console.log("player ", dat, " is already dead");
+                return 0;
+            }
+        }else{
             werewolfVote[playerIdx] = victim;
-        } else {
-            console.log("player ", dat, " is already dead");
-            return 0;
         }
-
         _send[MSGCODE.HOST.UPDATE](AliveWerewolf,{
            actived: 1,
            alive: cache_aliveList,
@@ -470,29 +492,24 @@ var Core = function() {
         });
         // finish?
         var vote = {};
+        var val = -1;
         for (var key in werewolfVote) {
-            if (werewolfVote.hasOwnProperty(key)) {
-                // get voted victim
-                var val = werewolfVote[key];
+            val = werewolfVote[key];
+            vote[val]= (vote[val]||0)+1;
+        }
+        console.log(vote);
+        //console.log(vote[val],AliveWerewolf.length);
+        if (vote[val] == AliveWerewolf.length) {
+            console.log("== 狼人请闭眼 ==");
+            console.log("werewolfs killed player ", val);
+            MarkOfTheWolf = val;
+            if (val!=-1) playerList[val].alive = false;
+            for (var i=0;i<AliveWerewolf.length;i++){
+                playerList[AliveWerewolf[i]].status = [val];
             }
-            if (vote.hasOwnProperty(val)) {
-                vote[val] += 1;
-            } else {
-                vote[val] = 1;
-            }
-            console.log(vote);
-            //console.log(vote[val],AliveWerewolf.length);
-            if (vote[val] == AliveWerewolf.length) {
-                console.log("== 狼人请闭眼 ==");
-                console.log("werewolfs killed player ", val);
-                MarkOfTheWolf = val;
-                playerList[val].alive = false;
-                for (var i=0;i<AliveWerewolf.length;i++){
-                    playerList[AliveWerewolf[i]].status = [val];
-                }
-                CheckIfEnd();
-                phaseIncreament();
-            }
+            _send[MSGCODE.HOST.RESULT](AliveWerewolf, [val]);
+            CheckIfEnd();
+            phaseIncreament();
         }
     }
 
@@ -520,15 +537,15 @@ var Core = function() {
             return 0;
         }
 
-        if (playerList[playerIdx].role != "seer" || dat == null) {
+        if (playerList[playerIdx].role != ROLECODE.SEER || dat == null) {
             console.log("not a seer");
             return;
         }
 
-        var testIdx = dat[0];
+        var testIdx = dat[1][0];
         var testRst = 0;
         console.log("seer choose to test " + dat);
-        if (playerList[testIdx].role != "werewolf") {
+        if (playerList[testIdx].role != ROLECODE.WEREWOLF) {
             console.log("player " + testIdx + " is a good guy");
             testRst = 0;
         } else {
@@ -552,18 +569,25 @@ var Core = function() {
                 console.log("== @#%#……&%%…… 死了你要不要救 ==");
                 console.log("== 你有一瓶毒药要不要用 ==");
                 phaseIncreament();
+            }else{
+                _send[MSGCODE.HOST.UPDATE]([witchID],{
+                   actived: 1,
+                   alive: cache_aliveList,
+                   status: playerList[witchID].status,
+                   action:[playerList[witchID].status[0]>0?MarkOfTheWolf:-1]
+                });
             }
             return;
         }
 
-        if (playerList[playerIdx].role != "witch" || dat==null) {
+        if (playerList[playerIdx].role != ROLECODE.WITCH || dat==null) {
             return 0;
         }
 
-        var healIdx=dat[0];
-        var poisonIdx=dat[1];
+        var healIdx=dat[1][0];
+        var poisonIdx=dat[1][1];
 
-        if (playerList[playerIdx].status[0]>0 && healIdx!==-1){
+        if (playerList[playerIdx].status[0]>0 && healIdx!==-1 && MarkOfTheWolf!==-1){
             playerList[MarkOfTheWolf].alive = true;
             playerList[playerIdx].status[0] = 0;
             console.log("use potion saved ", playerList[MarkOfTheWolf]);
@@ -573,25 +597,14 @@ var Core = function() {
             playerList[playerIdx].status[1] = 0;
             console.log("use potion kill ", playerList[poisonIdx]);
         }
+        _send[MSGCODE.HOST.END]([playerIdx],[healIdx, poisonIdx]);
         phaseIncreament();
     }
 
     var phaseIncreament = function() {
         phaseIdx = (phaseIdx+1) %GamePhaseOrder.length;
         console.log("phaseIdx", phaseIdx);
-        that.onUpdated([
-            GamePhaseOrder[phaseIdx] ,
-            getAliveStr(),
-            getStatusArr()
-        ]);
-        for (var i=0;i<playerList.length;i++){
-            _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[i]],{
-               actived: 0,
-               alive: cache_aliveList,
-               status: playerList[i].status,
-               action:[]
-            });
-        }
+        generalUpdate();
         GamePhase[GamePhaseOrder[phaseIdx]]();
     }
 
@@ -608,7 +621,7 @@ var Core = function() {
         };
 
         _msg[MSGCODE.CLIENT.DECISION] = function(clientId, dat) {
-            GamePhase[phaseIdx](_playerIDtoIDX[clientId], dat);
+            GamePhase[GamePhaseOrder[phaseIdx]](_playerIDtoIDX[clientId], dat);
         };
     };
 
@@ -624,12 +637,10 @@ var Core = function() {
                 opts.action
             ]);
         };
-        _send[MSGCODE.HOST.RESULT] = function(target, dat) {
+        _send[MSGCODE.HOST.RESULT] = function(target, rst) {
             that.clientUpdate(target, [
                 MSGCODE.HOST.RESULT,
-                dat.number,
-                dat.name,
-                dat.role
+                rst
             ], true);
         };
         _send[MSGCODE.HOST.END] = function(target, rst) {

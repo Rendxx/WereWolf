@@ -45,7 +45,10 @@ Seer.prototype.update = function (aliveListArr, dat){
     Basic.prototype.update.call(this,aliveListArr, dat);
     if (dat==null) return;
     this.lastRoleInfo = dat;
-    this._html.info['msg'].html('Player [No.'+dat[0]+'] is <b>'+ROLEDATA[dat[1]].name+'</b>');
+    if (!this._playerInfo.hasOwnProperty(dat[0])){
+    } else {
+        this._html.info['msg'].html('Player [No.'+dat[0]+'] is <b>'+ROLEDATA[dat[1]].name+'</b>');
+    }
 };
 
 Seer.prototype.showRst = function (dat){
@@ -53,6 +56,17 @@ Seer.prototype.showRst = function (dat){
       this._html.action['container'].fadeOut(200);
       return;
     }
+
+    if (!this._playerInfo.hasOwnProperty(dat[0])){
+        InfoBox.alert({
+            content: 'You did not see anyone this night',
+            callback: function() {
+              this._html.action['container'].fadeOut(200);
+            }.bind(this)
+        });
+        return;
+    }
+
     var p = this._playerInfo[dat[0]];
     var isGood = dat[1]===0;
     InfoBox.alert({

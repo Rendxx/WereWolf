@@ -1,7 +1,7 @@
 // test -----------------------------------------------------------------
 (function(){
   var playerNum = 0;
-  var roleList = [1,2,3,4,5,6,1,2,1,2,1,2,1,2,1,2,1,2];
+  var roleList = [1,1,2,3,4,5,2,6,2,1,2,1,2,1,2,1,2,1,2];
   window.test={
     reset : function (){
       window.msg('1|1|SERVER|2|{"clients":{},"obs":{},"status":1,"setup":null,"game":null}');
@@ -33,23 +33,27 @@
             window.test.clientSET(i, i, 'player '+i+"_"+roleList[i], roleList[i]);
         }
     },
-    client : function (id, x, y){
-      if(id>playerNum){
-        console.log("%c Illegal Command ", 'color: #cc0000;');
-        return;
-      }
-      window.msg('2|4|c'+id+'|3|['+x+','+y+']');
+    update : {
+        1: function (id, target){   // wolf
+            window.msg('2|4|c'+id+'|3|[1,['+target+']]');
+        },
+        2: function (target){   // seer
+            var id = 3;
+            window.msg('2|4|c'+id+'|3|[1,['+target+']]');
+        },
+        3: function (heal, poison){   // witch
+            var id = 4;
+            window.msg('2|4|c'+id+'|3|[1,['+heal+','+poison+']]');
+        },
     },
     end : function (){
       window.msg('1|5|SERVER|13|null');
     },
-
     init : function(n) {
         test.reset();
         test.add(n);
         test.start();
     },
-
     renew : function (){
       window.msg('1|6|SERVER|14|null');
     }
@@ -68,6 +72,10 @@
   console.log("%c test.client(1,10,10) ", 'color: #003399;');
   console.log("%c test.clientSET(1,2,\"player 2\",2) ", 'color: #003399;');
   console.log("%c test.inited() ", 'color: #003399;');
+  console.log('');
+  console.log("%c test.update[1](6,3)", 'color: #003399;');
+  console.log("%c test.update[2](6)", 'color: #003399;');
+  console.log("%c test.update[3](-1,-1)", 'color: #003399;');
   console.groupEnd();
   console.log('');
 })();

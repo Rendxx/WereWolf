@@ -46,13 +46,22 @@ WereWolf.prototype.showRst = function (dat){
       this._html.action['container'].fadeOut(200);
       return;
     }
-    var p = this._playerInfo[dat[0]];
-    InfoBox.alert({
-        content: INFO.SHOWPLAYER(p[0], p[1],'This player has been murdered'),
-        callback: function() {
-          this._html.action['container'].fadeOut(200);
-        }.bind(this)
-    });
+    if (!this._playerInfo.hasOwnProperty(dat[0])){
+        InfoBox.alert({
+            content: 'You did not murder anyone this night',
+            callback: function() {
+              this._html.action['container'].fadeOut(200);
+            }.bind(this)
+        });
+    } else {
+        var p = this._playerInfo[dat[0]];
+        InfoBox.alert({
+            content: INFO.SHOWPLAYER(p[0], p[1],'This player has been murdered'),
+            callback: function() {
+              this._html.action['container'].fadeOut(200);
+            }.bind(this)
+        });
+    }
 };
 
 WereWolf.prototype.initInfoPanel = function (container){
