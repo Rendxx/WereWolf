@@ -3,40 +3,36 @@
     You can set game options while waiting for other players.
 */
 
+var RoleSelectPanel = require('./RoleSelectPanel.js');
 var Style = require('../less/Prepare.less');
 
 var HTML = {
     logo: '<div class="_logo"></div>',
+    line: '<div class="_line"></div>',
+    playerCount: '<div class="_playerCount">0</div>',
     playerList: '<div class="_playerList"></div>',
     item: '<div class="_item"></div>',
-    startBtn: '<div class="_start">START</div>'
+    startBtn: '<div class="_start">Game Start</div>'
 };
 
-var CSS = {
-    occupied: '_occupied',
-    hidden: '_hidden'
-};
+var CSS={
+  'animationEnd': '_animationEnd'
+}
 
 var Prepare = function (container, opts_in) {
     "use strick";
     // Property -------------------------------------
-    var // html
-        html = {
-            container: $(container),
-            startBtn: null,
-            playerList: null,
-            player: [],
-            colorSelector: null,
-            colorList: null,
-            colorItem: {}
-        },
+    var html = {
+        container: $(container)
+    };
 
-        // data
-        colorOption = null,
-        colorId = null,
-
-        // cache
-        cache_client = null;
+    var cache_client = null,
+        clientNumber = 0;
+    var roleSelectPanel=null;
+    var setupOpt = {
+        roleArrange:[],
+        roleList:[]
+    };
 
     // Callback -------------------------------------
 
@@ -45,6 +41,7 @@ var Prepare = function (container, opts_in) {
         /* TODO: show Prepare-Screen */
         _renderClient(cache_client);
         html['container'].fadeIn();
+        html['logo'].addClass(CSS.animationEnd);
     };
 
     this.hide = function () {
@@ -70,74 +67,64 @@ var Prepare = function (container, opts_in) {
     // api -------------------------------------------
     this.getSetupPara = function () {
         /* TODO: return game options */
-        return {
-            color: colorOption[colorId]
-        };
+        return setupOpt;
     };
 
     // Private ---------------------------------------
     var _renderClient = function (clientData) {
         if (clientData == null) return;
+
+
+        for (var id in html['player']) {
+            if(clientData.hasOwnProperty(id))continue;
+            html['player'][id].remove();
+            delete html.player[id];
+        }
+
         // player
-        var occupiedNumber = {};
+        clientNumber=0;
         for (var id in clientData) {
-            if (clientData[id].number == -1) continue;
-            occupiedNumber[clientData[id].number] = id;
+            clientNumber++;
+            if(html['player'].hasOwnProperty(id))continue;
+            html['player'][id] = $(HTML.item).appendTo(html['playerList']).text(clientData[id].name);
         }
-
-        for (var i = 0; i < maxPlayer; i++) {
-            if (i in occupiedNumber) {
-                html['player'][i].html(clientData[occupiedNumber[i]].name).addClass(CSS.occupied);
-            } else {
-                html['player'][i].html("").removeClass(CSS.occupied);
-            }
-        }
-    };
-
-    var _selectColor = function (id) {
-        colorId = id;
-        html['colorSelector'].children('span').text(id);
-        html['colorSelector'][0].style.backgroundColor = colorOption[id];
+        html['playerCount'].text(clientNumber);
     };
 
     // Setup -----------------------------------------
     var _setupHtml = function () {
+        html['logo'] = $(HTML.logo).appendTo(html['container']);
+        html['line'] = $(HTML.line).appendTo(html['container']);
         // player list
+        html['playerCount'] = $(HTML.playerCount).appendTo(html['container']);
         html['playerList'] = $(HTML.playerList).appendTo(html['container']);
-        for (var i = 0; i < maxPlayer; i++) {
-            html['player'][i] = $(HTML.item).appendTo(html['playerList']);
-        }
 
         // start btn
         html['startBtn'] = $(HTML.startBtn).appendTo(html['container']);
         html['startBtn'].click(function () {
-          window.test.start();
-         /* TODO: use the line below in real env
-              $.get('/Host/Start');
-         */
+            roleSelectPanel.show(clientNumber);
         });
-
-        // color selector
-        html['colorSelector'] = $(HTML.colorSelector).appendTo(html['container']);
-        html['colorList'] = $(HTML.colorList).appendTo(html['container']).addClass(CSS.hidden);
-        for (var i in colorOption) {
-            var ele = $(HTML.colorItem).appendTo(html['colorList']);
-            ele.children('span').text(i);
-            ele[0].style.backgroundColor = colorOption[i];
-            if (colorId == null) _selectColor(i);
-            ele.click({ id: i }, function (e) {
-                _selectColor(e.data.id);
-                html['colorList'].toggleClass(CSS.hidden);
-            });
-            html['colorItem'][i] = ele;
-        }
-        html['colorSelector'].click(function () {
-            html['colorList'].toggleClass(CSS.hidden);
-        });
+        html['player'] = {};
     };
 
     var _init = function (opts_in) {
         _setupHtml();
+        roleSelectPanel = new RoleSelectPanel(container);
+
+        roleSelectPanel.onFinish = function (roleArr, roleList2){
+            console.log('FINISH ------------------------');
+            console.log(roleArr);
+            console.log(roleList2);
+            console.log('');
+            setupOpt = {
+                roleArrange:roleArr,
+                roleList:roleList2
+            };
+            window.test.start();
+           /* TODO: use the line below in real env
+                $.get('/Host/Start');
+           */
+        };
     }(opts_in);
 };
 

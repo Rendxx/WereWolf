@@ -11,8 +11,7 @@ var ClientList = function (opts_in) {
         _max = 5,
         _isLocker = false;
 
-    var clients = {},       // { id:<number>, name:<string>, number:<number>}
-        players = [];       // queue of players, starts from 0
+    var clients = {};       // { id:<number>, name:<string>}
 
     // callback ------------------------------------------
     this.onUpdateClient = null;               /* TODO: callback: send client data if update */
@@ -22,8 +21,6 @@ var ClientList = function (opts_in) {
     this.reset = function (clientData) {
         /* TODO: reset all client data */
         clients = {};
-        players = [];
-        for (var i = 0; i < _max; i++) players[i] = null;
         for (var id in clientData) {
             addClient(id, clientData[id]);
         }
@@ -49,7 +46,12 @@ var ClientList = function (opts_in) {
 
     this.getClientList = function () {
         /* TODO: initialize the client data. */
-        return players;
+        var players=[];
+        for (var id in clients) {
+            players.push(clients[id]);
+        }
+
+        return players=[];
     };
 
     // Lock -----------------------------------------------
@@ -65,37 +67,20 @@ var ClientList = function (opts_in) {
 
     // Client Add / Remove -----------------------------------------------
     var addClient = function (id, name) {
+        if (_isLocker) return;
         clients[id] = {
             id: id,
-            name: name,
-            number: -1
+            name: name
         };
-
-        if (_isLocker) return;
-        for (var i = 0; i < _max; i++) {
-            if (players[i] == null) {
-                clients[id].number = i;
-                players[i] = {
-                    name: name,
-                    id:id
-                };
-                break;
-            }
-        }
     };
 
     var removeClient = function (id) {
-        var n = clients[id].number;
-        delete clients[id];
-        if (n == -1) return;
         if (_isLocker) return;
-        players[n] = null;
+        delete clients[id];
     };
 
     // Setup -----------------------------------------------
     var _init = function (opts_in) {
-        _max = opts_in.max;
-        for (var i = 0; i < _max; i++) players[i] = null;
     }(opts_in);
 };
 

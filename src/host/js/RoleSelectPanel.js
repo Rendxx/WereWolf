@@ -1,14 +1,14 @@
 var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 
-require('../less/RoleSelection.less');
+require('../less/RoleSelectPanel.less');
 
 var HTML = {
-    wrap: '<div class="roleSelection"></div>',
+    wrap: '<div class="roleSelectPanel"></div>',
     inner: '<div class="_inner"></div>',
     title: '<div class="_title"><span>ROLE SETTING</span></div>',
     remainder: '<div class="_remainder"></div>',
-    cancel: '<div class="_cancel">Cancel</div>',
+    cancel: '<div class="_cancel">cancel</div>',
     ok: '<div class="_ok">O K</div>',
     roleList: '<div class="_roleList"></div>',
     selection: '<div class="_selection"></div>',
@@ -103,7 +103,7 @@ var RoleSelection = function (container){
         _html['remainder']=$(HTML.remainder).appendTo(_html['title']);
         _html['cancel']=$(HTML.cancel).appendTo(_html['title']);
         _html['cancel'].click(function(){
-            that.hide(); 
+            that.hide();
         });
         _html['ok']=$(HTML.ok).appendTo(_html['title']);
         _html['ok'].click(function(){

@@ -4,6 +4,7 @@
 */
 
 var Style = require('./less/Index.less');
+var Font = require('GLOBAL/font/optimusprinceps/style.css');
 
 window.GAME = {
   ClientList:require('./js/ClientList.js'),

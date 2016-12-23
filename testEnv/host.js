@@ -6,7 +6,7 @@
       window.msg('1|1|SERVER|2|{"clients":{},"obs":{},"status":1,"setup":null,"game":null}');
     },
     add : function (num){
-      if (num>6) {
+      if (num>26) {
         console.log("%c Illegal Command ", 'color: #cc0000;');
         return;
       }
