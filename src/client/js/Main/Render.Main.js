@@ -129,8 +129,8 @@ var Main = function (container) {
         _send[MSGCODE.CLIENT.SET_INIT] = function (dat){
             that.message.action([
               MSGCODE.CLIENT.SET_INIT,
-              dat.name,
               dat.number,
+              dat.name,
               dat.role
             ]);
         };
