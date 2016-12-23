@@ -103,7 +103,7 @@ var RoleSelection = function (container){
         _html['remainder']=$(HTML.remainder).appendTo(_html['title']);
         _html['cancel']=$(HTML.cancel).appendTo(_html['title']);
         _html['cancel'].click(function(){
-            that.hide();
+            that.hide(); 
         });
         _html['ok']=$(HTML.ok).appendTo(_html['title']);
         _html['ok'].click(function(){
