@@ -13,7 +13,8 @@ var setting = {
     ],
     entry: {
         host : './src/host/Index',
-        client : './src/client/Index'
+        client : './src/client/Index',
+        test : './src/test/Index'
     },
     output: {
         path: 'public/Content',
@@ -60,6 +61,7 @@ var setting = {
 
 if (minimize) setting.entry = {
     'host.min' : './src/host/Index',
-    'client.min' : './src/client/Index'
+    'client.min' : './src/client/Index',
+    'test.min' : './src/test/Index'
 }
 module.exports = setting;

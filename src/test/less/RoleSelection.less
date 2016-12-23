@@ -1,0 +1,223 @@
+.roleSelection {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    overflow: hidden;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.2s;
+    background-color: rgba(0,0,0,0.6);
+    font-family: 'poor richard', Calibri;
+
+    &._show{
+        opacity: 1;
+        visibility: visible;
+    }
+
+    ._inner{
+        position:absolute;
+        top:20px;
+        left:20px;
+        bottom:20px;
+        right:20px;
+        box-sizing: border-box;
+        overflow: hidden;
+        box-shadow: 0 0 5px #000;
+        background-color: #333;
+        background-image: url('../../client/design/bg.png');
+        background-repeat: repeat;
+        background-size: auto;
+
+        .__item{
+            position: relative;
+            display: inline-block;
+            margin:5px 5px;
+            width:120px;
+            height:160px;
+            overflow: hidden;
+            border-radius: 6px;
+            background-color: #111;
+            box-shadow: 0 0 5px rgba(0,0,0,0.4);
+
+            span{
+              color:#ccc;
+              text-align: center;
+              line-height: 20px;
+              width:100%;
+              height:20px;
+              font-size: 16px;
+              position:absolute;
+              bottom:20px;
+              left:0;
+            }
+
+            &:after{
+                content: '';
+                display: block;
+                position: absolute;
+                top:10px;
+                left:10px;
+                width:100px;
+                height:100px;
+                box-sizing: border-box;
+                border-bottom:1px solid #1e1e1e;
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+
+            &.Villager{
+              &:after{
+                  background-image: url('../../global/design/Role/villager.png');
+              }
+            }
+
+            &.Werewolf{
+              &:after{
+                  background-image: url('../../global/design/Role/werewolf.png');
+              }
+            }
+
+            &.Seer{
+              &:after{
+                  background-image: url('../../global/design/Role/seer.png');
+              }
+            }
+
+            &.Witch{
+              &:after{
+                  background-image: url('../../global/design/Role/villager.png');
+              }
+            }
+
+            &.Hunter{
+              &:after{
+                  background-image: url('../../global/design/Role/hunter.png');
+              }
+            }
+
+            &.Idiot{
+              &:after{
+                  background-image: url('../../global/design/Role/idiot.png');
+              }
+            }
+
+            &.Elder{
+              &:after{
+                  background-image: url('../../global/design/Role/elder.png');
+              }
+            }
+        }
+
+        ._title{
+
+            background-color: #333;
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:60px;
+            line-height: 60px;
+            border-bottom: 1px solid #282828;
+            color:#ccc;
+            text-align: center;
+            font-size: 24px;
+
+            z-index:100;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+
+            ._remainder{
+                padding-left: 74px;
+                position:absolute;
+                top:0;
+                left:0;
+                width:30px;
+                font-size: 16px;
+                text-align: left;
+
+                &:after{
+                    content:'Remaind: ';
+                    position:absolute;
+                    display:block;
+                    top:0;
+                    left:0;
+                    text-align: right;
+                    width:70px;
+                    color:#888;
+                }
+            }
+
+            span{
+
+            }
+            ._cancel{
+                position:absolute;
+                top:0;
+                right:0;
+                width:100px;
+                color:#666;
+                font-size: 14px;
+            }
+        }
+
+        ._roleList{
+            box-sizing: border-box;
+            padding: 70px 30px 250px;
+            position: relative;
+            top:0;
+            left:0;
+            background-color: #222;
+            z-index:10;
+
+            ._roleItem{
+                .__item;
+            }
+        }
+        
+        ._selection{
+            background-color: rgba(0,0,0,0.1);
+            position:absolute;
+            bottom:100px;
+            left:0;
+            width:100%;
+            height:181px;
+            padding: 5px 30px;
+            border-top: 1px solid #282828;
+            overflow: hidden;
+            box-sizing: border-box;
+            z-index:100;
+
+            ._selectionInner{
+                margin:0 auto;
+
+                ._roleItem{
+                    .__item;
+                    opacity: 0.75;
+                }
+            }
+        }
+        ._ok{
+          z-index:100;
+          position:absolute;
+          bottom:20px;
+          left:50%;
+          width:160px;
+          height:60px;
+          line-height: 60px;
+          margin-left:-81px;
+          border: 1px solid #777;
+          color:#777;
+          text-align: center;
+          font-size: 30px;
+
+          &._available{
+            background-color: #899674;
+            border: 1px solid #899674;
+            color:#333;
+          }
+        }
+    }
+}

@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template</title>                                                 <!-- TODO: Page title -->
+    <link href="../Content/test.css" rel="stylesheet" type="text/css" />    <!-- TODO: Style file in absolute path -->
+</head>
+<body>
+    <div id="test" class="panel"></div>
+    <div class="bg"></div>
+
+    <!--Script-->
+    <script type="text/javascript" src="../Lib/jquery.min.js"></script>                <!-- TODO: load jQuery  -->
+    <script type="text/javascript" src="../Lib/InfoBox.min.js"></script>               <!-- TODO: load InfoBox  -->
+    <script type="text/javascript" src="../Content/test.js"></script>   <!-- TODO: load game client file  -->
+    <script type="text/javascript">
+        var roleSelection = new GAME.RoleSelection(document.getElementById('test'));
+        roleSelection.onFinish = function (roleArr){
+            console.log('FINISH ------------------------');
+            console.log(roleArr);
+            console.log('');
+        };
+        roleSelection.onCancel = function (roleArr){
+            console.log('CANCEL ------------------------');
+            console.log('');
+        };
+
+        window.t = function (num){
+            roleSelection.show(num);
+        }
+    </script>
+</body>
+</html>
