@@ -30,51 +30,18 @@
     end : function (){
       window.msg('1|5|SERVER|13|null');
     },
-    clientAct : function (id,data) {
+    clientSET : function (id,number,name,role) {
       if(id>playerNum){
         console.log("%c Illegal Command ", 'color: #cc0000;');
         return;
       }
-      window.msg('2|4|c'+id+'|3|"'+data+'"');
+      window.msg('2|4|c'+id+'|3|[0,'+number+',"'+name+'",'+role+']');
     },
+
     init : function(n) {
         test.reset();
         test.add(n);
         test.start();
-    },
-
-    play : function() {
-        test.clientAct(1,"seer");
-        test.clientAct(2,"witch");
-        test.clientAct(3,"villiger");
-        test.clientAct(4,"werewolf");
-        test.clientAct(5,"werewolf");
-
-        // day 1
-        // werewolf kill c1
-        test.clientAct(5,"c1");
-        test.clientAct(4,"c1");
-
-        // seer test c2
-        test.clientAct(1,"c2");
-
-        // witch save c1
-        test.clientAct(2,"Y");
-
-        // day 2
-        // werewolf kill c1
-        test.clientAct(5,"c1");
-        test.clientAct(4,"c1");
-
-        // seer test c4
-        test.clientAct(1,"c4");
-
-        // witch poison c4
-        test.clientAct(2,"Y")
-        test.clientAct(2,"c4")
-
-
-
     },
 
     renew : function (){
@@ -228,7 +195,7 @@ Rendxx.Game = Rendxx.Game || {};
             'NO_CODE': 0,
             'CLIENT_SETUP': 1,
             'CLIENT_UPDATE': 2,
-            'ACTION': 3
+            'ACTION': 3,
             'CLIENT_UPDATE_TMP': 4
         },
         CUSTOMIZED: 'CUSTOMIZED'
