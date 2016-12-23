@@ -7,8 +7,8 @@ var Style = require('./less/Index.less');
 var Font = require('GLOBAL/font/optimusprinceps/style.css');
 
 window.GAME = {
-  ClientList:require('./js/ClientList.js'),
-  Core:require('./js/Core.js'),
+  ClientList:require('HOST/js/ClientList.js'),
+  Core:require('HOST/js/Core/Core.js'),
   Render:{
     Prepare : require('HOST/js/Prepare/Render.Prepare.js'),
     Main : require('HOST/js/Main/Render.Main.js'),

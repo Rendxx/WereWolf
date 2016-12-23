@@ -51,7 +51,7 @@ var ClientList = function (opts_in) {
             players.push(clients[id]);
         }
 
-        return players=[];
+        return players;
     };
 
     // Lock -----------------------------------------------

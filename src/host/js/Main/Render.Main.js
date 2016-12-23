@@ -7,8 +7,8 @@ var ACTION = require('GLOBAL/js/ActionCode.js');
 var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var PHASE = require('GLOBAL/js/PhaseCode.js');
-var InfoBox = require('CLIENT/js/InfoBox.js');
-var PlayerPanel = require('CLIENT/js/Main/Render.Main.PlayerPanel.js');
+var InfoBox = require('HOST/js/InfoBox.js');
+var PlayerPanel = require('HOST/js/Main/Render.Main.PlayerPanel.js');
 
 require('HOST/less/Main/Main.less');
 
@@ -23,12 +23,13 @@ var Main = function (container) {
     var that = this;
     var width = 0,
         height = 0;
-    var cache_pos = null;
     var html = {
         container: $(container),
         board : null,
         player:[]
     };
+    var gameData = null;
+    var playerPanel = null;
 
     // callback ------------------------------------------
     this.handler = {};        /* TODO: this is a package of hander provided by Core. You can use these handler to control the game at Host */
@@ -37,6 +38,7 @@ var Main = function (container) {
     this.show = function () {
         /* TODO: show Main-Screen */
         html['container'].fadeIn();
+        playerPanel.show();
         _render();
     };
 
@@ -49,13 +51,9 @@ var Main = function (container) {
     this.reset = function (setupData) {
         /* TODO: initialize the game */
         if (setupData==null) return;
-        _clear();
-        var player = setupData.player;
-        var color = setupData.color;
-        cache_pos = setupData.playerPos;
-        for (var i=0;i<player.length;i++){
-            _addPlayer(i, player[i].id, player[i].name, color);
-        }
+        var basicData = setupData[0];
+        var playerData = setupData[1];
+        playerPanel.reset(basicData, playerData);
         _render();
     };
 
@@ -67,10 +65,10 @@ var Main = function (container) {
         /* TODO: deprecated */
     };
 
-    this.updateGame = function (gameData) {
+    this.updateGame = function (gameData_in) {
         /* TODO: update the game with game data */
-        if (gameData == null) return;
-        cache_pos = gameData.pos;
+        if (gameData_in == null) return;
+        gameData = gameData_in;
         _render();
     };
 
@@ -88,35 +86,24 @@ var Main = function (container) {
         html['player']=[];
     };
     var _render = function (){
-        width = html['board'].width();
-        height = html['board'].height();
-        for (var i=0;i<cache_pos.length;i++){
-            var pos = cache_pos[i];
-            html['player'][i][0].style.left = pos[0]/100*width+'px';
-            html['player'][i][0].style.top = pos[1]/100*height+'px';
-        }
-    };
-
-    var _addPlayer = function (idx, clientId, name, color){
-        var playerNode = $(HTML.player).appendTo(html['board']).text(name);
-        playerNode[0].style.backgroundColor = color;
-        html['player'][idx] = playerNode;
-
-        playerNode[0].addEventListener('click', function (){
-            $$.info.check(name + " will win this game?", null, true, "rgba(0,0,0,0.6)",
-            function () {
-                that.handler.win(clientId);   // use handler to control game from HOST
-            });
-        },false)
+        if (gameData == null) return;
+        var phase = gameData[0];
+        var aliveList = gameData[1];
+        var statusList = gameData[2];
+        playerPanel.update(aliveList);
     };
 
     // setup -----------------------------------------------
     var _setupHtml = function () {
-        html['board'] = $(HTML.board).appendTo(html['container']);
+        //html['board'] = $(HTML.board).appendTo(html['container']);
     };
 
     var _init = function () {
         _setupHtml();
+        playerPanel = new PlayerPanel(html['container'][0]);
+        playerPanel.onCHange = function(idx, alive){
+            this.handler.setAlive && this.handler.setAlive(idx, alive);
+        };
     }();
 };
 

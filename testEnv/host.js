@@ -20,6 +20,18 @@
     start : function (){
       window.msg('1|3|SERVER|12|null');
     },
+    clientSET : function (id,number,name,role) {
+      if(id>playerNum){
+        console.log("%c Illegal Command ", 'color: #cc0000;');
+        return;
+      }
+      window.msg('2|4|c'+id+'|3|[0,'+number+',"'+name+'",'+role+']');
+    },
+    inited : function () {
+        for (var i=1;i<=playerNum;i++){
+            window.test.clientSET(i, i, 'playerEE '+i, i);
+        }
+    },
     client : function (id, x, y){
       if(id>playerNum){
         console.log("%c Illegal Command ", 'color: #cc0000;');
@@ -29,13 +41,6 @@
     },
     end : function (){
       window.msg('1|5|SERVER|13|null');
-    },
-    clientSET : function (id,number,name,role) {
-      if(id>playerNum){
-        console.log("%c Illegal Command ", 'color: #cc0000;');
-        return;
-      }
-      window.msg('2|4|c'+id+'|3|[0,'+number+',"'+name+'",'+role+']');
     },
 
     init : function(n) {
@@ -60,6 +65,8 @@
   console.log("%c test.reset() ", 'color: #003399;');
   console.log("%c test.add(3) ", 'color: #003399;');
   console.log("%c test.client(1,10,10) ", 'color: #003399;');
+  console.log("%c test.clientSET(1,2,\"player 2\",2) ", 'color: #003399;');
+  console.log("%c test.inited() ", 'color: #003399;');
   console.groupEnd();
   console.log('');
 })();
