@@ -29,8 +29,9 @@
       window.msg('2|4|c'+id+'|3|[0,'+number+',"'+name+'",'+role+']');
     },
     inited : function () {
+        var t = [4,6,5,1,3,2,9]
         for (var i=1;i<=playerNum;i++){
-            window.test.clientSET(i, i, 'player '+i+"_"+roleList[i], roleList[i]);
+            window.test.clientSET(i, t[i], 'player '+i+"_"+roleList[i], roleList[i]);
         }
     },
     update : {

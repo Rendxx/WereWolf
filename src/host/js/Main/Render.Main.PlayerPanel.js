@@ -49,7 +49,7 @@ var PlayerPanel = function(container) {
         _playerInfo = playerInfo;
         playerNum = _basicData.length;
         setupHtml();
-        setupPlayer(_basicData, playerInfo);
+        setupPlayer(_basicData, _playerInfo);
         resize();
     };
 
@@ -161,18 +161,31 @@ var PlayerPanel = function(container) {
         var fontSize = ~~(70*ratio);
         r-=(playerSize/2+60);
         var angle = Math.PI*2/html['player'].length;
+
+        var orderList = [];
         for (var i=0; i<html['player'].length; i++){
-            html['player'][i].wrap.css({
+            orderList.push(i);
+        }
+        if (_playerInfo!=null && _playerInfo.length>0){
+          orderList.sort(function(a, b){
+              var number_a = _playerInfo[a][0]||0;
+              var number_b = _playerInfo[b][0]||0;
+              return number_a-number_b;
+          });
+        }
+
+        for (var i=0; i<html['player'].length; i++){
+            var idx = orderList[i];
+            html['player'][idx].wrap.css({
               'width': playerSize + 'px',
               'height': playerSize + 'px',
               'margin-top': (-r*Math.cos(angle*i))+'px',
               'margin-left': (r*Math.sin(angle*i))+'px',
             });
-            html['player'][i].number.css({
+            html['player'][idx].number.css({
               'font-size': fontSize + 'px'
             });
         }
-        html['message']
     };
 
     var _init = function() {
