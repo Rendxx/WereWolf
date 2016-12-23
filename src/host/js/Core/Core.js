@@ -9,6 +9,7 @@
 
 var ACTION = require('GLOBAL/js/ActionCode.js');
 var ROLECODE = require('GLOBAL/js/RoleCode.js');
+var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var MSGCODE = require('GLOBAL/js/MessageCode.js');
 var PHASECODE = require('GLOBAL/js/PhaseCode.js');
 var INITCODE = require('GLOBAL/js/InitCode.js');
@@ -59,8 +60,6 @@ var Core = function() {
     var reserruction = true;
     var destruction = true;
     var hunterRavage = true;
-    var seerLastTest = null;
-    var seerLastTestResult = null;
 
     // LOCK PHASECODE
     var lockSetup = false;
@@ -68,9 +67,20 @@ var Core = function() {
     var lockSeer = false;
     var lockWitch = false;
 
+    // CACHE FOR UPDATE MESSAGE
+    var cache_aliveList = '';
+
     // message -----------------------------------------------
     this.send = null; /* TODO: this.send(code, content): This function should be set by Host-Manager, it is used to send message out */
-    this.handler = {}; /* TODO: this is a package of hander for Render.Main */
+    this.handler = {
+        skip:function (){
+            phaseIncreament();
+        },
+        setAlive:function (playerIdx, isAlive){
+            playerList[playerIdx].alive = isAlive;
+            if (GamePhaseOrder[phaseIdx]===PHASECODE.DAY) generalUpdate(phaseIdx);
+        }
+    }; /* TODO: this is a package of hander for Render.Main */
 
     this.receive = function(msg) {
         /* TODO:
@@ -259,6 +269,7 @@ var Core = function() {
         }
         return arr;
     };
+
     var getAliveStr = function() {
         var str = '';
         for (var i = 0; i < playerList.length; i++) {
@@ -282,7 +293,6 @@ var Core = function() {
         }
         return allPlayerList;
     };
-
 
     var checkRoleSetuped = function() {
         for (var i = 0; i < playerNum; i++) {
@@ -339,11 +349,6 @@ var Core = function() {
                 ]);
             }
             phaseIncreament();
-            that.onUpdated([
-                GamePhaseOrder[phaseIdx] ,
-                getAliveStr(),
-                getStatusArr()
-            ]);
         } else {
             // tell that player "you are setuped"
             that.clientSetup([clientId], [
@@ -354,7 +359,7 @@ var Core = function() {
                 []
             ]);
         }
-    }
+    };
 
     var GetAliveStatus = function() {
         console.log("fucntion: GetAliveStatus")
@@ -379,6 +384,7 @@ var Core = function() {
         }
 
         AliveChara = AliveWerewolf.concat(AliveGods).concat(AliveMortal);
+        cache_aliveList = getAliveStr();
 
         console.log("AliveWerewolf", AliveWerewolf);
         console.log("AliveGods", AliveGods);
@@ -390,55 +396,22 @@ var Core = function() {
         lockSeer = false;
         lockWolf = false;
         lockWitch = false;
-    }
+    };
 
     var generalUpdate = function(phaseId_in) {
         phase= GamePhaseOrder[phaseId_in];
-        var liveList = "";
-        for (var i = 0; i < playerList.length; i++) {
-            if (playerList[i].alive) {
-                liveList += "1";
-            } else {
-                liveList += "0";
-            }
-        }
-
         for (var idx = 0; idx < playerList.length; idx++) {
-            var status = [];
-            var active = 0;
-            var actionData = [];
+            var active = (phase!=PHASECODE.DAY && ROLEDATA[playerList[idx].role].activedPhase.indexOf(phase)>0)?1:0;
 
-            // update status
-            if (playerList[idx].role == ROLECODE.WEREWOLF || playerList[idx].role == ROLECODE.VILLAGER) {
-                status = [];
-            } else if (playerList[idx].role == ROLECODE.SEER) {
-                status = [seerLastTest, seerLastTestResult];
-            } else if (playerList[idx].role == ROLECODE.WITCH) {
-                status = [reserruction, destruction];
-            } else if (playerList[idx].role == ROLECODE.HUNTER) {
-                status = [hunterRavage];
-            }
-
-            // update active
-            if (phase == PHASECODE.WOLF) {
-                if (playerList[idx].role == ROLECODE.WEREWOLF) {
-                    active = 1;
-                }
-            } else if (phase == PHASECODE.SEER) {
-                if (playerList[idx].role == ROLECODE.SEER) {
-                    active = 1;
-                }
-            } else if (phase == PHASECODE.WITCH) {
-                if (playerList[idx].role == ROLECODE.WITCH) {
-                    active = 1;
-                }
-            }
-
-            that.clientUpdate([_playerIDXtoID[idx]], [
-                1, phase, active, liveList, status, actionData
-            ]);
+            _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[idx]],{
+               actived: active,
+               alive: cache_aliveList,
+               status: playerList[idx].status,
+               action:[]
+             });
         }
-    }
+    };
+
     var CheckIfEnd = function() {
         return false;
     }
@@ -446,7 +419,7 @@ var Core = function() {
     var daytime = function() {
         console.log("function: daytime");
 
-        phaseIncreament();
+        //phaseIncreament();
     }
 
     var preNight = function() {
@@ -459,10 +432,10 @@ var Core = function() {
         phaseIncreament();
     }
 
-    var werewolf = function(playerId, dat) {
+    var werewolf = function(playerIdx, dat) {
         // tell all alive werewolfs who can be voted
 
-        if (playerId == null) {
+        if (playerIdx == null) {
             generalUpdate(phaseIdx);
             console.log("=========================");
             console.log("=       狼人请睁眼       =");
@@ -470,14 +443,12 @@ var Core = function() {
             return 0;
         }
 
-        wolfIdx = _playerIDtoIDX[playerId];
-
-        if (!(AliveWerewolf.indexOf(wolfIdx) > -1)) {
-            console.log(playerId + " is not in alive werewolf list");
+        if (!(AliveWerewolf.indexOf(playerIdx) > -1) || dat==null) {
+            console.log(playerIdx + " is not in alive werewolf list");
             return 0;
         }
 
-        victim = dat[1][0];
+        var victim = dat[1];
 
         if (!(_playersId.indexOf(_playerIDXtoID[victim]) > -1)) {
             console.log(dat + " is not in playerID list");
@@ -485,14 +456,18 @@ var Core = function() {
         }
         //if (!_playersId.include(dat)) { return 0; }
         if (playerList[victim].alive) {
-            werewolfVote[wolfIdx] = victim;
+            werewolfVote[playerIdx] = victim;
         } else {
             console.log("player ", dat, " is already dead");
             return 0;
         }
 
-        that.clientUpdate(AliveWerewolf, werewolfVote);
-
+        _send[MSGCODE.HOST.UPDATE](AliveWerewolf,{
+           actived: 1,
+           alive: cache_aliveList,
+           status: playerList[playerIdx].status,
+           action:werewolfVote
+        });
         // finish?
         var vote = {};
         for (var key in werewolfVote) {
@@ -508,24 +483,21 @@ var Core = function() {
             console.log(vote);
             //console.log(vote[val],AliveWerewolf.length);
             if (vote[val] == AliveWerewolf.length) {
-
                 console.log("== 狼人请闭眼 ==");
-
                 console.log("werewolfs killed player ", val);
                 MarkOfTheWolf = val;
                 playerList[val].alive = false;
+                for (var i=0;i<AliveWerewolf.length;i++){
+                    playerList[AliveWerewolf[i]].status = [val];
+                }
                 CheckIfEnd();
-
                 phaseIncreament();
-
             }
         }
-
     }
 
-    var seer = function(playerId, dat) {
-
-        if (playerId == null) {
+    var seer = function(playerIdx, dat) {
+        if (playerIdx == null) {
             console.log("=========================");
             console.log("=      预言家请睁眼      =");
             console.log("=========================");
@@ -538,36 +510,39 @@ var Core = function() {
 
             } else {
                 // tell seer who can be tested
-                that.clientUpdate([seerID], AliveChara);
+                _send[MSGCODE.HOST.UPDATE](AliveWerewolf,{
+                   actived: 1,
+                   alive: cache_aliveList,
+                   status: playerList[seerID].status,
+                   action:[]
+                });
             }
             return 0;
         }
 
-        if (playerList[playerId].role != "seer") {
+        if (playerList[playerIdx].role != "seer" || dat == null) {
             console.log("not a seer");
             return;
         }
 
-        var test = false;
+        var testIdx = dat[0];
+        var testRst = 0;
         console.log("seer choose to test " + dat);
-        if (playerList[dat].role != "werewolf") {
-            console.log("player " + dat + " is a good guy");
-            test = false;
+        if (playerList[testIdx].role != "werewolf") {
+            console.log("player " + testIdx + " is a good guy");
+            testRst = 0;
         } else {
-            console.log("player " + dat + " is a bad guy");
-            test = true;
+            console.log("player " + testIdx + " is a bad guy");
+            testRst = 1;
         }
-
-        that.clientUpdate([playerId], {
-            player: dat,
-            role: test
-        });
+        playerList[playerIdx].status = [testIdx, testRst];
+        _send[MSGCODE.HOST.END]([playerIdx],[testIdx, testRst]);
         console.log("== 预言家请闭眼 ==");
         phaseIncreament();
     }
 
-    var witch = function(playerId, dat) {
-        if (playerId == null) {
+    var witch = function(playerIdx, dat) {
+        if (playerIdx == null) {
             console.log("=========================");
             console.log("=       女巫请睁眼       =");
             console.log("=========================");
@@ -577,58 +552,46 @@ var Core = function() {
                 console.log("== @#%#……&%%…… 死了你要不要救 ==");
                 console.log("== 你有一瓶毒药要不要用 ==");
                 phaseIncreament();
-                return;
-            } else {
-                if (reserruction) {
-                    console.log("== " + MarkOfTheWolf + " 死了你要不要救 ==");
-                    // if witch not dead, and still have potion, tell witch who is dead tonight
-                    // console.log(MarkOfTheWolf," is killed tonight, do you want to use potion?");
-                    that.clientUpdate([witchID], MarkOfTheWolf);
-                    // stay in this phase, wait for witch action
-                    if (MarkOfTheWolf == witchID) {
-                        // cannot res herself
-                        console.log("cannot revive yourself")
-                        gameEnd();
-                        return;
-                    }
-
-                } else {
-
-                    // if no potion of res, random a time and go to potion of destruction
-                    console.log("witch doesn't have potion of reserruction");
-                    console.log("== @#%#……&%%…… 死了你要不要救 ==");
-                    gameEnd();
-                    return;
-                }
             }
             return;
         }
 
-        if (playerList[playerId].role != "witch") {
+        if (playerList[playerIdx].role != "witch" || dat==null) {
             return 0;
         }
 
-        if (dat == "Y" && MarkOfTheWolf != witchID) {
-            // if use potion, set player to alive, cannot save herself
+        var healIdx=dat[0];
+        var poisonIdx=dat[1];
+
+        if (playerList[playerIdx].status[0]>0 && healIdx!==-1){
             playerList[MarkOfTheWolf].alive = true;
-            reserruction = false;
-
+            playerList[playerIdx].status[0] = 0;
             console.log("use potion saved ", playerList[MarkOfTheWolf]);
-            // random a potion of destruction time, go to daytime
-            console.log("== 你有一瓶毒药要不要用 ==");
-            phaseIncreament();
-            return;
-
-        } else if (dat == "N") {
-            // go to potion of destruction
-            gameEnd();
-            return;
         }
+        if (playerList[playerIdx].status[1]>0 && poisonIdx!==-1){
+            playerList[poisonIdx].alive = false;
+            playerList[playerIdx].status[1] = 0;
+            console.log("use potion kill ", playerList[poisonIdx]);
+        }
+        phaseIncreament();
     }
 
     var phaseIncreament = function() {
         phaseIdx = (phaseIdx+1) %GamePhaseOrder.length;
         console.log("phaseIdx", phaseIdx);
+        that.onUpdated([
+            GamePhaseOrder[phaseIdx] ,
+            getAliveStr(),
+            getStatusArr()
+        ]);
+        for (var i=0;i<playerList.length;i++){
+            _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[i]],{
+               actived: 0,
+               alive: cache_aliveList,
+               status: playerList[i].status,
+               action:[]
+            });
+        }
         GamePhase[GamePhaseOrder[phaseIdx]]();
     }
 
@@ -645,18 +608,20 @@ var Core = function() {
         };
 
         _msg[MSGCODE.CLIENT.DECISION] = function(clientId, dat) {
-            GamePhase[phaseIdx](clientId, dat);
+            GamePhase[phaseIdx](_playerIDtoIDX[clientId], dat);
         };
     };
 
     var _setupSend = function() {
         _send={};
-        _send[MSGCODE.HOST.UPDATE] = function(target, dat) {
+        _send[MSGCODE.HOST.UPDATE] = function(target, opts) {
             that.clientUpdate(target, [
                 MSGCODE.HOST.UPDATE,
-                dat.number,
-                dat.name,
-                dat.role
+                GamePhaseOrder[phaseIdx],
+                opts.actived,
+                opts.alive,
+                opts.status,
+                opts.action
             ]);
         };
         _send[MSGCODE.HOST.RESULT] = function(target, dat) {
@@ -667,12 +632,10 @@ var Core = function() {
                 dat.role
             ], true);
         };
-        _send[MSGCODE.HOST.END] = function(target, dat) {
+        _send[MSGCODE.HOST.END] = function(target, rst) {
             that.clientUpdate(target, [
                 MSGCODE.HOST.END,
-                dat.number,
-                dat.name,
-                dat.role
+                rst
             ]);
         };
     };
@@ -697,6 +660,7 @@ var Core = function() {
         ];
         _setupMsg();
         _setupSend();
+
     }();
 
 };

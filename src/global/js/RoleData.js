@@ -3,7 +3,7 @@ var PHASE = require('GLOBAL/js/PhaseCode.js');
 var ROLEDATA = {};
 
 ROLEDATA[ROLECODE.NONE]={
-  step:[],
+  activedPhase:[],
   code:ROLECODE.NONE,
   name:'None',
   description:'None',
@@ -11,7 +11,7 @@ ROLEDATA[ROLECODE.NONE]={
 };
 
 ROLEDATA[ROLECODE.VILLAGER]={
-  step:[PHASE.DAY],
+  activedPhase:[PHASE.DAY],
   code:ROLECODE.VILLAGER,
   name:'Villager',
   description:'Villager',
@@ -19,7 +19,7 @@ ROLEDATA[ROLECODE.VILLAGER]={
 };
 
 ROLEDATA[ROLECODE.WEREWOLF]={
-  step:[PHASE.DAY, PHASE.WOLF],
+  activedPhase:[PHASE.DAY, PHASE.WOLF],
   code:ROLECODE.WEREWOLF,
   name:'Werewolf',
   description:'Werewolf',
@@ -27,7 +27,7 @@ ROLEDATA[ROLECODE.WEREWOLF]={
 };
 
 ROLEDATA[ROLECODE.SEER]={
-  step:[PHASE.DAY, PHASE.SEER],
+  activedPhase:[PHASE.DAY, PHASE.SEER],
   code:ROLECODE.SEER,
   name:'Seer',
   description:'Seer',
@@ -35,7 +35,7 @@ ROLEDATA[ROLECODE.SEER]={
 };
 
 ROLEDATA[ROLECODE.WITCH]={
-  step:[PHASE.DAY, PHASE.WITCH],
+  activedPhase:[PHASE.DAY, PHASE.WITCH],
   code:ROLECODE.WITCH,
   name:'Witch',
   description:'Witch',
@@ -43,7 +43,7 @@ ROLEDATA[ROLECODE.WITCH]={
 };
 
 ROLEDATA[ROLECODE.HUNTER]={
-  step:[PHASE.DAY, PHASE.HUNTER],
+  activedPhase:[PHASE.DAY, PHASE.HUNTER],
   code:ROLECODE.HUNTER,
   name:'Hunter',
   description:'Hunter',
@@ -51,7 +51,7 @@ ROLEDATA[ROLECODE.HUNTER]={
 };
 
 ROLEDATA[ROLECODE.IDIOT]={
-  step:[PHASE.DAY, PHASE.IDIOT],
+  activedPhase:[PHASE.DAY, PHASE.IDIOT],
   code:ROLECODE.IDIOT,
   name:'Idiot',
   description:'Idiot',
@@ -59,7 +59,7 @@ ROLEDATA[ROLECODE.IDIOT]={
 };
 
 ROLEDATA[ROLECODE.ELDER]={
-  step:[PHASE.DAY, PHASE.ELDER],
+  activedPhase:[PHASE.DAY, PHASE.ELDER],
   code:ROLECODE.ELDER,
   name:'Elder',
   description:'Elder',

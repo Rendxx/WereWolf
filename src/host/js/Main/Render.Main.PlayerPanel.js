@@ -87,7 +87,7 @@ var PlayerPanel = function(container) {
             InfoBox.check({
                 content: 'Do you want to SKIP this phase',
                 callbackYes: function() {
-                    that.onSkip&&that.onSkip(idx, alive);
+                    that.onSkip&&that.onSkip();
                 }
             });
         });

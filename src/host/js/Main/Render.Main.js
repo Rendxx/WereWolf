@@ -101,8 +101,11 @@ var Main = function (container) {
     var _init = function () {
         _setupHtml();
         playerPanel = new PlayerPanel(html['container'][0]);
-        playerPanel.onCHange = function(idx, alive){
-            this.handler.setAlive && this.handler.setAlive(idx, alive);
+        playerPanel.onSkip = function(){
+            that.handler&&that.handler.skip && that.handler.skip();
+        };
+        playerPanel.onChange = function(idx, alive){
+            that.handler&&that.handler.setAlive && that.handler.setAlive(idx, alive);
         };
     }();
 };

@@ -1,7 +1,7 @@
 // test -----------------------------------------------------------------
 (function(){
   var playerNum = 0;
-  var roleList = [3,1,1,1,2,2,2,3,4,5,1,2,1,1,2,1,1,2,1];
+  var roleList = [1,2,3,4,5,6,1,2,1,2,1,2,1,2,1,2,1,2];
   window.test={
     reset : function (){
       window.msg('1|1|SERVER|2|{"clients":{},"obs":{},"status":1,"setup":null,"game":null}');
