@@ -6,11 +6,9 @@
 var Style = require('../less/Prepare.less');
 
 var HTML = {
+    logo: '<div class="_logo"></div>',
     playerList: '<div class="_playerList"></div>',
     item: '<div class="_item"></div>',
-    colorSelector: '<div class="colorSelector"><span></span></div>',
-    colorList: '<div class="_colorList"></div>',
-    colorItem: '<div class="_item"><span></span></div>',
     startBtn: '<div class="_start">START</div>'
 };
 
@@ -34,7 +32,6 @@ var Prepare = function (container, opts_in) {
         },
 
         // data
-        maxPlayer = 0,
         colorOption = null,
         colorId = null,
 
@@ -140,8 +137,6 @@ var Prepare = function (container, opts_in) {
     };
 
     var _init = function (opts_in) {
-        maxPlayer = opts_in.maxPlayer;
-        colorOption = opts_in.colorOption || {};
         _setupHtml();
     }(opts_in);
 };
