@@ -3,12 +3,13 @@
         font-size: 16px;
         width:100%;
         height:100%;
+        box-shadow: inset 0 0 150px #000;
 
         ._title {
             position:absolute;;
             top:0;
             left:0;
-            width:100%;
+            width:420;
             height:64px;
             line-height: 64px;
             background-color: rgba(10,10,10,0.9);
@@ -16,27 +17,28 @@
             text-align: left;
             z-index:10;
 
-            span{
-                color:#999;
-                font-size: 24px;
-                padding-left:30px;
-            }
-
-            ._hide {
-                width: 52px;
-                height: 52px;
+            ._title_btn {
+                width: 140px;
+                height: 100%;
                 text-align: center;
-                position: absolute;
-                top: 6px;
-                right: 6px;
-                color: #333;
-                //background-image: url('../../design/back-64.png');
-                background-repeat: no-repeat;
-                background-position: center center;
-                background-color: #332929;
-                border:2px solid #3c2c2c;
-                box-shadow: inset 0 0 6px rgba(0,0,0,0.4);
-                box-sizing: border-box;
+                position: relative;;
+                display: inline-block;
+                color: #ccc;
+                font-size: 18px;
+                cursor: pointer;
+                background-color: rgba(0,0,0,0.2);
+
+                &._skip{
+                    background-color: rgba(255,0,0,0.04);
+                }
+
+                &:hover{
+                    background-color: rgba(0,0,0,0);
+
+                    &._skip{
+                        background-color: rgba(255,0,0,0.1);
+                    }
+                }
             }
         }
 
@@ -51,27 +53,6 @@
             z-index:1;
             transform: translate(-50%,-50%);
 
-            ._space {
-                overflow: visible;
-                width: 100%;
-                height:70px;
-                clear:both;
-                position:relative;
-                top:0;
-                left:0;
-
-                &:after{
-                  content: '';
-                  position:absolute;
-                  top: -1px;
-                  left: 0;
-                  width:100%;
-                  height:1px;
-                  background-color: #222;
-                  z-index:1;
-                }
-            }
-
             ._player {
                 width: 256px;
                 height:256px;
@@ -80,8 +61,9 @@
                 left:50%;
                 line-height: 40px;
                 overflow: visible;
-                float:left;
                 transform: translate(-50%,-50%);
+                cursor: pointer;
+                z-index:40;
 
                 &:before{
                   content: '';
@@ -118,7 +100,7 @@
                     color: #888;
                     margin: 0 auto;
                     font-size: 40px;
-                    font-family: "Agency FB";
+                    font-family: 'optimusprinceps', "Agency FB", Calibri;
                     text-shadow: 0 0 5px #000;
                     z-index:30;
                     position:absolute;
@@ -164,26 +146,28 @@
                         opacity: 1;
                     }
                 }
+
+                &:hover{
+                    ._number {
+                        color:#fff;
+                        opacity: 1;
+                    }
+                    ._name {
+                        color: #fff;
+                    }
+                }
+            }
+
+            ._message{
+                width: 300px;
+                position:absolute;
+                top:50%;
+                left:50%;
+                overflow: visible;
+                transform: translate(-50%,-50%);
+                z-index: 10;
             }
         }
+
     }
-}
-
-._checkBox_player_number {
-  font-size:50px;
-  line-height:90px;
-  width:90px;
-  height:90px;
-  background:#ccc;
-  color:#333;
-  margin:5px auto;
-  margin-top:15px;
-  font-family: "Agency FB";
-  border-radius: 3px;
-}
-
-._checkBox_player_name {
-  font-size:20px;
-  line-height:30px;
-  font-family: 微软雅黑, Calibri;
 }

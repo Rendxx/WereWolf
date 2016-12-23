@@ -36,8 +36,9 @@ var Core = function() {
     var playerList = [];
 
     // GAME PROGRESS INFO
-    var GamePhase = [];
-    var phaseIdx = 0;
+    var GamePhase = {};
+    var GamePhaseOrder = [];
+    var phaseIdx = -1;
     var dayNum = 0;
     var battlelog = [];
 
@@ -61,7 +62,7 @@ var Core = function() {
     var seerLastTest = null;
     var seerLastTestResult = null;
 
-    // LOCK PHASE
+    // LOCK PHASECODE
     var lockSetup = false;
     var lockWolf = false;
     var lockSeer = false;
@@ -190,7 +191,8 @@ var Core = function() {
     this.start = function() {
         /* TODO: game start */
         start = true;
-        GamePhase[phaseIdx]();
+        phaseIdx=-1;
+        GamePhase[PHASECODE.INIT]();
     };
 
     this.end = function() {
@@ -336,10 +338,9 @@ var Core = function() {
                     getPlayerInfoArr()
                 ]);
             }
-            phaseIdx = 2;
-            GamePhase[phaseIdx]();
+            phaseIncreament();
             that.onUpdated([
-                phaseIdx,
+                GamePhaseOrder[phaseIdx] ,
                 getAliveStr(),
                 getStatusArr()
             ]);
@@ -391,7 +392,8 @@ var Core = function() {
         lockWitch = false;
     }
 
-    var generalUpdate = function(phase) {
+    var generalUpdate = function(phaseId_in) {
+        phase= GamePhaseOrder[phaseId_in];
         var liveList = "";
         for (var i = 0; i < playerList.length; i++) {
             if (playerList[i].alive) {
@@ -444,8 +446,7 @@ var Core = function() {
     var daytime = function() {
         console.log("function: daytime");
 
-        phaseIdx = 2;
-        GamePhase[phaseIdx]();
+        phaseIncreament();
     }
 
     var preNight = function() {
@@ -455,10 +456,7 @@ var Core = function() {
         GetAliveStatus();
         unlockAllPhase();
 
-        phaseIdx = 3;
-
-        GamePhase[phaseIdx]();
-
+        phaseIncreament();
     }
 
     var werewolf = function(playerId, dat) {
@@ -518,8 +516,7 @@ var Core = function() {
                 playerList[val].alive = false;
                 CheckIfEnd();
 
-                phaseIdx = 4;
-                GamePhase[phaseIdx]();
+                phaseIncreament();
 
             }
         }
@@ -537,8 +534,7 @@ var Core = function() {
                 console.log("seer is dead");
                 console.log("== 预言家请验人 ==");
                 console.log("== 预言家请闭眼 ==");
-                phaseIdx = 5;
-                GamePhase[phaseIdx]();
+                phaseIncreament();
 
             } else {
                 // tell seer who can be tested
@@ -567,8 +563,7 @@ var Core = function() {
             role: test
         });
         console.log("== 预言家请闭眼 ==");
-        phaseIdx = 5;
-        GamePhase[phaseIdx]();
+        phaseIncreament();
     }
 
     var witch = function(playerId, dat) {
@@ -581,8 +576,7 @@ var Core = function() {
                 console.log("witch is dead");
                 console.log("== @#%#……&%%…… 死了你要不要救 ==");
                 console.log("== 你有一瓶毒药要不要用 ==");
-                phaseIdx = 1;
-                GamePhase[phaseIdx]();
+                phaseIncreament();
                 return;
             } else {
                 if (reserruction) {
@@ -594,8 +588,7 @@ var Core = function() {
                     if (MarkOfTheWolf == witchID) {
                         // cannot res herself
                         console.log("cannot revive yourself")
-                        phaseIdx = 6;
-                        GamePhase[phaseIdx]();
+                        gameEnd();
                         return;
                     }
 
@@ -604,8 +597,7 @@ var Core = function() {
                     // if no potion of res, random a time and go to potion of destruction
                     console.log("witch doesn't have potion of reserruction");
                     console.log("== @#%#……&%%…… 死了你要不要救 ==");
-                    phaseIdx = 6;
-                    GamePhase[phaseIdx]();
+                    gameEnd();
                     return;
                 }
             }
@@ -624,31 +616,25 @@ var Core = function() {
             console.log("use potion saved ", playerList[MarkOfTheWolf]);
             // random a potion of destruction time, go to daytime
             console.log("== 你有一瓶毒药要不要用 ==");
-            phaseIdx = 1;
-            GamePhase[phaseIdx]();
+            phaseIncreament();
             return;
 
         } else if (dat == "N") {
             // go to potion of destruction
-            phaseIdx = 6;
-            GamePhase[phaseIdx]();
+            gameEnd();
             return;
         }
     }
 
     var phaseIncreament = function() {
-        if (phaseIdx == 3) {
-            phaseIdx = 4;
-        } else if (phaseIdx == 4) {
-            phaseIdx = 5;
-        } else if (phaseIdx == 5) {
-            phaseIdx = 6;
-        } else if (phaseIdx == 6) {
-            phaseIdx = 1;
-        }
+        phaseIdx = (phaseIdx+1) %GamePhaseOrder.length;
         console.log("phaseIdx", phaseIdx);
-        GamePhase[phaseIdx]();
+        GamePhase[GamePhaseOrder[phaseIdx]]();
     }
+
+    var gameEnd = function (){
+        GamePhase[PHASECODE.END]();
+    };
 
     // setup -----------------------------------------------
 
@@ -694,7 +680,21 @@ var Core = function() {
     var _init = function() {
         //that.handler.win = win;
         cd = new countdown(5000, phaseIncreament);
-        GamePhase = [setupRole, daytime, preNight, werewolf, seer, witch, end];
+        GamePhase = {}
+        GamePhase[PHASECODE.INIT] = setupRole;
+        GamePhase[PHASECODE.DAY] = daytime;
+        GamePhase[PHASECODE.PRENIGHT] = preNight;
+        GamePhase[PHASECODE.WOLF] = werewolf;
+        GamePhase[PHASECODE.SEER] = seer;
+        GamePhase[PHASECODE.WITCH] = witch;
+        GamePhase[PHASECODE.END] = end;
+        GamePhaseOrder=[
+          PHASECODE.PRENIGHT,
+          PHASECODE.WOLF,
+          PHASECODE.SEER,
+          PHASECODE.WITCH,
+          PHASECODE.DAY
+        ];
         _setupMsg();
         _setupSend();
     }();

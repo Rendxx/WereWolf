@@ -1,15 +1,20 @@
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var INFO = require('HOST/js/Info.js');
+var PHASEMESSAGE = require('HOST/js/Main/PhaseMessage.js');
 var InfoBox = require('HOST/js/InfoBox.js');
 
 require('HOST/less/Main/Main.PlayerPanel.less');
 
 var HTML = {
     wrap: '<div class="_playerList"></div>',
-    title: '<div class="_title"><span>Player List</span></div>',
+    title: '<div class="_title"></div>',
     inner: '<div class="_inner"></div>',
     hide: '<div class="_hide"></div>',
     space: '<div class="_space"></div>',
+    skip: '<div class="_title_btn _skip">Skip</div>',
+    status: '<div class="_title_btn _status">Status</div>',
+    roleList: '<div class="_title_btn _roleList">RoleList</div>',
+    message: '<div class="_message"></div>',
 
     player: {
       wrap: '<div class="_player"></div>',
@@ -36,6 +41,7 @@ var PlayerPanel = function(container) {
 
     // Callback ------------------------------
     this.onChange = null;
+    this.onSkip = null;
 
     // Public --------------------------------
     this.reset = function(basicData, playerInfo) {
@@ -47,11 +53,17 @@ var PlayerPanel = function(container) {
         resize();
     };
 
-    this.update = function(alive) {
+    this.update = function(phase, aliveList, statusList) {
         for (var i=0;i<playerNum;i++){
-            playerAlive[i] = alive[i]==='1';
+            playerAlive[i] = aliveList[i]==='1';
             if (playerAlive[i]) html['player'][i].wrap.addClass(CSS.alive);
             else html['player'][i].wrap.removeClass(CSS.alive);
+        }
+
+        if (!PHASEMESSAGE.hasOwnProperty(phase)) {
+            html['message'].empty();
+        } else {
+            html['message'].html(PHASEMESSAGE[phase]);
         }
     };
 
@@ -66,7 +78,19 @@ var PlayerPanel = function(container) {
         html['wrap'] = $(HTML.wrap).appendTo(html['container']);
         html['title'] = $(HTML.title).appendTo(html['wrap']);
         html['inner'] = $(HTML.inner).appendTo(html['wrap']);
-        html['hide'] = $(HTML.hide).appendTo(html['title']);
+        html['message'] = $(HTML.message).appendTo(html['inner']);
+        html['skip'] = $(HTML.skip).appendTo(html['title']);
+        html['status'] = $(HTML.status).appendTo(html['title']);
+        html['roleList'] = $(HTML.roleList).appendTo(html['title']);
+
+        html['skip'].click(function(){
+            InfoBox.check({
+                content: 'Do you want to SKIP this phase',
+                callbackYes: function() {
+                    that.onSkip&&that.onSkip(idx, alive);
+                }
+            });
+        });
     };
 
     var setupPlayer = function(basicData, playerInfo) {
@@ -76,6 +100,7 @@ var PlayerPanel = function(container) {
         }
         if (playerInfo!=null){
             for (var i=0;i<playerNum;i++){
+                html['player'][i]['wrap'].unbind('click');
                 if (playerInfo[i]==null) continue;
                 setPlayerInfo(i, playerInfo[i][0],playerInfo[i][1]);
             }
@@ -86,6 +111,17 @@ var PlayerPanel = function(container) {
     var setPlayerInfo = function (idx, number, name){
         html['player'][idx]['number'].text(number);
         html['player'][idx]['name'].text(name);
+
+        html['player'][idx]['wrap'].click(function(){
+            var alive = playerAlive[idx]!==true;
+            var text = 'Do you want to '+ (alive?'heal':'kill') + ' this player?';
+            InfoBox.check({
+                content: INFO.SHOWPLAYER(number, name, text),
+                callbackYes: function() {
+                    that.onChange&&that.onChange(idx, alive);
+                }
+            });
+        });
     };
 
     var addPlayer = function (idx, name){
@@ -136,6 +172,7 @@ var PlayerPanel = function(container) {
               'font-size': fontSize + 'px'
             });
         }
+        html['message']
     };
 
     var _init = function() {

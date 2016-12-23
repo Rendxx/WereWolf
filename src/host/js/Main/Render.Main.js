@@ -90,7 +90,7 @@ var Main = function (container) {
         var phase = gameData[0];
         var aliveList = gameData[1];
         var statusList = gameData[2];
-        playerPanel.update(aliveList);
+        playerPanel.update(phase, aliveList, statusList);
     };
 
     // setup -----------------------------------------------

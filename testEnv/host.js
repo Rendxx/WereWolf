@@ -1,6 +1,7 @@
 // test -----------------------------------------------------------------
 (function(){
   var playerNum = 0;
+  var roleList = [3,1,1,1,2,2,2,3,4,5,1,2,1,1,2,1,1,2,1];
   window.test={
     reset : function (){
       window.msg('1|1|SERVER|2|{"clients":{},"obs":{},"status":1,"setup":null,"game":null}');
@@ -29,7 +30,7 @@
     },
     inited : function () {
         for (var i=1;i<=playerNum;i++){
-            window.test.clientSET(i, i, 'playerEE '+i, i);
+            window.test.clientSET(i, i, 'player '+i+"_"+roleList[i], roleList[i]);
         }
     },
     client : function (id, x, y){
