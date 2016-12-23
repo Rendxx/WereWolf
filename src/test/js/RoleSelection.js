@@ -6,7 +6,7 @@ require('../less/RoleSelection.less');
 var HTML = {
     wrap: '<div class="roleSelection"></div>',
     inner: '<div class="_inner"></div>',
-    title: '<div class="_title"><span>Select the roles in this game.</span></div>',
+    title: '<div class="_title"><span>ROLE SETTING</span></div>',
     remainder: '<div class="_remainder"></div>',
     cancel: '<div class="_cancel">Cancel</div>',
     ok: '<div class="_ok">O K</div>',
@@ -92,6 +92,7 @@ var RoleSelection = function (container){
         ele.addClass(dat.name);
         ele.click(function(e){
             that.removeRole(roleCode);
+            return false;
         });
     };
 
@@ -104,23 +105,29 @@ var RoleSelection = function (container){
         _html['cancel'].click(function(){
             that.hide();
         });
+        _html['ok']=$(HTML.ok).appendTo(_html['title']);
+        _html['ok'].click(function(){
+            if (playerNumber-roleCache.length>0) return false;
+            var roleMap = {};
+            var output = [];
+            var copy = roleCache.slice();
+            for (var i=playerNumber;i>0;i--){
+                var k = ~~(Math.random()*i);
+                output.push(copy[k]);
+                roleMap[copy[k]]=1;
+                copy[k] = copy[i-1];
+            }
+            var roleList2 = [];
+            for (var i in roleMap){
+              roleList2.push(Number(i));
+            }
+            roleList2.sort();
+            that.onFinish && that.onFinish (output,roleList2);
+        });
 
         _html['roleList']=$(HTML.roleList).appendTo(_html['inner']);
         _html['selection']=$(HTML.selection).appendTo(_html['inner']);
         _html['selectionInner']=$(HTML.selectionInner).appendTo(_html['selection']);
-        _html['ok']=$(HTML.ok).appendTo(_html['inner']);
-
-        _html['ok'].click(function(){
-            if (playerNumber-roleCache.length>0) return false;
-            var output = [];
-            var copy = roleCache.slice();
-            for (var i=playerNumber;i>0;i--){
-                var k = ~~(Math.random()*playerNumber);
-                output.push(copy[k]);
-                copy[k] = copy[i-1];
-            }
-            that.onFinish && that.onFinish (output);
-        });
         _html['selectionRole'] = [];
         for (var i=0;i<availableRole.length;i++){
             addSelection(i,availableRole[i]);
@@ -134,6 +141,7 @@ var RoleSelection = function (container){
         ele.addClass(dat.name);
         ele.click(function(e){
             that.addRole(roleCode);
+            return false;
         });
         _html['selectionRole'][i] = ele;
     };

@@ -16,12 +16,13 @@
     <script type="text/javascript" src="../Content/test.js"></script>   <!-- TODO: load game client file  -->
     <script type="text/javascript">
         var roleSelection = new GAME.RoleSelection(document.getElementById('test'));
-        roleSelection.onFinish = function (roleArr){
+        roleSelection.onFinish = function (roleArr, roleList2){
             console.log('FINISH ------------------------');
             console.log(roleArr);
+            console.log(roleList2);
             console.log('');
         };
-        roleSelection.onCancel = function (roleArr){
+        roleSelection.onCancel = function (){
             console.log('CANCEL ------------------------');
             console.log('');
         };
