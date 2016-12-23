@@ -6,8 +6,14 @@
     - It monitors game process and decides the next status of the game.
 */﻿
 
-var charactor = function (id, role, name) {
+var ACTION = require('GLOBAL/js/ActionCode.js');
+var ROLECODE = require('GLOBAL/js/RoleCode.js');
+var MSGCODE = require('GLOBAL/js/MessageCode.js');
+var STEPCODE = require('GLOBAL/js/StepCode.js');
+
+var charactor = function (id, number, role, name) {
     this.id = id;
+    this.number = number;
     this.role = role;
     this.name = name;
     this.alive = true;
@@ -22,33 +28,49 @@ var Core = function () {
         _players = null,
         _playersId = null,
         _playerMap = null,  // hash table player base info
-        _playerPos = [];
+        _playerPos = [],
+        _playerIDXtoID = null,
+        _playerIDtoIDX = null;
 
+    // TIME COUNTER
     var cd = null;
 
+    // PLAYER INFO
     var playerNum = 0;
-
-    var GamePhase = [];
     var playerList = {};
+    var clientPlayerList = [];
+
+    // GAME PROGRESS INFO
+    var GamePhase = [];
     var phaseIdx = 0;
     var dayNum = 0;
-    battlelog = [];
+    var battlelog = [];
 
+    // PER NIGHT INFO
     var werewolfVote = {};
-
     var AliveWerewolf = [];
     var AliveGods = [];
     var AliveMortal = [];
     var AliveChara = [];
 
+    // SPECIAL ID INFO
     var MarkOfTheWolf = "";
     var seerID;
     var witchID;
     var hunterID;
 
-    // witch
+    // HERO SKILL INFO
     var reserruction = true;
     var destruction = true;
+    var hunterRavage = true;
+    var seerLastTest = null;
+    var seerLastTestResult = null;
+
+    // LOCK PHASE
+    var lockSetup = false;
+    var lockWolf = false;
+    var lockSeer = false;
+    var lockWitch = false;
 
     // message -----------------------------------------------
     this.send = null;         /* TODO: this.send(code, content): This function should be set by Host-Manager, it is used to send message out */
@@ -120,25 +142,28 @@ var Core = function () {
         _playersId = [];
         _playerMap = {};
         _playerPos = [];
+        _playerIDtoIDX = {};
+        _playerIDXtoID = {};
         _color = para.color;
 
-        for (var i = 0, count = playerData.length; i < count; i++) {
-            if (playerData[i] == null) continue;
-            playerNum++;
-        }
+        playerNum = playerData.length;
+        // clientPlayerList = new Array(playerNum);
 
         for (var i = 0, count = playerData.length; i < count; i++) {
             if (playerData[i] == null) continue;
 
             var playerObj={
               id: playerData[i].id,
+              idx: i,
               name: playerData[i].name
             }
             _players.push(playerObj);
             _playersId.push(playerObj.id);
-
+            _playerIDtoIDX[playerObj.id] = playerObj.idx;
+            _playerIDXtoID[playerObj.idx] = playerObj.id;
             // changed
-            _playerMap[playerObj.id] = playerData[i].name;
+            // _playerMap[playerObj.id] = playerData[i].name;
+            _playerMap[playerObj.id] = playerObj;
 
             _playerPos.push([~~(Math.cos(2*Math.PI*i/playerNum)*35+50), ~~(Math.sin(2*Math.PI*i/playerNum)*35+50)]);
 
@@ -164,6 +189,7 @@ var Core = function () {
     this.start = function () {
         /* TODO: game start */
         start = true;
+        GamePhase[phaseIdx]();
     };
 
     this.end = function () {
@@ -210,51 +236,86 @@ var Core = function () {
         start=false;
     };
 
+    var hasEmpty = function (list) {
+        for (var i = 0; i < list.length; i++) {
+            if (list[i] == null) {
+               return true;
+            }
+        }
+        return false;
+    }
+
     // game component --------------------------------------
     var setupRole = function (playerId, dat) {
-      if (playerId == null || dat == null) { return 0; }
 
-//      console.log(JSON.stringify(_playerMap));
-      console.log("player " + playerId + ", " + _playerMap[playerId] + " set to role " + dat);
+      if (lockSetup) { return; }
+
+      if (playerId == null || dat == null) {
+          for (var i = 0; i < _players.length; i++) {
+              that.clientUpdate([_players[i].id], [
+                  0,_players[i].idx,playerNum,[ROLECODE.VILLAGER,ROLECODE.WEREWOLF,ROLECODE.SEER,ROLECODE.WITCH,ROLECODE.HUNTER],[],[]
+              ]);
+          }
+          return;
+      }
+
+      var number = dat[1];
+      var name = dat[2];
+      var role = dat[3];
+
+      // console.log("player " + playerId + ", " + _playerMap[playerId] + " set to role " + dat);
       // get user instructions
-      if ( dat == "witch") {
-        witchID = playerId;
-        var p = new charactor(playerId,"witch",_playerMap[playerId]);
+      if ( role == ROLECODE.WITCH) {
+        witchID = _playerMap[playerId].idx;
       }
 
-      else if ( dat == "seer" ) {
-        seerID = playerId;
-        var p = new charactor(playerId,"seer",_playerMap[playerId]);
+      else if ( role == ROLECODE.SEER ) {
+        seerID = _playerMap[playerId].idx;
       }
 
-      else if ( dat == "villiger" ) {
-        var p = new charactor(playerId,"villiger",_playerMap[playerId]);
+      else if ( role == ROLECODE.HUNTER ) {
+        hunterID = _playerMap[playerId].idx;
       }
 
-      else if ( dat == "werewolf" ) {
-        var p = new charactor(playerId,"werewolf",_playerMap[playerId]);
-      }
 
-      else if ( dat == "hunter" ) {
-        hunterID = playerId;
-        var p = new charactor(playerId,"hunter",_playerMap[playerId]);
-      }
-      else { return; }
+      var p = new charactor(_playerMap[playerId].idx,number,role,name);
 
-      playerList[playerId] = p;
+      playerList[_playerMap[playerId].idx] = p;
+      clientPlayerList.push([number,name]);
 
-//      console.log(JSON.stringify(playerList));
+      console.log(clientPlayerList);
+      console.log(playerList);
 
       that.onUpdated({ playerInfo: playerList});
-//      console.log(Object.keys(playerList).length, Object.keys(_playerMap).length);
 
-
-      if (Object.keys(playerList).length == Object.keys(_playerMap).length) {
+      if (Object.keys(playerList).length == playerNum) {
           // go to preNight
           // ...
+          lockSetup = true;
+
+          clientPlayerList.sort(function(a,b){
+              return a[0] - b[0];
+          });
+
+          for (var i = 0; i < _players.length; i++) {
+              that.clientUpdate([_players[i].id], [
+                  2,
+                  _players[i].idx,
+                  playerNum,
+                  [ROLECODE.VILLAGER,ROLECODE.WEREWOLF,ROLECODE.SEER,ROLECODE.WITCH,ROLECODE.HUNTER],
+                  [playerList[_players[i].idx].number,playerList[_players[i].idx].name,playerList[_players[i].idx].role],
+                  clientPlayerList
+              ]);
+          }
+
           phaseIdx = 2;
           GamePhase[phaseIdx]();
           return;
+      }
+      else {
+        that.clientUpdate([playerId], [
+            1,_playerMap[playerId].idx,playerNum,[ROLECODE.VILLAGER,ROLECODE.WEREWOLF,ROLECODE.SEER,ROLECODE.WITCH,ROLECODE.HUNTER],[number,name,role],[]
+        ]);
       }
 
     }
@@ -269,19 +330,19 @@ var Core = function () {
 
       for (var key in playerList) {
         if (playerList.hasOwnProperty(key)) {
-          if (playerList[key].role == "werewolf" && playerList[key].alive) {
+          if (playerList[key].role == ROLECODE.WEREWOLF && playerList[key].alive) {
               AliveWerewolf.push(key);
           }
-          else if (playerList[key].role == "witch" && playerList[key].alive) {
+          else if (playerList[key].role == ROLECODE.WITCH && playerList[key].alive) {
               AliveGods.push(key);
           }
-          else if (playerList[key].role == "hunter" && playerList[key].alive) {
+          else if (playerList[key].role == ROLECODE.HUNTER && playerList[key].alive) {
               AliveGods.push(key);
           }
-          else if (playerList[key].role == "seer" && playerList[key].alive) {
+          else if (playerList[key].role == ROLECODE.SEER && playerList[key].alive) {
               AliveGods.push(key);
           }
-          else if (playerList[key].role == "villiger" && playerList[key].alive){
+          else if (playerList[key].role == ROLECODE.VILLAGER && playerList[key].alive){
               AliveMortal.push(key);
           }
         }
@@ -295,8 +356,67 @@ var Core = function () {
       console.log("AliveCharacters", AliveChara);
     }
 
-    var CheckIfEnd = function() {
+    var unlockAllPhase = function () {
+        lockSeer = false;
+        lockWolf = false;
+        lockWitch = false;
+    }
 
+    var generalUpdate = function (phase) {
+        var liveList = "";
+        for (var i = 0; i < clientPlayerList.length; i++) {
+            if (playerList[i].alive){
+                liveList += "1";
+            }
+            else{
+                liveList += "0";
+            }
+        }
+
+        for (var idx in playerList) {
+            var status = [];
+            var active = 0;
+            var actionData = [];
+
+            // update status
+            if(playerList[idx].role == ROLECODE.WEREWOLF || playerList[idx].role == ROLECODE.VILLAGER){
+                status = [];
+            }
+            else if (playerList[idx].role == ROLECODE.SEER) {
+                status = [seerLastTest,seerLastTestResult];
+            }
+            else if (playerList[idx].role == ROLECODE.WITCH) {
+                status = [reserruction,destruction];
+            }
+            else if (playerList[idx].role == ROLECODE.HUNTER) {
+               status = [hunterRavage];
+            }
+
+            // update active
+            if (phase == STEPCODE.WOLF) {
+                if (playerList[idx].role == ROLECODE.WEREWOLF) {
+                    active = 1;
+                }
+            }
+            else if (phase == STEPCODE.SEER) {
+                if (playerList[idx].role == ROLECODE.SEER) {
+                    active = 1;
+                }
+            }
+            else if (phase == STEPCODE.WITCH) {
+                if (playerList[idx].role == ROLECODE.WITCH) {
+                    active = 1;
+                }
+            }
+
+            that.clientUpdate([_playerIDXtoID[idx]], [
+                1,phase,active,liveList,status,actionData
+            ]);
+
+        }
+    }
+    var CheckIfEnd = function() {
+        return false;
     }
 
     var daytime = function () {
@@ -311,38 +431,41 @@ var Core = function () {
         console.log("entering preNight");
 
         GetAliveStatus();
+        unlockAllPhase();
 
         phaseIdx = 3;
-        cd.start();
+
         GamePhase[phaseIdx]();
 
     }
 
     var werewolf = function (playerId, dat) {
-//        console.log("function: Werewolf");
-
         // tell all alive werewolfs who can be voted
-        that.clientUpdate(AliveWerewolf,AliveChara);
 
         if (playerId == null) {
+          generalUpdate(phaseIdx);
           console.log("=========================");
           console.log("=       狼人请睁眼       =");
           console.log("=========================");
           return 0;
         }
 
-        if (!(AliveWerewolf.indexOf(playerId) > -1)) {
+        wolfIdx = _playerIDtoIDX[playerId];
+
+        if (!(AliveWerewolf.indexOf(wolfIdx) > -1)) {
           console.log(playerId + " is not in alive werewolf list");
           return 0;
         }
 
-        if (!(_playersId.indexOf(dat) > -1)) {
+        victim = dat[1][0];
+
+        if (!(_playersId.indexOf(_playerIDXtoID[victim]) > -1)) {
           console.log(dat + " is not in playerID list");
           return 0;
         }
         //if (!_playersId.include(dat)) { return 0; }
-        if (playerList[dat].alive){
-            werewolfVote[playerId] = dat;
+        if (playerList[victim].alive){
+            werewolfVote[wolfIdx] = victim;
         }
         else {
             console.log("player ",dat," is already dead");
@@ -350,7 +473,6 @@ var Core = function () {
         }
 
         that.clientUpdate(AliveWerewolf, werewolfVote);
-//        console.log(werewolfVote);
 
         // finish?
         var vote = {};
@@ -374,7 +496,6 @@ var Core = function () {
             console.log("werewolfs killed player ", val);
             MarkOfTheWolf = val;
             playerList[val].alive = false;
-//            console.log(JSON.stringify(playerList[val]));
             CheckIfEnd();
 
             phaseIdx = 4;
@@ -386,7 +507,6 @@ var Core = function () {
     }
 
     var seer = function (playerId, dat) {
-//        console.log("function: Seer");
 
         if (playerId == null) {
             console.log("=========================");
@@ -429,8 +549,8 @@ var Core = function () {
         GamePhase[phaseIdx]();
     }
 
-    var witch_res = function (playerId, dat) {
-//        console.log("function: Witch_res");
+    var witch = function (playerId, dat) {
+
         if (playerId == null) {
             console.log("=========================");
             console.log("=       女巫请睁眼       =");
@@ -497,61 +617,6 @@ var Core = function () {
         }
     }
 
-    var witch_des = function (playerId, dat) {
-        console.log("function: Witch_Des");
-        // if we go here, assume witch is alive
-        if (playerId == null) {
-          console.log("== 你有一瓶毒药要不要用 ==");
-          if (destruction){
-              that.clientUpdate([witchID],AliveChara);
-          }else{
-
-              phaseIdx = 1;
-              GamePhase[phaseIdx]();
-              return;
-          }
-
-          return;
-        }
-        if (playerList[playerId].role != "witch") { return 0; }
-
-        // die insect
-        if (destruction){
-
-            that.clientUpdate([witchID],AliveChara);
-
-            //console.log("do you want to use poison?");
-            if ((_playersId.indexOf(dat) > -1)) {
-                // if dat is a valid playerID, set alive to false
-                playerList[dat].alive = false;
-                console.log(playerList[dat], " is destroyed");
-
-                destruction = false;
-
-                console.log("== 女巫请闭眼 ==");
-
-                phaseIdx = 1;
-                GamePhase[phaseIdx]();
-                return;
-
-            }
-            else if (dat == "N") {
-                // go to day time
-                phaseIdx = 1;
-                GamePhase[phaseIdx]();
-                return;
-            }
-        }
-        else {
-            console.log("Witch doesn't have potion of destruction");
-
-            console.log("== 女巫请闭眼 ==");
-            phaseIdx = 1;
-            GamePhase[phaseIdx]();
-            return;
-        }
-    }
-
     var phaseIncreament = function() {
         if (phaseIdx == 3) {
             phaseIdx = 4;
@@ -573,7 +638,7 @@ var Core = function () {
     var _init = function () {
         //that.handler.win = win;
         cd = new countdown(5000,phaseIncreament);
-        GamePhase = [setupRole, daytime, preNight, werewolf, seer, witch_res, witch_des, end];
+        GamePhase = [setupRole, daytime, preNight, werewolf, seer, witch, end];
     }();
 
 };
