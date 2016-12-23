@@ -46,8 +46,10 @@ Witch.prototype.active = function (aliveListArr, killedArr){
 
             if (this.potion[0]>0 && killedArr[0]==-1){
                 this._action.choice.update(-1, null, null, 'Nobody was murdered this night.', false);
-            } else if (this.potion[0]===0 || killedArr[0]==-1){
+            } else if (this.potion[0]===0 || killedArr[0]===-1){
                 this._action.choice.update(-1, null, null, 'You have no healing potion.', false);
+            } else if (this.potion[0]>0 && killedArr[0]===this.playerIdx){
+                this._action.choice.update(-1, null, null, 'You are murdered.<br/>You cannot heal yourself.', false);
             } else {
                 var playerInfo = this._playerInfo[killedArr[0]];
                 this._action.choice.update(killedArr[0], playerInfo[0], playerInfo[1], 'This player is murdered this night<br/>Do you want to heal he/she?', true);
