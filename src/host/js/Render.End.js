@@ -6,26 +6,19 @@
 ﻿var Style = require('../less/End.less');
 
 var HTML = {
-    list: '<div class="_list"></div>',
-    player: '<div class="_player"></div>',
+    villager: '<div class="_villager"><div class="_icon"></div><div class="_text"></div></div>',
+    werewolf: '<div class="_werewolf"><div class="_icon"></div><div class="_text"></div></div>',
     renewBtn: '<div class="_renew">RENEW</div>'
 };
 
 var CSS = {
-    win: '_win'
 };
 
 var End = function (container) {
     "use strick";
     // property -----------------------------------------------
-    var html_wrap = $('.end'),
-        html_content = null,
-        html_renew = null;
-
     var html = {
-        container: $(container),
-        board : null,
-        renew : null
+        container: $(container)
     };
 
     // interface controll --------------------------------
@@ -49,29 +42,26 @@ var End = function (container) {
     };
 
     this.updateGame = function (gameData) {
-        /* TODO:
-            create End-Screen.
-            end data should be contained in input data.
-        */
-        if (gameData && gameData.end) {
-            var s = "";
-            html['list'].empty();
-            var end = gameData.end;
-            for (var i=0;i<end.length;i++){
-                _addPlayer(end[i].name, end[i].win);
-            }
+        /* TODO: do nothing */
+        if (gameData==null) return;
+        var villager = gameData[3];
+        if (villager){
+          html['villager'].show();
+          html['werewolf'].hide();
+        } else{
+          html['villager'].hide();
+          html['werewolf'].show();
         }
     };
 
     // Private ---------------------------------------
-    var _addPlayer = function (name, win){
-        var playerNode = $(HTML.player).appendTo(html['list']).text(name);
-        if (win) playerNode.addClass(CSS.win);
-    };
 
     // setup -----------------------------------------------
     var _setupHtml = function () {
-        html['list'] = $(HTML.list).appendTo(html['container']);
+        html['villager'] = $(HTML.villager).appendTo(html['container']);
+        html['werewolf'] = $(HTML.werewolf).appendTo(html['container']);
+        html['villager'].hide();
+        html['werewolf'].hide();
         html['renew'] = $(HTML.renewBtn).appendTo(html['container']);
         html['renew'].click(function () {
             window.test.renew();
