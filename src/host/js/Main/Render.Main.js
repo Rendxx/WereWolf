@@ -7,6 +7,7 @@ var ACTION = require('GLOBAL/js/ActionCode.js');
 var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var PHASE = require('GLOBAL/js/PhaseCode.js');
+var PHASESOUND = require('HOST/js/Main/PhaseSound.js');
 var InfoBox = require('HOST/js/InfoBox.js');
 var PlayerPanel = require('HOST/js/Main/Render.Main.PlayerPanel.js');
 
@@ -30,6 +31,7 @@ var Main = function (container) {
     };
     var gameData = null;
     var playerPanel = null;
+    var currentPhase = -1;
 
     // callback ------------------------------------------
     this.handler = {};        /* TODO: this is a package of hander provided by Core. You can use these handler to control the game at Host */
@@ -91,6 +93,10 @@ var Main = function (container) {
         var aliveList = gameData[1];
         var statusList = gameData[2];
         playerPanel.update(phase, aliveList, statusList);
+        if (currentPhase!==phase && PHASESOUND.hasOwnProperty(phase)){
+          PHASESOUND[phase].play();
+        }
+        currentPhase=phase;
     };
 
     // setup -----------------------------------------------
