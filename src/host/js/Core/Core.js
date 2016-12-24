@@ -66,15 +66,17 @@ var Core = function() {
     var lockWolf = false;
     var lockSeer = false;
     var lockWitch = false;
+    var lockWaiting = false;
 
     // CACHE FOR UPDATE MESSAGE
     var cache_aliveList = '';
+    var _timeoutFunc = null;
 
     // message -----------------------------------------------
     this.send = null; /* TODO: this.send(code, content): This function should be set by Host-Manager, it is used to send message out */
     this.handler = {
         skip:function (){
-            phaseIncreament();
+            phaseIncreament(0);
         },
         setAlive:function (playerIdx, isAlive){
             playerList[playerIdx].alive = isAlive;
@@ -184,7 +186,7 @@ var Core = function() {
             basicDat[i] = [_players[i].id, _players[i].name, _players[i].idx];
         }
 
-        this.onSetuped([basicDat, []]);
+        this.onSetuped([INITCODE.SETTING, basicDat, []]);
         for (var i = 0; i < _players.length; i++) {
             this.clientSetup([_players[i].id], [
                 INITCODE.SETTING,
@@ -251,15 +253,6 @@ var Core = function() {
         */
         start = false;
     };
-
-    var hasEmpty = function(list) {
-        for (var i = 0; i < list.length; i++) {
-            if (list[i] == null) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     // game component --------------------------------------
     var getBasicDataArr = function() {
@@ -337,7 +330,7 @@ var Core = function() {
             // tell all player game setuped
             lockSetup = true;
 
-            that.onSetuped([getBasicDataArr(), getPlayerInfoArr()]);
+            that.onSetuped([INITCODE.ALLDONE, getBasicDataArr(), getPlayerInfoArr()]);
             for (var i = 0; i < playerList.length; i++) {
                 that.clientSetup([_players[i].id], [
                     INITCODE.ALLDONE,
@@ -348,7 +341,7 @@ var Core = function() {
                     getPlayerInfoArr()
                 ]);
             }
-            phaseIncreament();
+            waitingForStart();
         } else {
             // tell that player "you are setuped"
             that.clientSetup([clientId], [
@@ -359,6 +352,11 @@ var Core = function() {
                 []
             ]);
         }
+    };
+
+    var waitingForStart = function (){
+        GetAliveStatus();
+        generalUpdate();
     };
 
     var GetAliveStatus = function() {
@@ -430,6 +428,12 @@ var Core = function() {
         return false;
     }
 
+    var preDay = function() {
+        console.log("entering preDay");
+        GetAliveStatus();
+        phaseIncreament(1000);
+    };
+
     var daytime = function() {
         console.log("function: daytime");
 
@@ -443,7 +447,7 @@ var Core = function() {
         GetAliveStatus();
         unlockAllPhase();
 
-        phaseIncreament();
+        phaseIncreament(8000);
     }
 
     var werewolf = function(playerIdx, dat) {
@@ -523,7 +527,7 @@ var Core = function() {
                 console.log("seer is dead");
                 console.log("== 预言家请验人 ==");
                 console.log("== 预言家请闭眼 ==");
-                phaseIncreament();
+                phaseIncreament(~~(Math.random()*10000)+6000);
 
             } else {
                 // tell seer who can be tested
@@ -568,7 +572,7 @@ var Core = function() {
                 console.log("witch is dead");
                 console.log("== @#%#……&%%…… 死了你要不要救 ==");
                 console.log("== 你有一瓶毒药要不要用 ==");
-                phaseIncreament();
+                phaseIncreament(~~(Math.random()*10000)+6000);
             }else{
                 _send[MSGCODE.HOST.UPDATE]([witchID],{
                    actived: 1,
@@ -601,11 +605,18 @@ var Core = function() {
         phaseIncreament();
     }
 
-    var phaseIncreament = function() {
-        phaseIdx = (phaseIdx+1) %GamePhaseOrder.length;
-        console.log("phaseIdx", phaseIdx);
-        generalUpdate();
-        GamePhase[GamePhaseOrder[phaseIdx]]();
+    var phaseIncreament = function(timeout) {
+        if (timeout==null) timeout=5000;
+        if (_timeoutFunc!==null){
+            clearTimeout(_timeoutFunc);
+        }
+
+        _timeoutFunc = setTimeout(function(){
+            phaseIdx = (phaseIdx+1) %GamePhaseOrder.length;
+            console.log("phaseIdx", phaseIdx);
+            generalUpdate();
+            GamePhase[GamePhaseOrder[phaseIdx]]();
+        }, timeout);
     }
 
     var gameEnd = function (){
@@ -661,12 +672,14 @@ var Core = function() {
         GamePhase[PHASECODE.WOLF] = werewolf;
         GamePhase[PHASECODE.SEER] = seer;
         GamePhase[PHASECODE.WITCH] = witch;
+        GamePhase[PHASECODE.PREDAY] = preDay;
         GamePhase[PHASECODE.END] = end;
         GamePhaseOrder=[
           PHASECODE.PRENIGHT,
           PHASECODE.WOLF,
           PHASECODE.SEER,
           PHASECODE.WITCH,
+          PHASECODE.PREDAY,
           PHASECODE.DAY
         ];
         _setupMsg();

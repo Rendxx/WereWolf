@@ -9,7 +9,8 @@ var PHASE = {
     HUNTER: 6,
     IDIOT: 7,
     ELDER: 8,
-    END: 9
+    PREDAY: 9,
+    END: 10
 };
 
 module.exports = PHASE;

@@ -7,6 +7,11 @@ PHASESOUND[PHASE.DAY] = new Howl({
     loop: false,
     volume: 1
 });
+PHASESOUND[PHASE.PRENIGHT] = new Howl({
+    src: [path+'night2.mp3'],
+    loop: false,
+    volume: 1
+});
 PHASESOUND[PHASE.WOLF] = new Howl({
     src: [path+'werewolf2.mp3'],
     loop: false,

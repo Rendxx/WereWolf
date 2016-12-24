@@ -32,6 +32,7 @@ var Main = function (container) {
     var gameData = null;
     var playerPanel = null;
     var currentPhase = -1;
+    var _timeoutFunc = null;
 
     // callback ------------------------------------------
     this.handler = {};        /* TODO: this is a package of hander provided by Core. You can use these handler to control the game at Host */
@@ -53,9 +54,10 @@ var Main = function (container) {
     this.reset = function (setupData) {
         /* TODO: initialize the game */
         if (setupData==null) return;
-        var basicData = setupData[0];
-        var playerData = setupData[1];
-        playerPanel.reset(basicData, playerData);
+        var initCode = setupData[0];
+        var basicData = setupData[1];
+        var playerData = setupData[2];
+        playerPanel.reset(initCode, basicData, playerData);
         _render();
     };
 
@@ -94,7 +96,12 @@ var Main = function (container) {
         var statusList = gameData[2];
         playerPanel.update(phase, aliveList, statusList);
         if (currentPhase!==phase && PHASESOUND.hasOwnProperty(phase)){
-          PHASESOUND[phase].play();
+            if (_timeoutFunc!==null){
+              clearTimeout(_timeoutFunc);
+            }
+            _timeoutFunc = setTimeout(function(){
+                PHASESOUND[phase].play();
+            },2000);
         }
         currentPhase=phase;
     };

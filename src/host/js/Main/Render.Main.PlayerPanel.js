@@ -1,6 +1,8 @@
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var INFO = require('HOST/js/Info.js');
+var INITCODE = require('GLOBAL/js/InitCode.js');
 var PHASEMESSAGE = require('HOST/js/Main/PhaseMessage.js');
+var PHASECODE = require('GLOBAL/js/PhaseCode.js');
 var InfoBox = require('HOST/js/InfoBox.js');
 
 require('HOST/less/Main/Main.PlayerPanel.less');
@@ -11,6 +13,7 @@ var HTML = {
     inner: '<div class="_inner"></div>',
     hide: '<div class="_hide"></div>',
     space: '<div class="_space"></div>',
+    start: '<div class="_playerList_start">START</div>',
     skip: '<div class="_title_btn _skip">Skip</div>',
     status: '<div class="_title_btn _status">Status</div>',
     roleList: '<div class="_title_btn _roleList">RoleList</div>',
@@ -38,22 +41,26 @@ var PlayerPanel = function(container) {
     var playerAlive = [];
     var _playerInfo = null;
     var _basicData = null;
+    var _phase = PHASECODE.NONE;
 
     // Callback ------------------------------
     this.onChange = null;
     this.onSkip = null;
 
     // Public --------------------------------
-    this.reset = function(basicData, playerInfo) {
+    this.reset = function(initCode, basicData, playerInfo) {
         _basicData = basicData;
         _playerInfo = playerInfo;
         playerNum = _basicData.length;
         setupHtml();
         setupPlayer(_basicData, _playerInfo);
+        if (_phase === PHASECODE.NONE && initCode===INITCODE.ALLDONE)
+          html['start'].fadeIn(200);
         resize();
     };
 
     this.update = function(phase, aliveList, statusList) {
+        _phase= phase;
         for (var i=0;i<playerNum;i++){
             playerAlive[i] = aliveList[i]==='1';
             if (playerAlive[i]) html['player'][i].wrap.addClass(CSS.alive);
@@ -79,6 +86,7 @@ var PlayerPanel = function(container) {
         html['title'] = $(HTML.title).appendTo(html['wrap']);
         html['inner'] = $(HTML.inner).appendTo(html['wrap']);
         html['message'] = $(HTML.message).appendTo(html['inner']);
+        html['start'] = $(HTML.start).appendTo(html['inner']);
         html['skip'] = $(HTML.skip).appendTo(html['title']);
         html['status'] = $(HTML.status).appendTo(html['title']);
         html['roleList'] = $(HTML.roleList).appendTo(html['title']);
@@ -90,6 +98,11 @@ var PlayerPanel = function(container) {
                     that.onSkip&&that.onSkip();
                 }
             });
+        });
+
+        html['start'].click(function(){
+            that.onSkip&&that.onSkip();
+            html['start'].fadeOut(200);
         });
     };
 
