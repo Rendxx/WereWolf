@@ -1,100 +1,104 @@
 .main {
     ._playerList {
         font-size: 16px;
-        width:100%;
-        height:100%;
+        width: 100%;
+        height: 100%;
         box-shadow: inset 0 0 150px #000;
 
         ._title {
-            position:absolute;;
-            top:0;
-            left:0;
-            width:420;
-            height:64px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 420;
+            height: 64px;
             line-height: 64px;
             background-color: rgba(10,10,10,0.9);
             box-shadow: 0 0 20px rgba(0,0,0,0.6);
             text-align: left;
-            z-index:10;
+            z-index: 10;
 
             ._title_btn {
                 width: 140px;
                 height: 100%;
                 text-align: center;
-                position: relative;;
+                position: relative;
                 display: inline-block;
                 color: #ccc;
                 font-size: 18px;
                 cursor: pointer;
                 background-color: rgba(0,0,0,0.2);
 
-                &._skip{
+                &._skip {
                     background-color: rgba(255,0,0,0.04);
                 }
 
-                &:hover{
+                &:hover {
                     background-color: rgba(0,0,0,0);
 
-                    &._skip{
+                    &._skip {
                         background-color: rgba(255,0,0,0.1);
                     }
+                }
+
+                &._actived{
+                    text-shadow: 0 0 5px #f00;
                 }
             }
         }
 
         ._inner {
-            width:100%;
-            height:100%;
-            position:absolute;
-            top:50%;
-            left:50%;
-            margin:0 auto;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: 0 auto;
             overflow: hidden;
-            z-index:1;
+            z-index: 1;
             transform: translate(-50%,-50%);
 
             ._player {
                 width: 256px;
-                height:256px;
-                position:absolute;
-                top:50%;
-                left:50%;
+                height: 256px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
                 line-height: 40px;
                 overflow: visible;
                 transform: translate(-50%,-50%);
                 cursor: pointer;
-                z-index:40;
+                z-index: 40;
 
-                &:before{
-                  content: '';
-                  position:absolute;
-                  top: 0;
-                  left: 0;
-                  width:100%;
-                  height:100%;
-                  background-image: url('../../design/slash.png');
-                  background-size: contain;
-                  z-index:100;
+                &:before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-image: url('../../design/slash.png');
+                    background-size: contain;
+                    z-index: 100;
                 }
 
-                &:after{
-                  opacity: 0.2;
-                  content: '';
-                  position:absolute;
-                  top: 5%;
-                  left: 5%;
-                  width:90%;
-                  height:90%;
-                  background-image: url('../../../global/design/Portrait-Bg.png');
-                  background-size: contain;
-                  z-index:1;
+                &:after {
+                    opacity: 0.2;
+                    content: '';
+                    position: absolute;
+                    top: 5%;
+                    left: 5%;
+                    width: 90%;
+                    height: 90%;
+                    background-image: url('../../../global/design/Portrait-Bg.png');
+                    background-size: contain;
+                    z-index: 1;
                 }
 
                 ._number {
                     display: block;
                     line-height: 128px;
-                    height:128px;
-                    width:128px;
+                    height: 128px;
+                    width: 128px;
                     border: 0;
                     text-align: center;
                     color: #888;
@@ -102,10 +106,10 @@
                     font-size: 40px;
                     font-family: 'optimusprinceps', "Agency FB", Calibri;
                     text-shadow: 0 0 5px #000;
-                    z-index:30;
-                    position:absolute;
-                    top:50%;
-                    left:50%;
+                    z-index: 30;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
                     transform: translate(-50%,-50%);
                     opacity: 0.75;
                 }
@@ -114,81 +118,142 @@
                     overflow: hidden;
                     display: block;
                     width: 256px;
-                    height:24px;
+                    height: 24px;
                     line-height: 24px;
                     text-align: center;
                     color: #888;
-                    margin:0;
+                    margin: 0;
                     overflow: hidden;
                     position: absolute;
-                    top:100%;
-                    left:50%;
-                    margin-left:-128px;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -128px;
                     font-size: 20px;
-                    z-index:10;
+                    z-index: 10;
                 }
 
-                &._alive{
-                    &:before{
-                      display: none;
+                &._alive {
+                    &:before {
+                        display: none;
                     }
-                    &:after{
-                      opacity: 0.75;
+
+                    &:after {
+                        opacity: 0.75;
                     }
+
                     ._number {
-                        color:#fff;
+                        color: #fff;
                         opacity: 1;
                     }
+
                     ._name {
                         color: #999;
                     }
-                    &:hover{
+
+                    &:hover {
                         opacity: 1;
                     }
                 }
 
-                &:hover{
+                &:hover {
                     ._number {
-                        color:#fff;
+                        color: #fff;
                         opacity: 1;
                     }
+
                     ._name {
                         color: #fff;
                     }
                 }
+
+                ._role {
+                    width: 70%;
+                    height: 70%;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%,-50%);
+                    z-index: 240;
+                    opacity: 0;
+                    transition: opacity 0.4s;
+                    border-radius: 5px;
+                    background-color: #000;
+                    box-shadow: 0 0 10px #000;
+
+                    background-position: center center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+
+                    &.Villager {
+                        background-image: url('../../../global/design/Role/villager.png');
+                    }
+
+                    &.Werewolf {
+                        background-image: url('../../../global/design/Role/werewolf.png');
+                    }
+
+                    &.Seer {
+                        background-image: url('../../../global/design/Role/seer.png');
+                    }
+
+                    &.Witch {
+                        background-image: url('../../../global/design/Role/witch.png');
+                    }
+
+                    &.Hunter {
+                        background-image: url('../../../global/design/Role/hunter.png');
+                    }
+
+                    &.Idiot {
+                        background-image: url('../../../global/design/Role/idiot.png');
+                    }
+
+                    &.Elder {
+                        background-image: url('../../../global/design/Role/elder.png');
+                    }
+                }
             }
 
-            ._message{
+            ._message {
                 width: 300px;
-                position:absolute;
-                top:50%;
-                left:50%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
                 overflow: visible;
                 transform: translate(-50%,-50%);
                 z-index: 10;
             }
 
-            ._playerList_start{
+            ._playerList_start {
                 width: 300px;
-                height:80px;
+                height: 80px;
                 line-height: 80px;
                 text-align: center;
-                position:absolute;
-                top:50%;
-                left:50%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
                 transform: translate(-50%,-50%);
                 z-index: 200;
-                color:#ccc;
+                color: #ccc;
                 text-shadow: 0 0 5px rgba(0,0,0,0.5);
                 cursor: pointer;
                 font-size: 50px;
                 display: none;
 
-                &:hover{
-                    color:#fff;
+                &:hover {
+                    color: #fff;
                 }
             }
         }
 
+        &._roleVisible{
+            ._inner{
+                ._player{
+                    ._role{
+                      opacity: 1;
+                    }
+                }
+            }
+        }
     }
 }

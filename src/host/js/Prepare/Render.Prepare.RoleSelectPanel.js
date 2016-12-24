@@ -76,7 +76,7 @@ var RoleSelection = function (container){
         _html['remainder'].text(remainedNumber);
 
         // ok
-        if (remainedNumber===0)_html['ok'].addClass(CSS.available);
+        if (remainedNumber===0 && playerNumber>0)_html['ok'].addClass(CSS.available);
         else _html['ok'].removeClass(CSS.available);
 
         _html['roleList'].empty();
@@ -107,7 +107,7 @@ var RoleSelection = function (container){
         });
         _html['ok']=$(HTML.ok).appendTo(_html['title']);
         _html['ok'].click(function(){
-            if (playerNumber-roleCache.length>0) return false;
+            if (playerNumber-roleCache.length>0 || playerNumber===0) return false;
             var roleMap = {};
             var output = [];
             var copy = roleCache.slice();

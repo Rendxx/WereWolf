@@ -16,18 +16,21 @@ var HTML = {
     start: '<div class="_playerList_start">START</div>',
     skip: '<div class="_title_btn _skip">Skip</div>',
     status: '<div class="_title_btn _status">Status</div>',
-    roleList: '<div class="_title_btn _roleList">RoleList</div>',
+    roleVisible: '<div class="_title_btn _roleVisible">RoleList</div>',
     message: '<div class="_message"></div>',
 
     player: {
       wrap: '<div class="_player"></div>',
       number: '<div class="_number"></div>',
-      name: '<div class="_name"></div>'
+      name: '<div class="_name"></div>',
+      role: '<div class="_role"></div>'
     },
 };
 
 var CSS = {
-    alive: '_alive'
+    alive: '_alive',
+    actived: '_actived',
+    role: '_roleVisible'
 };
 
 var PlayerPanel = function(container) {
@@ -42,6 +45,7 @@ var PlayerPanel = function(container) {
     var _playerInfo = null;
     var _basicData = null;
     var _phase = PHASECODE.NONE;
+    var isRoleVisible = false;
 
     // Callback ------------------------------
     this.onChange = null;
@@ -79,6 +83,17 @@ var PlayerPanel = function(container) {
         resize();
     };
 
+    this.showRole = function (isOn){
+        isRoleVisible= isOn;
+        if (isOn){
+          html['wrap'].addClass(CSS.role);
+          html['roleVisible'].addClass(CSS.actived);
+        } else {
+           html['wrap'].removeClass(CSS.role);
+           html['roleVisible'].removeClass(CSS.actived);
+        }
+    };
+
     // Private ---------------------------------------
 
     var setupHtml = function() {
@@ -90,7 +105,7 @@ var PlayerPanel = function(container) {
         html['start'] = $(HTML.start).appendTo(html['inner']);
         html['skip'] = $(HTML.skip).appendTo(html['title']);
         html['status'] = $(HTML.status).appendTo(html['title']);
-        html['roleList'] = $(HTML.roleList).appendTo(html['title']);
+        html['roleVisible'] = $(HTML.roleVisible).appendTo(html['title']);
 
         html['skip'].click(function(){
             InfoBox.check({
@@ -105,6 +120,10 @@ var PlayerPanel = function(container) {
             that.onSkip&&that.onSkip();
             html['start'].fadeOut(200);
         });
+
+        html['roleVisible'].click(function(){
+            that.showRole(!isRoleVisible);
+        });
     };
 
     var setupPlayer = function(basicData, playerInfo) {
@@ -116,15 +135,16 @@ var PlayerPanel = function(container) {
             for (var i=0;i<playerNum;i++){
                 html['player'][i]['wrap'].unbind('click');
                 if (playerInfo[i]==null) continue;
-                setPlayerInfo(i, playerInfo[i][0],playerInfo[i][1]);
+                setPlayerInfo(i, playerInfo[i][0],playerInfo[i][1],playerInfo[i][2]);
             }
         }
         resize();
     };
 
-    var setPlayerInfo = function (idx, number, name){
+    var setPlayerInfo = function (idx, number, name, role){
         html['player'][idx]['number'].text(number);
         html['player'][idx]['name'].text(name);
+        html['player'][idx]['role'].addClass(ROLEDATA[role].name);
 
         html['player'][idx]['wrap'].click(function(){
             var alive = playerAlive[idx]!==true;
@@ -143,6 +163,7 @@ var PlayerPanel = function(container) {
         pkg['wrap'] = $(HTML.player.wrap).appendTo(html['inner']);
         pkg['number'] = $(HTML.player.number).appendTo(pkg['wrap']).text('?');
         pkg['name'] = $(HTML.player.name).appendTo(pkg['wrap']).text('<'+name+'>');
+        pkg['role'] = $(HTML.player.role).appendTo(pkg['wrap']);
         html['player'][idx] = pkg;
 
         pkg['wrap'].click(function(){
