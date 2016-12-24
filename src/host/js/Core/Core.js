@@ -429,6 +429,7 @@ var Core = function(opts) {
             (_gameData.phaseIdx===-1?PHASECODE.NONE:GamePhaseOrder[_gameData.phaseIdx]),
             getAliveStr(),
             getStatusArr(),
+            -1,
             _gameData
         ]);
 
