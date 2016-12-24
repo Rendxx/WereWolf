@@ -80,7 +80,7 @@ var Core = function() {
         },
         setAlive:function (playerIdx, isAlive){
             playerList[playerIdx].alive = isAlive;
-            if (GamePhaseOrder[phaseIdx]===PHASECODE.DAY) {GetAliveStatus();generalUpdate();}
+            generalUpdate();
         }
     }; /* TODO: this is a package of hander for Render.Main */
 
@@ -409,8 +409,8 @@ var Core = function() {
         //      });
         // }
         that.onUpdated([
-            GamePhaseOrder[phaseIdx] ,
-            cache_aliveList,
+            (phaseIdx===-1?PHASECODE.NONE:GamePhaseOrder[phaseIdx]),
+            getAliveStr(),
             getStatusArr()
         ]);
 

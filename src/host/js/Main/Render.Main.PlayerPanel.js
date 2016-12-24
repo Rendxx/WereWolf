@@ -60,9 +60,10 @@ var PlayerPanel = function(container) {
     };
 
     this.update = function(phase, aliveList, statusList) {
-        _phase= phase;
+        _phase = phase;
         for (var i=0;i<playerNum;i++){
             playerAlive[i] = aliveList[i]==='1';
+            if (_phase!==PHASECODE.DAY&&_phase!==PHASECODE.NONE) continue;
             if (playerAlive[i]) html['player'][i].wrap.addClass(CSS.alive);
             else html['player'][i].wrap.removeClass(CSS.alive);
         }
@@ -127,7 +128,7 @@ var PlayerPanel = function(container) {
 
         html['player'][idx]['wrap'].click(function(){
             var alive = playerAlive[idx]!==true;
-            var text = 'Do you want to '+ (alive?'heal':'kill') + ' this player?';
+            var text = 'Do you want to <b>'+ (alive?'HEAL':'KILL') + '</b> this player?<br/>(Player status will not refresh at night)';
             InfoBox.check({
                 content: INFO.SHOWPLAYER(number, name, text),
                 callbackYes: function() {
