@@ -28,7 +28,6 @@ var Core = function(opts) {
 
     var _msg;
     var _send;
-    var roleList = [];
     // TIME COUNTER
     var cd = null;
 
@@ -39,8 +38,6 @@ var Core = function(opts) {
     // GAME PROGRESS INFO
     var GamePhase = {};
     var GamePhaseOrder = [];
-    var phaseIdx = -1;
-    var dayNum = 0;
     var battlelog = [];
 
     // PER NIGHT INFO
@@ -50,27 +47,23 @@ var Core = function(opts) {
     var AliveMortal = [];
     var AliveChara = [];
 
-    // SPECIAL ID INFO
-    var MarkOfTheWolf = -1;
-    var seerID;
-    var witchID;
-    var hunterID;
-
-    // HERO SKILL INFO
-    var reserruction = true;
-    var destruction = true;
-    var hunterRavage = true;
-
-    // LOCK PHASECODE
-    var lockSetup = false;
-    var lockWolf = false;
-    var lockSeer = false;
-    var lockWitch = false;
-    var lockWaiting = false;
-
     // CACHE FOR UPDATE MESSAGE
-    var cache_aliveList = '';
     var _timeoutFunc = null;
+    var _gameData = {
+        // GAME PROGRESS INFO
+        roleList: [],
+        phaseIdx: -1,
+        dayNum:0,
+        // LOCK PHASECODE
+        lockSetup: false,
+        // SPECIAL ID INFO
+        WolfMark: -1,
+        seerID: -1,
+        witchID: -1,
+        hunterID: -1,
+        // CACHE
+        cacheAlive: '',
+    };
 
     // message -----------------------------------------------
     this.send = null; /* TODO: this.send(code, content): This function should be set by Host-Manager, it is used to send message out */
@@ -129,11 +122,16 @@ var Core = function(opts) {
         */
 
         if (setupData != null) {
-            var basicDat = setupData[0];
+            var initCode = setupData[0];
+            var basicDat = setupData[1];
 
             _players = [];
             _playersId = [];
             _playerMap = [];
+            _playerIDtoIDX = {};
+            _playerIDXtoID = {};
+            playerList=[];
+            playerNum = basicDat.length;
 
             for (var i = 0; i < basicDat.length; i++) {
                 var id = basicDat[i][0];
@@ -150,8 +148,26 @@ var Core = function(opts) {
                 _playerIDtoIDX[playerObj.id] = playerObj.idx;
                 _playerIDXtoID[playerObj.idx] = playerObj.id;
             }
+
+            if (initCode===INITCODE.ALLDONE){
+                var infoList = setupData[2];
+                for (var i = 0; i < infoList.length; i++) {
+                    var number = infoList[i][0];
+                    var name = infoList[i][1];
+                    var role = infoList[i][2];
+                    var idx = i;
+                    var clientName = basicDat[i].name;
+                    addCharacter(idx, clientName, number, name, role);
+                }
+            }
         }
         if (gameData != null) {
+          var aliveList = gameData[1];
+          var statusList = gameData[2];
+          for (var i=0;i<playerList.length;i++){
+              playerList[i].alive = (aliveList[i]==='1');
+              playerList[i].status = statusList[i];
+          }
         }
     };
 
@@ -160,14 +176,10 @@ var Core = function(opts) {
             setup the game with player data and initial options.
             then send the setup data out
         */
-        roleList = para.roleList;
-        phaseIdx = -1;
+        _gameData.roleList = para.roleList;
+        _gameData.phaseIdx = -1;
 
-        lockSetup = false;
-        lockWolf = false;
-        lockSeer = false;
-        lockWitch = false;
-        lockWaiting = false;
+        _gameData.lockSetup = false;
 
         _players = [];
         _playersId = [];
@@ -175,7 +187,7 @@ var Core = function(opts) {
         _playerIDtoIDX = {};
         _playerIDXtoID = {};
         playerList=[];
-        dayNum=0;
+        _gameData.dayNum=0;
 
         playerNum = playerData.length;
 
@@ -210,7 +222,7 @@ var Core = function(opts) {
                 INITCODE.SETTING,
                 _players[i].idx,
                 playerNum,
-                roleList,
+                _gameData.roleList,
                 [],
                 []
             ]);
@@ -221,7 +233,7 @@ var Core = function(opts) {
     this.start = function() {
         /* TODO: game start */
         start = true;
-        phaseIdx=-1;
+        _gameData.phaseIdx=-1;
         GamePhase[PHASECODE.INIT]();
     };
 
@@ -251,7 +263,8 @@ var Core = function(opts) {
             PHASECODE.END,
             getAliveStr(),
             getStatusArr(),
-            isVillager?1:0
+            isVillager?1:0,
+            _gameData
         ]);
         _send[MSGCODE.HOST.END](_playersId, isVillager?1:0);
         _onEnd && _onEnd();
@@ -299,8 +312,27 @@ var Core = function(opts) {
         return true;
     };
 
+    var addCharacter = function (idx, clientName, number, name, role){
+        var p = new Charactor(idx, number, role, name, clientName);
+        if (role == ROLECODE.WITCH) {
+            _gameData.witchID = idx;
+            p.status = [1, 1];
+        } else if (role == ROLECODE.SEER) {
+            _gameData.seerID = idx;
+            p.status = [-1, -1];
+        } else if (role == ROLECODE.HUNTER) {
+            _gameData.hunterID = idx;
+            p.status = [1];
+        } else if (role == ROLECODE.IDIOT) {
+            p.status = [1];
+        }
+
+        playerList[idx] = p;
+        console.log(playerList);
+    };
+
     var setupRole = function(clientId, dat) {
-        if (lockSetup) {
+        if (_gameData.lockSetup) {
             return;
         }
         if (clientId == null || dat == null) return;
@@ -314,26 +346,11 @@ var Core = function(opts) {
         // get user instructions
         var idx = _playerMap[clientId].idx;
         var clientName = _playerMap[clientId].name;
-        var p = new Charactor(idx, number, role, name, clientName);
-        if (role == ROLECODE.WITCH) {
-            witchID = idx;
-            p.status = [1, 1];
-        } else if (role == ROLECODE.SEER) {
-            seerID = idx;
-            p.status = [-1, -1];
-        } else if (role == ROLECODE.HUNTER) {
-            hunterID = idx;
-            p.status = [1];
-        } else if (role == ROLECODE.IDIOT) {
-            p.status = [1];
-        }
-
-        playerList[idx] = p;
-        console.log(playerList);
+        addCharacter(idx, clientName, number, name, role);
 
         if (checkRoleSetuped()) {
             // tell all player game setuped
-            lockSetup = true;
+            _gameData.lockSetup = true;
 
             var infoList = getPlayerInfoArr(true);
             that.onSetuped([INITCODE.ALLDONE, getBasicDataArr(), infoList]);
@@ -342,7 +359,7 @@ var Core = function(opts) {
                     INITCODE.ALLDONE,
                     _players[i].idx,
                     playerNum,
-                    roleList,
+                    _gameData.roleList,
                     infoList[i],
                     getPlayerInfoArr(false)
                 ]);
@@ -354,7 +371,7 @@ var Core = function(opts) {
                 INITCODE.DONE,
                 idx,
                 playerNum,
-                roleList, [number, name, role],
+                _gameData.roleList, [number, name, role],
                 []
             ]);
         }
@@ -388,19 +405,13 @@ var Core = function(opts) {
         }
 
         AliveChara = AliveWerewolf.concat(AliveGods).concat(AliveMortal);
-        cache_aliveList = getAliveStr();
+        _gameData.cacheAlive = getAliveStr();
 
         console.log("AliveWerewolf", AliveWerewolf);
         console.log("AliveGods", AliveGods);
         console.log("AliveMortal", AliveMortal);
         console.log("AliveCharacters", AliveChara);
     }
-
-    var unlockAllPhase = function() {
-        lockSeer = false;
-        lockWolf = false;
-        lockWitch = false;
-    };
 
     var generalUpdate = function() {
         // phase= GamePhaseOrder[phaseId_in];
@@ -409,21 +420,22 @@ var Core = function(opts) {
         //
         //     _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[idx]],{
         //        actived: active,
-        //        alive: cache_aliveList,
+        //        alive: _gameData.cacheAlive,
         //        status: playerList[idx].status,
         //        action:[]
         //      });
         // }
         that.onUpdated([
-            (phaseIdx===-1?PHASECODE.NONE:GamePhaseOrder[phaseIdx]),
+            (_gameData.phaseIdx===-1?PHASECODE.NONE:GamePhaseOrder[_gameData.phaseIdx]),
             getAliveStr(),
-            getStatusArr()
+            getStatusArr(),
+            _gameData
         ]);
 
         for (var i=0;i<playerList.length;i++){
             _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[i]],{
                actived: 0,
-               alive: cache_aliveList,
+               alive: _gameData.cacheAlive,
                status: playerList[i].status,
                action:[]
             });
@@ -447,12 +459,10 @@ var Core = function(opts) {
     }
 
     var preNight = function() {
-        dayNum++;
+        _gameData.dayNum++;
         console.log("entering preNight");
 
         GetAliveStatus();
-        unlockAllPhase();
-
         phaseIncreament(8000);
     }
 
@@ -472,11 +482,16 @@ var Core = function(opts) {
 
             _send[MSGCODE.HOST.UPDATE](wolfIdList,{
                actived: 1,
-               alive: cache_aliveList,
+               alive: _gameData.cacheAlive,
                status: playerList[AliveWerewolf[0]].status,
                action:werewolfVote
             });
             return 0;
+        }
+
+        if (GamePhaseOrder[_gameData.phaseIdx] !== PHASECODE.WOLF) {
+            console.log("Not in correct phase");
+            return;
         }
 
         if (!(AliveWerewolf.indexOf(playerIdx) > -1) || dat==null) {
@@ -502,7 +517,7 @@ var Core = function(opts) {
         }
         _send[MSGCODE.HOST.UPDATE](wolfIdList,{
            actived: 1,
-           alive: cache_aliveList,
+           alive: _gameData.cacheAlive,
            status: playerList[playerIdx].status,
            action:werewolfVote
         });
@@ -518,7 +533,7 @@ var Core = function(opts) {
         if (vote[val] == AliveWerewolf.length) {
             console.log("== 狼人请闭眼 ==");
             console.log("werewolfs killed player ", val);
-            MarkOfTheWolf = val;
+            _gameData.WolfMark = val;
             if (val!=-1) playerList[val].alive = false;
             for (var i=0;i<AliveWerewolf.length;i++){
                 playerList[AliveWerewolf[i]].status = [val];
@@ -535,7 +550,7 @@ var Core = function(opts) {
             console.log("=      预言家请睁眼      =");
             console.log("=========================");
 
-            if (!(AliveGods.indexOf(seerID) > -1)) {
+            if (!(AliveGods.indexOf(_gameData.seerID) > -1)) {
                 console.log("seer is dead");
                 console.log("== 预言家请验人 ==");
                 console.log("== 预言家请闭眼 ==");
@@ -543,14 +558,19 @@ var Core = function(opts) {
 
             } else {
                 // tell seer who can be tested
-                _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[seerID]],{
+                _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[_gameData.seerID]],{
                    actived: 1,
-                   alive: cache_aliveList,
-                   status: playerList[seerID].status,
+                   alive: _gameData.cacheAlive,
+                   status: playerList[_gameData.seerID].status,
                    action:[]
                 });
             }
             return 0;
+        }
+
+        if (GamePhaseOrder[_gameData.phaseIdx] !== PHASECODE.SEER) {
+            console.log("Not in correct phase");
+            return;
         }
 
         if (playerList[playerIdx].role != ROLECODE.SEER || dat == null) {
@@ -580,19 +600,24 @@ var Core = function(opts) {
             console.log("=       女巫请睁眼       =");
             console.log("=========================");
 
-            if (!(AliveGods.indexOf(witchID) > -1)) {
+            if (!(AliveGods.indexOf(_gameData.witchID) > -1)) {
                 console.log("witch is dead");
                 console.log("== @#%#……&%%…… 死了你要不要救 ==");
                 console.log("== 你有一瓶毒药要不要用 ==");
                 phaseIncreament(~~(Math.random()*10000)+6000);
             }else{
-                _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[witchID]],{
+                _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[_gameData.witchID]],{
                    actived: 1,
-                   alive: cache_aliveList,
-                   status: playerList[witchID].status,
-                   action:[playerList[witchID].status[0]>0?MarkOfTheWolf:-1]
+                   alive: _gameData.cacheAlive,
+                   status: playerList[_gameData.witchID].status,
+                   action:[playerList[_gameData.witchID].status[0]>0?_gameData.WolfMark:-1]
                 });
             }
+            return;
+        }
+
+        if (GamePhaseOrder[_gameData.phaseIdx] !== PHASECODE.WITCH) {
+            console.log("Not in correct phase");
             return;
         }
 
@@ -603,10 +628,10 @@ var Core = function(opts) {
         var healIdx=dat[1][0];
         var poisonIdx=dat[1][1];
 
-        if (playerList[playerIdx].status[0]>0 && healIdx!==-1 && MarkOfTheWolf!==-1){
-            playerList[MarkOfTheWolf].alive = true;
+        if (playerList[playerIdx].status[0]>0 && healIdx!==-1 && _gameData.WolfMark!==-1){
+            playerList[_gameData.WolfMark].alive = true;
             playerList[playerIdx].status[0] = 0;
-            console.log("use potion saved ", playerList[MarkOfTheWolf]);
+            console.log("use potion saved ", playerList[_gameData.WolfMark]);
         }
         if (playerList[playerIdx].status[1]>0 && poisonIdx!==-1){
             playerList[poisonIdx].alive = false;
@@ -622,12 +647,12 @@ var Core = function(opts) {
         if (_timeoutFunc!==null){
             clearTimeout(_timeoutFunc);
         }
+        _gameData.phaseIdx = (_gameData.phaseIdx+1) %GamePhaseOrder.length;
 
         _timeoutFunc = setTimeout(function(){
-            phaseIdx = (phaseIdx+1) %GamePhaseOrder.length;
-            console.log("phaseIdx", phaseIdx);
+            console.log("_gameData.phaseIdx", _gameData.phaseIdx);
             generalUpdate();
-            GamePhase[GamePhaseOrder[phaseIdx]]();
+            GamePhase[GamePhaseOrder[_gameData.phaseIdx]]();
         }, timeout);
     }
 
@@ -644,7 +669,7 @@ var Core = function(opts) {
         };
 
         _msg[MSGCODE.CLIENT.DECISION] = function(clientId, dat) {
-            GamePhase[GamePhaseOrder[phaseIdx]](_playerIDtoIDX[clientId], dat);
+            GamePhase[GamePhaseOrder[_gameData.phaseIdx]](_playerIDtoIDX[clientId], dat);
         };
     };
 
@@ -653,7 +678,7 @@ var Core = function(opts) {
         _send[MSGCODE.HOST.UPDATE] = function(target, opts) {
             that.clientUpdate(target, [
                 MSGCODE.HOST.UPDATE,
-                GamePhaseOrder[phaseIdx],
+                GamePhaseOrder[_gameData.phaseIdx],
                 opts.actived,
                 opts.alive,
                 opts.status,

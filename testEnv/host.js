@@ -6,6 +6,13 @@
     reset : function (){
       window.msg('1|1|SERVER|2|{"clients":{},"obs":{},"status":1,"setup":null,"game":null}');
     },
+    reset2 : function (){
+      window.msg('1|1|SERVER|2|{'+
+          '"status":2'+
+          ',"setup":[2,[["c1","player 1",0],["c2","player 2",1],["c3","player 3",2],["c4","player 4",3],["c5","player 5",4],["c6","player 6",5]],[[6,"player 1_1",1],[5,"player 2_2",2],[1,"player 3_3",3],[3,"player 4_4",4],[2,"player 5_5",5],[9,"player 6_2",2]]]'+
+          ',"game":[1,"011101",[[],[],[-1,-1],[0,1],[1],[]],{"roleList":[1,2,3,4,5],"phaseIdx":5,"dayNum":1,"lockSetup":true,"WolfMark":-1,"seerID":2,"witchID":3,"hunterID":4,"cacheAlive":"011101"}]'+
+      '}');
+    },
     add : function (num){
       if (num>26) {
         console.log("%c Illegal Command ", 'color: #cc0000;');
