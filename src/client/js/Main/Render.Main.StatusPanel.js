@@ -40,7 +40,7 @@ var StatusPanel = function(container) {
 
     this.reset = function(number, name, role, roleInstance) {
         setupHtml(number, name, role);
-        roleInstance.initInfoPanel(html['role'][0]);
+        if(roleInstance!=null) roleInstance.initInfoPanel(html['role'][0]);
     };
 
     this.updateAlive = function(isAlive) {

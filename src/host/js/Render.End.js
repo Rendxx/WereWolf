@@ -14,12 +14,14 @@ var HTML = {
 var CSS = {
 };
 
-var End = function (container) {
+var End = function (container, opts) {
     "use strick";
     // property -----------------------------------------------
     var html = {
         container: $(container)
     };
+
+    var _onRenew = null;
 
     // interface controll --------------------------------
     this.show = function () {
@@ -64,14 +66,14 @@ var End = function (container) {
         html['werewolf'].hide();
         html['renew'] = $(HTML.renewBtn).appendTo(html['container']);
         html['renew'].click(function () {
-            window.test.renew();
-            //$.get('/Host/Renew');
+          _onRenew && _onRenew();
         });
     };
 
-    var _init = function () {
+    var _init = function (opts) {
+        _onRenew = opts&&opts.onRenew;
         _setupHtml();
-    }();
+    }(opts);
 };
 
 module.exports = End;

@@ -15,3 +15,5 @@ window.GAME = {
     End : require('HOST/js/Render.End.js')
   }
 };
+
+console.log('Werewolf v0.1.1');

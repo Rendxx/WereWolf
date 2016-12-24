@@ -173,6 +173,7 @@ Witch.prototype.initActionPanel = function (container, playerInfo){
             content: 'Are you sure you don\'t want to poison anyone?',
             callbackYes: function() {
                 that.onActionEnd && that.onActionEnd([-1, -1]);
+                that._action.playerList.hide();
             }
         });
     };

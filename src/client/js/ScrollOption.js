@@ -130,7 +130,7 @@ var ScrollOption = function (container, optionData, para_in){
           e = e ? e : window.event;
           var from = e.relatedTarget || e.toElement;
           if (!from || from.nodeName == "HTML") {
-              _stopDrag(e);
+              stopDrag(e);
           }
       }, false);
   };

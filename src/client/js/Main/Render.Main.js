@@ -203,7 +203,7 @@ var Main = function (container) {
     };
     var _resetHtml = function (setupData) {
         html['panel']['setting'].empty().hide();
-        html['panel']['player'].empty().hide();
+        playerPanel.reset();
         html['panel']['status'].empty().hide();
         html['panel']['action'].empty().hide();
     };

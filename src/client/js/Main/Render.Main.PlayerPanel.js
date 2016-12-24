@@ -48,8 +48,9 @@ var PlayerPanel = function(container) {
 
     this.reset = function(playerInfo) {
         _playerInfo = playerInfo;
-        playerNum = playerInfo.length;
         setupHtml();
+        if (playerInfo==null) return;
+        playerNum = playerInfo.length;
         setupPlayer(playerInfo);
     };
 

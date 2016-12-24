@@ -35,6 +35,7 @@ var Prepare = function (container, opts_in) {
     };
 
     // Callback -------------------------------------
+    var _onStart = null;
 
     // interface controll --------------------------------
     this.show = function () {
@@ -110,6 +111,7 @@ var Prepare = function (container, opts_in) {
     var _init = function (opts_in) {
         _setupHtml();
         roleSelectPanel = new RoleSelectPanel(container);
+        _onStart = opts_in && opts_in.onStart;
 
         roleSelectPanel.onFinish = function (roleArr, roleList2){
             console.log('FINISH ------------------------');
@@ -120,10 +122,7 @@ var Prepare = function (container, opts_in) {
                 roleArrange:roleArr,
                 roleList:roleList2
             };
-            window.test.start();
-           /* TODO: use the line below in real env
-                $.get('/Host/Start');
-           */
+            _onStart && _onStart();
         };
     }(opts_in);
 };

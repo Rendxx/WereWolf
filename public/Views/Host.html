@@ -29,19 +29,35 @@
             3. create Host instance with ClientList-Module, GameCore-Module and the Renderer just created
             4. setup the Host instance
         */
-        var colorOption = {
-            'red': "#c14c4c",
-            'green': "#9bd24e",
-            'blue': "#4781b1"
+
+        var onEnd = function(){
+          window.test.end();
+          /* TODO: use the line below in real env
+               $.get('/Host/End')
+          */
+        };
+
+        var onStart = function(){
+            window.test.start();
+            /* TODO: use the line below in real env
+                $.get('/Host/Start');
+            */
+        };
+
+        var onRenew = function(){
+            window.test.renew();
+            /* TODO: use the line below in real env
+                $.get('/Host/Renew');
+            */
         };
         var renderer = new Rendxx.Game.Host.Renderer({
-            prepare: new GAME.Render.Prepare(document.getElementById('prepare'), { maxPlayer: 6, colorOption: colorOption }),
+            prepare: new GAME.Render.Prepare(document.getElementById('prepare'),{onStart:onStart}),
             main: new GAME.Render.Main(document.getElementById('main')),
-            end: new GAME.Render.End(document.getElementById('end'))
+            end: new GAME.Render.End(document.getElementById('end'),{onRenew:onRenew})
         });
         var host = new Rendxx.Game.Host.Main({
-            clientList: new GAME.ClientList({ max: 6 }),
-            game: new GAME.Core(),
+            clientList: new GAME.ClientList(),
+            game: new GAME.Core({onEnd:onEnd}),
             renderer: renderer
         });
         host.setup();

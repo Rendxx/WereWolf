@@ -15,7 +15,7 @@ var PHASECODE = require('GLOBAL/js/PhaseCode.js');
 var INITCODE = require('GLOBAL/js/InitCode.js');
 var Charactor = require('./Charactor.js');
 
-var Core = function() {
+var Core = function(opts) {
     "use strick";
     // property -----------------------------------------------
     var that = this,
@@ -119,6 +119,7 @@ var Core = function() {
     this.onSetuped = null; // (setupData): be called when game setups
     this.clientSetup = null; // (target, clientData) setup client, be called when game setups
     this.clientUpdate = null; // (target, clientData) update client side, be called when anything related to that client updates
+    var _onEnd = null;
 
     // update ---------------------------------------------
     this.reset = function(setupData, gameData) {
@@ -253,10 +254,7 @@ var Core = function() {
             isVillager?1:0
         ]);
         _send[MSGCODE.HOST.END](_playersId, isVillager?1:0);
-        window.test.end();
-        /* TODO: use the line below in real env
-             $.get('/Host/End')
-        */
+        _onEnd && _onEnd();
         start = false;
     };
 
@@ -285,10 +283,11 @@ var Core = function() {
         return arr;
     };
 
-    var getPlayerInfoArr = function() {
+    var getPlayerInfoArr = function(hasRole) {
         var allPlayerList = [];
         for (var i = 0; i < playerList.length; i++) {
             allPlayerList[i] = [playerList[i].number, playerList[i].name, playerList[i].role];
+            if (!hasRole) allPlayerList[i].length=2;
         }
         return allPlayerList;
     };
@@ -336,15 +335,16 @@ var Core = function() {
             // tell all player game setuped
             lockSetup = true;
 
-            that.onSetuped([INITCODE.ALLDONE, getBasicDataArr(), getPlayerInfoArr()]);
+            var infoList = getPlayerInfoArr(true);
+            that.onSetuped([INITCODE.ALLDONE, getBasicDataArr(), infoList]);
             for (var i = 0; i < playerList.length; i++) {
                 that.clientSetup([_players[i].id], [
                     INITCODE.ALLDONE,
                     _players[i].idx,
                     playerNum,
                     roleList,
-                    [number, name, role],
-                    getPlayerInfoArr()
+                    infoList[i],
+                    getPlayerInfoArr(false)
                 ]);
             }
             waitingForStart();
@@ -459,12 +459,18 @@ var Core = function() {
     var werewolf = function(playerIdx, dat) {
         // tell all alive werewolfs who can be voted
 
+        var wolfIdList = [];
+        for (var i = 0;i<AliveWerewolf.length;i++){
+          wolfIdList.push(_playerIDXtoID[AliveWerewolf[i]]);
+        }
+
         if (playerIdx == null) {
             console.log("=========================");
             console.log("=       狼人请睁眼       =");
             console.log("=========================");
 
-            _send[MSGCODE.HOST.UPDATE](AliveWerewolf,{
+
+            _send[MSGCODE.HOST.UPDATE](wolfIdList,{
                actived: 1,
                alive: cache_aliveList,
                status: playerList[AliveWerewolf[0]].status,
@@ -494,7 +500,7 @@ var Core = function() {
         }else{
             werewolfVote[playerIdx] = victim;
         }
-        _send[MSGCODE.HOST.UPDATE](AliveWerewolf,{
+        _send[MSGCODE.HOST.UPDATE](wolfIdList,{
            actived: 1,
            alive: cache_aliveList,
            status: playerList[playerIdx].status,
@@ -517,7 +523,7 @@ var Core = function() {
             for (var i=0;i<AliveWerewolf.length;i++){
                 playerList[AliveWerewolf[i]].status = [val];
             }
-            _send[MSGCODE.HOST.RESULT](AliveWerewolf, [val]);
+            _send[MSGCODE.HOST.RESULT](wolfIdList, [val]);
             CheckIfEnd();
             phaseIncreament();
         }
@@ -537,7 +543,7 @@ var Core = function() {
 
             } else {
                 // tell seer who can be tested
-                _send[MSGCODE.HOST.UPDATE](AliveWerewolf,{
+                _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[seerID]],{
                    actived: 1,
                    alive: cache_aliveList,
                    status: playerList[seerID].status,
@@ -563,7 +569,7 @@ var Core = function() {
             testRst = 1;
         }
         playerList[playerIdx].status = [testIdx, testRst];
-        _send[MSGCODE.HOST.END]([playerIdx],[testIdx, testRst]);
+        _send[MSGCODE.HOST.RESULT]([_playerIDXtoID[playerIdx]],[testIdx, testRst]);
         console.log("== 预言家请闭眼 ==");
         phaseIncreament();
     }
@@ -580,7 +586,7 @@ var Core = function() {
                 console.log("== 你有一瓶毒药要不要用 ==");
                 phaseIncreament(~~(Math.random()*10000)+6000);
             }else{
-                _send[MSGCODE.HOST.UPDATE]([witchID],{
+                _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[witchID]],{
                    actived: 1,
                    alive: cache_aliveList,
                    status: playerList[witchID].status,
@@ -607,7 +613,7 @@ var Core = function() {
             playerList[playerIdx].status[1] = 0;
             console.log("use potion kill ", playerList[poisonIdx]);
         }
-        _send[MSGCODE.HOST.END]([playerIdx],[healIdx, poisonIdx]);
+        _send[MSGCODE.HOST.RESULT]([_playerIDXtoID[playerIdx]],[testIdx, testRst]);
         phaseIncreament();
     }
 
@@ -668,7 +674,7 @@ var Core = function() {
         };
     };
 
-    var _init = function() {
+    var _init = function(opts) {
         //that.handler.win = win;
         cd = new countdown(5000, phaseIncreament);
         GamePhase = {}
@@ -690,8 +696,8 @@ var Core = function() {
         ];
         _setupMsg();
         _setupSend();
-
-    }();
+        _onEnd = opts && opts.onEnd;
+    }(opts);
 
 };
 
