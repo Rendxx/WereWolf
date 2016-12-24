@@ -613,7 +613,7 @@ var Core = function(opts) {
             playerList[playerIdx].status[1] = 0;
             console.log("use potion kill ", playerList[poisonIdx]);
         }
-        _send[MSGCODE.HOST.RESULT]([_playerIDXtoID[playerIdx]],[testIdx, testRst]);
+        _send[MSGCODE.HOST.RESULT]([_playerIDXtoID[playerIdx]],[healIdx, poisonIdx]);
         phaseIncreament();
     }
 

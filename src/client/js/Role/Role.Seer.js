@@ -36,9 +36,9 @@ Seer.prototype.active = function (aliveListArr){
 };
 
 Seer.prototype.inactive = function (){
+    this._html.action['container'].fadeOut(200);
     if (!this.actived) return;
     this.actived = false;
-    this._html.action['container'].fadeOut(200);
 };
 
 Seer.prototype.update = function (aliveListArr, dat){

@@ -60,6 +60,12 @@ Witch.prototype.active = function (aliveListArr, killedArr){
     }
 };
 
+Witch.prototype.inactive = function (){
+    this._html.action['container'].fadeOut(200);
+    if (!this.actived) return;
+    this.actived = false;
+};
+
 Witch.prototype.update = function (aliveListArr, dat){
   Basic.prototype.update.call(this,aliveListArr, dat);
     if (dat==null) return;

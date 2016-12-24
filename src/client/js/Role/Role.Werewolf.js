@@ -35,9 +35,9 @@ WereWolf.prototype.active = function (aliveListArr, voteArr){
 };
 
 WereWolf.prototype.inactive = function (){
+    this._html.action['container'].fadeOut(200);
     if (!this.actived) return;
     this.actived = false;
-    this._html.action['container'].fadeOut(200);
 };
 
 WereWolf.prototype.showRst = function (dat){

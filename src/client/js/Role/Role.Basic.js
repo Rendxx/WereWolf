@@ -25,11 +25,11 @@ Basic.prototype.setup = function (playerIdx){
     this.playerIdx = playerIdx;
 };
 
-
 Basic.prototype.dayTime = function (dat){
     InfoBox.alert({
         content: INFO.DAY,
     });
+    this.inactive();
 };
 
 Basic.prototype.active = function (dat){
