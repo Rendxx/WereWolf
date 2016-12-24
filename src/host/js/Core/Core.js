@@ -160,12 +160,21 @@ var Core = function() {
             then send the setup data out
         */
         roleList = para.roleList;
+        phaseIdx = -1;
+
+        lockSetup = false;
+        lockWolf = false;
+        lockSeer = false;
+        lockWitch = false;
+        lockWaiting = false;
 
         _players = [];
         _playersId = [];
         _playerMap = {};
         _playerIDtoIDX = {};
         _playerIDXtoID = {};
+        playerList=[];
+        dayNum=0;
 
         playerNum = playerData.length;
 

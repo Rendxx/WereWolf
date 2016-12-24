@@ -104,6 +104,7 @@ var Main = function (container) {
             },2000);
         }
         currentPhase=phase;
+        gameData=null;
     };
 
     // setup -----------------------------------------------

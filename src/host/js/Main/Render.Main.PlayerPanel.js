@@ -76,6 +76,7 @@ var PlayerPanel = function(container) {
         playerNum = _basicData.length;
         setupHtml();
         setupPlayer(_basicData, _playerInfo);
+        if (initCode===INITCODE.SETTING) _phase= PHASECODE.NONE;
         if (_phase === PHASECODE.NONE && initCode===INITCODE.ALLDONE)
           html['start'].fadeIn(200);
         resize();
