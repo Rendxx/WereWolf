@@ -40,7 +40,7 @@
                     }
                 }
 
-                &._actived{
+                &._actived {
                     text-shadow: 0 0 5px #f00;
                 }
             }
@@ -179,7 +179,6 @@
                     border-radius: 5px;
                     background-color: #000;
                     box-shadow: 0 0 10px #000;
-
                     background-position: center center;
                     background-repeat: no-repeat;
                     background-size: contain;
@@ -246,11 +245,160 @@
             }
         }
 
-        &._roleVisible{
-            ._inner{
-                ._player{
-                    ._role{
-                      opacity: 1;
+        ._statusPanel {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 300;
+
+            ._innerWrap {
+                width: 500px;
+                text-align: center;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin: 0 auto;
+                overflow: hidden;
+                z-index: 1;
+                transform: translate(-50%,-50%);
+                background-color: #000;
+                z-index: 300;
+                box-shadow: 0 0 5px #000;
+                border-radius: 5px;
+
+                ._block {
+                    box-sizing: border-box;
+                    width: 500px;
+                    height: 128px;
+                    position: relative;
+                    top: 0;
+                    left: 0;
+
+                    &._witch {
+                        &:after {
+                            content: '';
+                            display: block;
+                            height: 128px;
+                            width: 128px;
+                            position: absolute;
+                            top: 50%;
+                            left: 0;
+                            transform: translate(0,-50%);
+                            background-position: center center;
+                            background-repeat: no-repeat;
+                            background-size: contain;
+                            background-image: url('../../../global/design/Role/witch.png');
+                        }
+
+                        ._status_btn {
+                            position: absolute;
+                            top: 0;
+                            height: 88px;
+                            line-height: 88px;
+                            width: 186px;
+                            cursor: pointer;
+                            color: #999;
+                            padding-top:32px;
+                            transition: color 0.2s;
+
+                            &:after {
+                                position: absolute;
+                                width: 100%;
+                                height: 40px;
+                                line-height: 40px;
+                                color: #666;
+                                top: 30px;
+                                left: 0;
+                            }
+
+                            &._potion_heal {
+                                left: 128px;
+
+                                &:after {
+                                    content: '{ Heal }';
+                                }
+                            }
+
+                            &._potion_poison {
+                                left: 328px;
+
+                                &:after {
+                                    content: '{ Poison }';
+                                }
+                            }
+
+                            &:hover {
+                                color: #fff;
+                                &:after {
+                                    color:#fff;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        ._endPanel {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 300;
+
+            ._innerWrap {
+                width: 800px;
+                height: 200px;
+                line-height: 200px;
+                text-align: center;
+                font-size: 40px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin: 0 auto;
+                overflow: hidden;
+                z-index: 1;
+                transform: translate(-50%,-50%);
+                background-color: #000;
+                z-index: 300;
+                box-shadow: 0 0 5px #000;
+
+                ._end_btn {
+                    width: 50%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    color: #999;
+                    transition: color 0.2s;
+                    cursor: pointer;
+
+                    &._villager {
+                        left: 0;
+                    }
+
+                    &._werewolf {
+                        right: 0;
+                    }
+
+                    &:hover {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+
+        &._roleVisible {
+            ._inner {
+                ._player {
+                    ._role {
+                        opacity: 1;
                     }
                 }
             }

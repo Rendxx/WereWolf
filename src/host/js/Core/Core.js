@@ -81,6 +81,17 @@ var Core = function() {
         setAlive:function (playerIdx, isAlive){
             playerList[playerIdx].alive = isAlive;
             generalUpdate();
+        },
+        setStatus:function (role, status){
+            for (var i = 0;i<playerList.length;i++){
+                if (playerList[i].role===role){
+                    playerList[i].status = status;
+                }
+            }
+            generalUpdate();
+        },
+        win:function (isVillager){
+            win(isVillager);
         }
     }; /* TODO: this is a package of hander for Render.Main */
 
@@ -140,9 +151,6 @@ var Core = function() {
             }
         }
         if (gameData != null) {
-            this.onUpdated({
-                pos: ''
-            });
         }
     };
 
@@ -228,25 +236,14 @@ var Core = function() {
     };
 
     // private ---------------------------------------------
-    var win = function(clientId) {
-        // Host select a player to win
-        var p = [];
-        for (var i = 0; i < _players.length; i++) {
-            p[i] = {
-                id: _players[i].id,
-                name: _players[i].name,
-                win: false
-            };
-        }
-        p[_playerMap[clientId]].win = true;
-        that.onUpdated({
-            end: p
-        });
-        for (var i = 0; i < _players.length; i++) {
-            that.clientUpdate([_players[i].id], {
-                end: p[i].win
-            });
-        }
+    var win = function(isVillager) {
+        that.onUpdated([
+            PHASECODE.END,
+            getAliveStr(),
+            getStatusArr(),
+            isVillager?1:0
+        ]);
+        _send[MSGCODE.HOST.END](_playersId, isVillager?1:0);
         window.test.end();
         /* TODO: use the line below in real env
              $.get('/Host/End')

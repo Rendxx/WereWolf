@@ -120,6 +120,12 @@ var Main = function (container) {
         playerPanel.onChange = function(idx, alive){
             that.handler&&that.handler.setAlive && that.handler.setAlive(idx, alive);
         };
+        playerPanel.onSetStatus = function(role, status){
+            that.handler&&that.handler.setStatus && that.handler.setStatus(role, status);
+        };
+        playerPanel.onEnd = function(isVillager){
+            that.handler&&that.handler.win && that.handler.win(isVillager);
+        };
     }();
 };
 

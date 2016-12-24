@@ -1,3 +1,4 @@
+var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var INFO = require('HOST/js/Info.js');
 var INITCODE = require('GLOBAL/js/InitCode.js');
@@ -16,9 +17,21 @@ var HTML = {
     start: '<div class="_playerList_start">START</div>',
     skip: '<div class="_title_btn _skip">Skip</div>',
     status: '<div class="_title_btn _status">Status</div>',
+    end: '<div class="_title_btn _end">End</div>',
     roleVisible: '<div class="_title_btn _roleVisible">RoleList</div>',
     message: '<div class="_message"></div>',
-
+    statusPanel:'<div class="_statusPanel">'+
+                  '<div class="_innerWrap">'+
+                    '<div class="_block _witch">'+
+                      '<div class="_status_btn _potion_heal">Yes</div>'+
+                      '<div class="_status_btn _potion_poison">Yes</div>'+
+                    '</div>'+
+                '</div></div>',
+    endPanel:'<div class="_endPanel">'+
+                  '<div class="_innerWrap">'+
+                    '<div class="_end_btn _villager">Villager Win</div>'+
+                    '<div class="_end_btn _werewolf">Werewolf Win</div>'+
+                '</div></div>',
     player: {
       wrap: '<div class="_player"></div>',
       number: '<div class="_number"></div>',
@@ -45,16 +58,21 @@ var PlayerPanel = function(container) {
     var _playerInfo = null;
     var _basicData = null;
     var _phase = PHASECODE.NONE;
+    var _initCode = null;
     var isRoleVisible = false;
+    var status = {};
 
     // Callback ------------------------------
     this.onChange = null;
     this.onSkip = null;
+    that.onSetStatus = null;
+    that.onEnd = null;
 
     // Public --------------------------------
     this.reset = function(initCode, basicData, playerInfo) {
         _basicData = basicData;
         _playerInfo = playerInfo;
+        _initCode = initCode;
         playerNum = _basicData.length;
         setupHtml();
         setupPlayer(_basicData, _playerInfo);
@@ -77,6 +95,7 @@ var PlayerPanel = function(container) {
         } else {
             html['message'].html(PHASEMESSAGE[phase]);
         }
+        updateStatus(statusList);
     };
 
     this.show = function (){
@@ -95,6 +114,16 @@ var PlayerPanel = function(container) {
     };
 
     // Private ---------------------------------------
+    var updateStatus = function (statusList){
+        for (var i=0;i<_playerInfo.length;i++){
+
+            status[_playerInfo[i][2]] = statusList[i];
+        }
+        if (status[ROLECODE.WITCH]){
+            html['witch_potion'][0].text(status[ROLECODE.WITCH][0]===1?'Yes':'No');
+            html['witch_potion'][1].text(status[ROLECODE.WITCH][1]===1?'Yes':'No');
+        }
+    };
 
     var setupHtml = function() {
         html['container'].empty();
@@ -105,9 +134,12 @@ var PlayerPanel = function(container) {
         html['start'] = $(HTML.start).appendTo(html['inner']);
         html['skip'] = $(HTML.skip).appendTo(html['title']);
         html['status'] = $(HTML.status).appendTo(html['title']);
+        html['end'] = $(HTML.end).appendTo(html['title']);
         html['roleVisible'] = $(HTML.roleVisible).appendTo(html['title']);
+        setupPanel();
 
         html['skip'].click(function(){
+            if (_initCode!==INITCODE.ALLDONE) return false;
             InfoBox.check({
                 content: 'Do you want to SKIP this phase',
                 callbackYes: function() {
@@ -117,12 +149,23 @@ var PlayerPanel = function(container) {
         });
 
         html['start'].click(function(){
+            if (_initCode!==INITCODE.ALLDONE) return false;
             that.onSkip&&that.onSkip();
             html['start'].fadeOut(200);
         });
 
         html['roleVisible'].click(function(){
+            if (_initCode!==INITCODE.ALLDONE) return false;
             that.showRole(!isRoleVisible);
+        });
+
+        html['status'].click(function(){
+            if (_initCode!==INITCODE.ALLDONE) return false;
+            html['statusPanel'].fadeIn(200);
+        });
+
+        html['end'].click(function(){
+            html['endPanel'].fadeIn(200);
         });
     };
 
@@ -177,6 +220,55 @@ var PlayerPanel = function(container) {
             });
         });
         return pkg;
+    };
+
+    var setupPanel = function (){
+        html['statusPanel'] = $(HTML.statusPanel).appendTo(html['wrap']);
+        html['endPanel'] = $(HTML.endPanel).appendTo(html['wrap']);
+        html['witch_potion'] = [
+          html['statusPanel'].find('._status_btn._potion_heal'),
+          html['statusPanel'].find('._status_btn._potion_poison')
+        ];
+
+        html['witch_potion'][0].click(function(e){
+            e.stopPropagation();
+            that.onSetStatus && that.onSetStatus (ROLECODE.WITCH, [1-status[ROLECODE.WITCH][0], status[ROLECODE.WITCH][1]]);
+            return false;
+        });
+
+        html['witch_potion'][1].click(function(e){
+            e.stopPropagation();
+            that.onSetStatus && that.onSetStatus (ROLECODE.WITCH, [status[ROLECODE.WITCH][0], 1-status[ROLECODE.WITCH][1]]);
+            return false;
+        });
+        html['statusPanel'].click(function(){
+            html['statusPanel'].fadeOut(200);
+        });
+
+        html['endPanel'].find('._end_btn._villager').click(function(e){
+            e.stopPropagation();
+            InfoBox.check({
+                content: 'Village Win?',
+                callbackYes: function() {
+                    that.onEnd&&that.onEnd(true);
+                }
+            });
+            return false;
+        });
+        html['endPanel'].find('._end_btn._werewolf').click(function(e){
+            e.stopPropagation();
+            InfoBox.check({
+                content: 'Werewolf Win?',
+                callbackYes: function() {
+                    that.onEnd&&that.onEnd(false);
+                }
+            });
+            return false;
+        });
+        html['endPanel'].click(function(e){
+            html['endPanel'].fadeOut(200);
+            return false;
+        });
     };
 
     var resize = function (){
