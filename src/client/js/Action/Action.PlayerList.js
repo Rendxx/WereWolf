@@ -107,7 +107,11 @@ var PlayerList = function (){
     };
 
     var resize = function (){
-        if (_html['list']) _html['list'].width(~~(_html['wrap'].width()/120)*120);
+        if (_html['list']){
+          var w =~~(_html['wrap'].width()/120)*120;
+          if (w===0) w = ~~($(window.document).width()/120)*120;
+           _html['list'].width(w);
+         }
     };
 
     var _init = function() {

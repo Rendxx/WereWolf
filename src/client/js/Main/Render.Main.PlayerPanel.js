@@ -98,7 +98,12 @@ var PlayerPanel = function(container) {
     };
 
     var resize = function (){
-        html['inner'].width(~~(html['container'].width()/120)*120);
+
+            if (html['inner']){
+              var w =~~(html['container'].width()/120)*120;
+              if (w===0) w = ~~($(window.document).width()/120)*120;
+               html['inner'].width(w);
+             }
     };
 
     var _init = function() {
