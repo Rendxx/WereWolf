@@ -77,8 +77,8 @@ var PlayerPanel = function(container) {
         setupHtml();
         setupPlayer(_basicData, _playerInfo);
         if (initCode===INITCODE.SETTING) _phase= PHASECODE.NONE;
-        if (_phase === PHASECODE.NONE && initCode===INITCODE.ALLDONE)
-          html['start'].fadeIn(200);
+        // if (_phase === PHASECODE.NONE && initCode===INITCODE.ALLDONE)
+        //   html['start'].fadeIn(200);
         resize();
     };
 
@@ -132,7 +132,7 @@ var PlayerPanel = function(container) {
         html['title'] = $(HTML.title).appendTo(html['wrap']);
         html['inner'] = $(HTML.inner).appendTo(html['wrap']);
         html['message'] = $(HTML.message).appendTo(html['inner']);
-        html['start'] = $(HTML.start).appendTo(html['inner']);
+        //html['start'] = $(HTML.start).appendTo(html['inner']);
         html['skip'] = $(HTML.skip).appendTo(html['title']);
         html['status'] = $(HTML.status).appendTo(html['title']);
         html['end'] = $(HTML.end).appendTo(html['title']);
@@ -149,11 +149,11 @@ var PlayerPanel = function(container) {
             });
         });
 
-        html['start'].click(function(){
-            if (_initCode!==INITCODE.ALLDONE) return false;
-            that.onSkip&&that.onSkip();
-            html['start'].fadeOut(200);
-        });
+        // html['start'].click(function(){
+        //     if (_initCode!==INITCODE.ALLDONE) return false;
+        //     that.onSkip&&that.onSkip();
+        //     html['start'].fadeOut(200);
+        // });
 
         html['roleVisible'].click(function(){
             if (_initCode!==INITCODE.ALLDONE) return false;

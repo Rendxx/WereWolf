@@ -209,32 +209,36 @@ var Core = function(opts) {
 
         }
 
+        for (var i = 0, count = playerData.length; i < count; i++) {
+            setupRole( playerData[i].id, [1, i+1,  playerData[i].name, para.roleArrange[i]]);
+        }
+
         console.log("setup", JSON.stringify(_playerMap));
 
         var basicDat = [];
         for (var i = 0; i < _players.length; i++) {
             basicDat[i] = [_players[i].id, _players[i].name, _players[i].idx];
         }
-
-        this.onSetuped([INITCODE.SETTING, basicDat, []]);
-        for (var i = 0; i < _players.length; i++) {
-            this.clientSetup([_players[i].id], [
-                INITCODE.SETTING,
-                _players[i].idx,
-                playerNum,
-                _gameData.roleList,
-                [],
-                []
-            ]);
-        }
+        //
+        // this.onSetuped([INITCODE.SETTING, basicDat, []]);
+        // for (var i = 0; i < _players.length; i++) {
+        //     this.clientSetup([_players[i].id], [
+        //         INITCODE.SETTING,
+        //         _players[i].idx,
+        //         playerNum,
+        //         _gameData.roleList,
+        //         [],
+        //         []
+        //     ]);
+        // }
     };
 
     // game ------------------------------------------------
     this.start = function() {
         /* TODO: game start */
         start = true;
-        _gameData.phaseIdx=-1;
-        GamePhase[PHASECODE.INIT]();
+        // _gameData.phaseIdx=-1;
+        // GamePhase[PHASECODE.INIT]();
     };
 
     this.end = function() {
@@ -364,7 +368,8 @@ var Core = function(opts) {
                     getPlayerInfoArr(false)
                 ]);
             }
-            waitingForStart();
+            phaseIncreament(0);
+            //waitingForStart();
         } else {
             // tell that player "you are setuped"
             that.clientSetup([clientId], [
@@ -666,7 +671,7 @@ var Core = function(opts) {
     var _setupMsg = function() {
         _msg={};
         _msg[MSGCODE.CLIENT.SET_INIT] = function(clientId, dat) {
-            setupRole(clientId, dat);
+            //setupRole(clientId, dat);
         };
 
         _msg[MSGCODE.CLIENT.DECISION] = function(clientId, dat) {
@@ -704,7 +709,7 @@ var Core = function(opts) {
         //that.handler.win = win;
         cd = new countdown(5000, phaseIncreament);
         GamePhase = {}
-        GamePhase[PHASECODE.INIT] = setupRole;
+        GamePhase[PHASECODE.INIT] = function(){};
         GamePhase[PHASECODE.DAY] = daytime;
         GamePhase[PHASECODE.PRENIGHT] = preNight;
         GamePhase[PHASECODE.WOLF] = werewolf;
@@ -713,12 +718,12 @@ var Core = function(opts) {
         GamePhase[PHASECODE.PREDAY] = preDay;
         GamePhase[PHASECODE.END] = end;
         GamePhaseOrder=[
+          PHASECODE.PREDAY,
+          PHASECODE.DAY,
           PHASECODE.PRENIGHT,
           PHASECODE.WOLF,
           PHASECODE.SEER,
-          PHASECODE.WITCH,
-          PHASECODE.PREDAY,
-          PHASECODE.DAY
+          PHASECODE.WITCH
         ];
         _setupMsg();
         _setupSend();
