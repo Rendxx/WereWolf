@@ -9,8 +9,8 @@
     reset2 : function (){
       window.msg('1|1|SERVER|2|{'+
           '"status":2'+
-          ',"setup":[2,[["c1","player 1",0],["c2","player 2",1],["c3","player 3",2],["c4","player 4",3],["c5","player 5",4],["c6","player 6",5]],[[6,"player 1_1",1],[5,"player 2_2",2],[1,"player 3_3",3],[3,"player 4_4",4],[2,"player 5_5",5],[9,"player 6_2",2]]]'+
-          ',"game":[1,"011101",[[],[],[-1,-1],[0,1],[1],[]],{"roleList":[1,2,3,4,5],"phaseIdx":5,"dayNum":1,"lockSetup":true,"WolfMark":-1,"seerID":2,"witchID":3,"hunterID":4,"cacheAlive":"011101"}]'+
+          ',"setup":'+($$.cookie.get("gameSetup")||'null')+
+          ',"game":'+($$.cookie.get("gameUpdate")||'null')+
       '}');
     },
     add : function (num){
@@ -25,22 +25,6 @@
       playerNum=num;
       window.msg('1|2|SERVER|8|{"clients":'+JSON.stringify(obj)+'}');
     },
-    start : function (){
-      window.msg('1|3|SERVER|12|null');
-    },
-    clientSET : function (id,number,name,role) {
-      if(id>playerNum){
-        console.log("%c Illegal Command ", 'color: #cc0000;');
-        return;
-      }
-      window.msg('2|4|c'+id+'|3|[0,'+number+',"'+name+'",'+role+']');
-    },
-    inited : function () {
-        var t = [4,6,5,1,3,2,9]
-        for (var i=1;i<=playerNum;i++){
-            window.test.clientSET(i, t[i], 'player '+i+"_"+roleList[i], roleList[i]);
-        }
-    },
     update : {
         1: function (id, target){   // wolf
             window.msg('2|4|c'+id+'|3|[1,['+target+']]');
@@ -54,13 +38,11 @@
             window.msg('2|4|c'+id+'|3|[1,['+heal+','+poison+']]');
         },
     },
+    start : function (){
+      window.msg('1|3|SERVER|12|null');
+    },
     end : function (){
       window.msg('1|5|SERVER|13|null');
-    },
-    init : function(n) {
-        test.reset();
-        test.add(n);
-        test.start();
     },
     renew : function (){
       window.msg('1|6|SERVER|14|null');
@@ -76,10 +58,8 @@
 
   console.group("%c TEST COMMAND ", 'background: #ddeeff; color: #003399;');
   console.log("%c test.reset() ", 'color: #003399;');
+  console.log("%c test.reset2() ", 'color: #003399;');
   console.log("%c test.add(3) ", 'color: #003399;');
-  console.log("%c test.client(1,10,10) ", 'color: #003399;');
-  console.log("%c test.clientSET(1,2,\"player 2\",2) ", 'color: #003399;');
-  console.log("%c test.inited() ", 'color: #003399;');
   console.log('');
   console.log("%c test.update[1](6,3)", 'color: #003399;');
   console.log("%c test.update[2](6)", 'color: #003399;');
@@ -395,6 +375,7 @@ Rendxx.Game = Rendxx.Game || {};
                 component.game.onUpdated = function (gameData) {
                     component.renderer.updateGame(gameData);
                     _msgSend_server(Message.CODE.SERVER.CACHE_GAME, gameData);
+                    $$.cookie.set("gameUpdate", (gameData == null ? null : JSON.stringify(gameData)));
                 };
 
                 component.game.clientSetup = function (targets, clientData) {
@@ -424,6 +405,7 @@ Rendxx.Game = Rendxx.Game || {};
                 component.game.onSetuped = function (setupData) {
                     component.renderer.reset(setupData);
                     _msgSend_server(Message.CODE.SERVER.CACHE_GAME_SETUP, setupData);
+                    $$.cookie.set("gameSetup",(setupData == null ? null : JSON.stringify(setupData)));
                 };
 
                 component.clientList.onUpdateClient = function (clientData) {
@@ -632,4 +614,96 @@ Rendxx.Game = Rendxx.Game || {};
     Game.Host = Game.Host || {};
     Game.Host.Renderer = Renderer;
 })(Rendxx.Game);
-//# sourceMappingURL=host.js.map
+
+
+(function () {
+    "use strict";
+    var _initCookie = function () {
+        // set cookie --------------------------------------------------------------------------
+        this.set = function (opts) {
+            var name = null;
+            var value = null;
+            var expires = null;
+            var domain = null;
+            var path = null;
+            var secure = null;
+
+            if (typeof opts == "object") {
+                name = opts.name;
+                value = opts.value;
+                expires = opts.expires;
+                domain = opts.domain;
+                path = opts.path;
+                secure = opts.secure;
+            } else {
+                if (arguments.length == 2) {
+                    // only set name & value
+                    name = arguments[0];
+                    value = arguments[1];
+                } else {
+                    // only set name
+                    name = opts;
+                }
+            }
+
+            if (name === null || name === undefined || name === "") return null;
+            if (value === null || value === undefined) value = "";
+            if (secure == false) secure = null;
+            return _set(name, value, expires, domain, path, secure);
+        };
+
+        // get cookie value --------------------------------------------------------------------------
+        this.get = function (name) {
+            try {
+                var arr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+                if (arr != null) return unescape(arr[2]);
+                return null;
+            } catch (e) {
+                return null;
+            }
+        };
+
+        // delete cookie --------------------------------------------------------------------------
+        this.del = function (opts) {
+            var name = null;
+            var domain = null;
+            var path = null;
+
+            if (typeof opts == "object") {
+                name = opts.name;
+                domain = opts.domain;
+                path = opts.path;
+            } else {
+                name = opts;
+            }
+
+            if (name === null || name === undefined || name === "") return;
+            return _set(name, "", 0, domain, path, null);
+        };
+
+        // ---------------------------------------------------------------------------------------
+        // set cookie value into document cookie
+        var _set = function (name, value, expires, domain, path, secure) {
+            try {
+                var exp = null;
+                if (expires != null) {
+                    exp = new Date();
+                    exp.setTime(exp.getTime() + expires * 60 * 60 * 1000);
+                }
+
+                var cookieStr = name + "=" + escape(value);
+                if (exp != null) cookieStr += "; expires=" + exp.toGMTString();
+                if (path != null) cookieStr += "; path=" + path;
+                if (domain != null) cookieStr += "; domain=" + domain;
+                if (secure != null) cookieStr += "; secure";
+
+                document.cookie = cookieStr;
+                return name;
+            } catch (e) {
+                return null;
+            }
+        };
+    }
+    window.$$ = window.$$ || {};
+    window.$$.cookie = new _initCookie();
+})();
