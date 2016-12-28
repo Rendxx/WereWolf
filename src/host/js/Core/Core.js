@@ -587,7 +587,10 @@ var Core = function(opts) {
         var testIdx = dat[1][0];
         var testRst = 0;
         console.log("seer choose to test " + dat);
-        if (playerList[testIdx].role != ROLECODE.WEREWOLF) {
+        if (testIdx===-1){
+            console.log("Seer did not check");
+            testRst = -1;
+        } else if (playerList[testIdx].role != ROLECODE.WEREWOLF) {
             console.log("player " + testIdx + " is a good guy");
             testRst = 0;
         } else {
