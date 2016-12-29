@@ -2,8 +2,7 @@ var MSGCODE = {};
 
 MSGCODE.HOST={
     END: 0,            // [ 0 | villager win ? 1:0 ] // send game result
-    UPDATE: 1,         // [ 1 | phase code | actived?1:0 | [player alive list: (alive?1:0) ] | [player status ] | [ action data ] ] // update client
-    RESULT: 2          // [ 2 | data ]
+    UPDATE: 1,         // [ 1 | phase code | actived?1:0 | [player alive list: (alive?1:0) ] | [player status ] | [ action data ] | [ action result ] ] // update client
 };
 
 MSGCODE.CLIENT={

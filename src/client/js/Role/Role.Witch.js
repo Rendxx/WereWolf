@@ -113,14 +113,8 @@ Witch.prototype.initActionPanel = function (container, playerInfo){
     this._action.choice.setup(container, 'Healer');
     this._action.choice.onYes = function (idx){
         if (!that.actived) return;
-
-        InfoBox.check({
-            content: INFO.SHOWPLAYER(playerInfo[idx][0], playerInfo[idx][1], 'Make sure you want to heal this player?'),
-            callbackYes: function() {
-                that.onActionEnd && that.onActionEnd([idx,-1]);
-                that._action.choice.hide();
-            }
-        });
+        that.onActionEnd && that.onActionEnd([idx,-1]);
+        that._action.choice.hide();
     };
 
     this._action.choice.onNo = function (){

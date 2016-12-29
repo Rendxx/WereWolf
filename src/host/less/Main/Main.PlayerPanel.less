@@ -140,40 +140,6 @@
                     z-index: 10;
                 }
 
-                &._alive {
-                    &:before {
-                        display: none;
-                    }
-
-                    &:after {
-                        opacity: 0.75;
-                    }
-
-                    ._number {
-                        color: #fff;
-                        opacity: 1;
-                    }
-
-                    ._name {
-                        color: #999;
-                    }
-
-                    &:hover {
-                        opacity: 1;
-                    }
-                }
-
-                &:hover {
-                    ._number {
-                        color: #fff;
-                        opacity: 1;
-                    }
-
-                    ._name {
-                        color: #fff;
-                    }
-                }
-
                 ._role {
                     width: 70%;
                     height: 70%;
@@ -181,11 +147,11 @@
                     top: 50%;
                     left: 50%;
                     transform: translate(-50%,-50%);
-                    z-index: 240;
+                    z-index: 90;
                     opacity: 0;
                     transition: opacity 0.4s;
                     border-radius: 5px;
-                    background-color: #000;
+                    background-color: #111;
                     box-shadow: 0 0 10px #000;
                     background-position: center center;
                     background-repeat: no-repeat;
@@ -217,6 +183,40 @@
 
                     &.Elder {
                         background-image: url('../../../global/design/Role/elder.png');
+                    }
+                }
+
+                &._alive {
+                    &:before {
+                        display: none;
+                    }
+
+                    &:after {
+                        opacity: 0.75;
+                    }
+
+                    ._number {
+                        color: #fff;
+                        opacity: 1;
+                    }
+
+                    ._name {
+                        color: #999;
+                    }
+
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+
+                &:hover {
+                    ._number {
+                        color: #fff;
+                        opacity: 1;
+                    }
+
+                    ._name {
+                        color: #fff;
                     }
                 }
             }
@@ -407,6 +407,12 @@
                 ._player {
                     ._role {
                         opacity: 1;
+                        background-color: #381111;
+                    }
+                    &._alive {
+                        ._role {
+                            background-color: #000;
+                        }
                     }
                 }
             }

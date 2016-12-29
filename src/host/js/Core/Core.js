@@ -544,7 +544,14 @@ var Core = function(opts) {
             for (var i=0;i<AliveWerewolf.length;i++){
                 playerList[AliveWerewolf[i]].status = [val];
             }
-            _send[MSGCODE.HOST.RESULT](wolfIdList, [val]);
+
+            _send[MSGCODE.HOST.UPDATE](wolfIdList,{
+               actived: 0,
+               alive: _gameData.cacheAlive,
+               status: playerList[playerIdx].status,
+               action:werewolfVote,
+               result: [val]
+            });
             CheckIfEnd();
             phaseIncreament();
         }
@@ -598,7 +605,14 @@ var Core = function(opts) {
             testRst = 1;
         }
         playerList[playerIdx].status = [testIdx, testRst];
-        _send[MSGCODE.HOST.RESULT]([_playerIDXtoID[playerIdx]],[testIdx, testRst]);
+
+        _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[playerIdx]],{
+           actived: 0,
+           alive: _gameData.cacheAlive,
+           status: playerList[playerIdx].status,
+           action:werewolfVote,
+           result: [testIdx, testRst]
+        });
         console.log("== 预言家请闭眼 ==");
         phaseIncreament();
     }
@@ -647,7 +661,14 @@ var Core = function(opts) {
             playerList[playerIdx].status[1] = 0;
             console.log("use potion kill ", playerList[poisonIdx]);
         }
-        _send[MSGCODE.HOST.RESULT]([_playerIDXtoID[playerIdx]],[healIdx, poisonIdx]);
+
+        _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[playerIdx]],{
+           actived: 0,
+           alive: _gameData.cacheAlive,
+           status: playerList[playerIdx].status,
+           action:werewolfVote,
+           result: [healIdx, poisonIdx]
+        });
         phaseIncreament();
     }
 
@@ -691,14 +712,9 @@ var Core = function(opts) {
                 opts.actived,
                 opts.alive,
                 opts.status,
-                opts.action
+                opts.action,
+                opts.result || []
             ]);
-        };
-        _send[MSGCODE.HOST.RESULT] = function(target, rst) {
-            that.clientUpdate(target, [
-                MSGCODE.HOST.RESULT,
-                rst
-            ], true);
         };
         _send[MSGCODE.HOST.END] = function(target, rst) {
             that.clientUpdate(target, [

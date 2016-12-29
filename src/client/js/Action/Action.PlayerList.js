@@ -38,14 +38,15 @@ var PlayerList = function (){
     };
 
     this.update = function (playerAliveArr, voteArr){
-        for (var i=0;i<_html['player'].length;i++){
+        for (var i in _html['player']){
             if (playerAliveArr[i]==='1') _html['player'][i].wrap.addClass(CSS.alive);
             else _html['player'][i].wrap.removeClass(CSS.alive);
             _html['player'][i].vote.empty();
         }
+        _html['player']['-1'] && _html['player']['-1'].wrap.addClass(CSS.alive);
         if (voteArr==null) return;
-        for (var i=0;i<voteArr.length;i++){
-            if (voteArr[i]===-1) continue;
+        for (var i in voteArr){
+            if (!_html['player'].hasOwnProperty(voteArr[i])) continue;
             _html['player'][voteArr[i]].vote.append(_html['voteCache'][i]);
         }
     };
@@ -64,7 +65,7 @@ var PlayerList = function (){
         _html['wrap']=$(HTML.wrap).appendTo(container);
         _html['_title']=$(HTML.title).appendTo(_html['wrap']).html(title||'');
         _html['list']=$(HTML.list).appendTo(_html['wrap']);
-        _html['player']=[];
+        _html['player']={};
         _html['space'] = $(HTML.space).appendTo(_html['list']);
         for (var i=0;i<playerInfo.length;i++){
             addPlayer(i, playerInfo[i][0],playerInfo[i][1]);
@@ -103,7 +104,7 @@ var PlayerList = function (){
             if (!pkg['wrap'].hasClass(CSS.alive)) return false;
             that.onAbstain && that.onAbstain ();
         });
-        _html['player']['abstain'] = pkg;
+        _html['player']['-1'] = pkg;
     };
 
     var resize = function (){
