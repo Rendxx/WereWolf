@@ -10,7 +10,6 @@ var INITCODE = require('GLOBAL/js/InitCode.js');
 var PHASE = require('GLOBAL/js/PhaseCode.js');
 var InfoBox = require('CLIENT/js/InfoBox.js');
 var RoleFactory = require('CLIENT/js/Role/RoleFactory.js');
-var SettingPanel = require('CLIENT/js/Main/Render.Main.SettingPanel.js');
 var StatusPanel = require('CLIENT/js/Main/Render.Main.StatusPanel.js');
 var PlayerPanel = require('CLIENT/js/Main/Render.Main.PlayerPanel.js');
 
@@ -44,10 +43,8 @@ var Main = function (container) {
         roleCode = null;
 
     var _msg = {};
-    var _initFunc = {};
     var _send = {};
-    var settingPanel = null,
-        statusPanel = null,
+    var statusPanel = null,
         playerPanel = null;
     var roleInstance = null;
 
@@ -74,10 +71,23 @@ var Main = function (container) {
           roleInstance.dispose();
           roleInstance=null;
         }
-        var initCode = setupData[0];
         index = setupData[1];
-        if (!_initFunc.hasOwnProperty(initCode)) return;
-        _initFunc[initCode](setupData);
+        var initData = setupData[2];
+        var playerInfo = setupData[3];
+
+        if (roleInstance!=null) roleInstance.dispose();
+        roleInstance = RoleFactory(initData[2]);
+        roleInstance.setup(index);
+        roleInstance.onActionEnd = function (idx){
+          _send[MSGCODE.CLIENT.DECISION](idx);
+        };
+
+        roleInstance.initActionPanel(html['panel']['action'], playerInfo);
+
+        playerPanel.hide();
+        statusPanel.show();
+        statusPanel.reset(initData[0],initData[1],initData[2],roleInstance);
+        playerPanel.reset(playerInfo);
     };
 
     this.updateGame = function (gameData) {
@@ -148,51 +158,6 @@ var Main = function (container) {
         html['panel']['player'].hide();
     };
 
-    var _setupInit = function () {
-        _initFunc[INITCODE.SETTING] = function (setupData){
-            var playerNumber = setupData[2];
-            var roleList = setupData[3];
-            settingPanel.reset(playerNumber, roleList);
-            settingPanel.show();
-            statusPanel.hide();
-        };
-
-        _initFunc[INITCODE.DONE] = function (setupData){
-            var playerIdx = setupData[1];
-            var initData = setupData[4];
-            var playerInfo = setupData[5];
-
-            roleInstance = RoleFactory(initData[2]);
-            roleInstance.setup(playerIdx);
-            roleInstance.onActionEnd = function (idx){
-              _send[MSGCODE.CLIENT.DECISION](idx);
-            };
-            settingPanel.hide();
-            statusPanel.show();
-            statusPanel.reset(initData[0],initData[1],initData[2],roleInstance);
-        };
-
-        _initFunc[INITCODE.ALLDONE] = function (setupData){
-            var playerIdx = setupData[1];
-            var initData = setupData[4];
-            var playerInfo = setupData[5];
-            if (roleInstance==null) {
-                roleInstance = RoleFactory(initData[2]);
-                roleInstance.setup(playerIdx);
-                roleInstance.onActionEnd = function (idx){
-                  _send[MSGCODE.CLIENT.DECISION](idx);
-                };
-            }
-            roleInstance.initActionPanel(html['panel']['action'], playerInfo);
-
-            settingPanel.hide();
-            playerPanel.hide();
-            statusPanel.show();
-            statusPanel.reset(initData[0],initData[1],initData[2],roleInstance);
-            playerPanel.reset(playerInfo);
-        };
-    };
-
     var _setupHtml = function (setupData) {
         html['container'].empty();
         html['panel'] = {};
@@ -214,20 +179,11 @@ var Main = function (container) {
 
     var _init = function () {
         _setupMsg();
-        _setupInit();
         _setupSend();
         _setupHtml();
-        settingPanel = new SettingPanel(html['panel']['setting'][0]);
         statusPanel = new StatusPanel(html['panel']['status'][0]);
         playerPanel = new PlayerPanel(html['panel']['player'][0]);
-
-        settingPanel.onConfirm = function (data){
-          _send[MSGCODE.CLIENT.SET_INIT](data);
-          settingPanel.hide();
-          statusPanel.reset(data.number, data.name, data.role);
-          statusPanel.show();
-        };
-
+        
         statusPanel.onToggle = function (data){
           playerPanel.show();
           statusPanel.hide();

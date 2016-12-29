@@ -362,23 +362,12 @@ var Core = function(opts) {
                 that.clientSetup([_players[i].id], [
                     INITCODE.ALLDONE,
                     _players[i].idx,
-                    playerNum,
-                    _gameData.roleList,
                     infoList[i],
                     getPlayerInfoArr(false)
                 ]);
             }
             phaseIncreament(0);
             //waitingForStart();
-        } else {
-            // tell that player "you are setuped"
-            that.clientSetup([clientId], [
-                INITCODE.DONE,
-                idx,
-                playerNum,
-                _gameData.roleList, [number, name, role],
-                []
-            ]);
         }
     };
 
