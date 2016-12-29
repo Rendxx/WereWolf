@@ -174,7 +174,13 @@ var Core = function(opts) {
             then send the setup data out
         */
         _gameData.roleList = para.roleList;
+
         _gameData.phaseIdx = -1;
+        console.log("playerdata");
+        console.log(playerData);
+
+        console.log("para");
+        console.log(para);
 
         _gameData.lockSetup = false;
 
@@ -187,6 +193,16 @@ var Core = function(opts) {
         _gameData.dayNum=0;
 
         playerNum = playerData.length;
+
+        // random give player roles
+        var roleDistribute = [];
+        var copy = para.roleArrange.slice();
+
+        for (var i=playerNum;i>0;i--){
+            var k = ~~(Math.random()*i);
+            roleDistribute.push(copy[k]);
+            copy[k] = copy[i-1];
+        }
 
         for (var i = 0, count = playerData.length; i < count; i++) {
             if (playerData[i] == null) continue;
@@ -207,7 +223,7 @@ var Core = function(opts) {
         }
 
         for (var i = 0, count = playerData.length; i < count; i++) {
-            setupRole( playerData[i].id, [1, i+1,  playerData[i].name, para.roleArrange[i]]);
+            setupRole( playerData[i].id, [1, i+1,  playerData[i].name, roleDistribute[i]]);
         }
 
         console.log("setup", JSON.stringify(_playerMap));

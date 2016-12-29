@@ -107,22 +107,50 @@ var RoleSelection = function (container){
         });
         _html['ok']=$(HTML.ok).appendTo(_html['title']);
         _html['ok'].click(function(){
+            // if cache not contain all player info, return
             if (playerNumber-roleCache.length>0 || playerNumber===0) return false;
-            var roleMap = {};
-            var output = [];
+
             var copy = roleCache.slice();
-            for (var i=playerNumber;i>0;i--){
-                var k = ~~(Math.random()*i);
-                output.push(copy[k]);
-                roleMap[copy[k]]=1;
-                copy[k] = copy[i-1];
-            }
+
+            // ================= move to core ==================
+            // var roleMap = {};
+            // var output = [];
+            // for (var i=playerNumber;i>0;i--){
+            //     var k = ~~(Math.random()*i);
+            //     output.push(copy[k]);
+            //     roleMap[copy[k]]=1;
+            //     copy[k] = copy[i-1];
+            // }
+            // var roleList2 = [];
+            // for (var i in roleMap){
+            //   roleList2.push(Number(i));
+            // }
+            // roleList2.sort();
+
+            // =================================================
+
             var roleList2 = [];
-            for (var i in roleMap){
-              roleList2.push(Number(i));
+
+            copy.sort();
+
+            for ( var i = 0; i < copy.length; i++ ){
+                if (i == 0) {
+                  roleList2.push(copy[i]);
+                }
+                else{
+                    if (copy[i] != copy[i-1]){
+                       roleList2.push(copy[i]);
+                    }
+                }
             }
-            roleList2.sort();
-            that.onFinish && that.onFinish (output,roleList2);
+
+            console.log("prepare");
+            console.log(roleCache);
+            // console.log(output);
+            console.log(roleList2);
+
+            that.onFinish && that.onFinish (roleCache,roleList2);
+
         });
 
         _html['roleList']=$(HTML.roleList).appendTo(_html['inner']);
