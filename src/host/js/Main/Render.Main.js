@@ -54,10 +54,9 @@ var Main = function (container) {
     this.reset = function (setupData) {
         /* TODO: initialize the game */
         if (setupData==null) return;
-        var initCode = setupData[0];
-        var basicData = setupData[1];
-        var playerData = setupData[2];
-        playerPanel.reset(initCode, basicData, playerData);
+        var basicData = setupData[0];
+        var playerData = setupData[1];
+        playerPanel.reset(basicData, playerData);
         _render();
     };
 

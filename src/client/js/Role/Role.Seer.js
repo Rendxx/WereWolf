@@ -47,7 +47,7 @@ Seer.prototype.update = function (aliveListArr, dat){
     this.lastRoleInfo = dat;
     if (!this._playerInfo.hasOwnProperty(dat[0])){
     } else {
-        this._html.info['msg'].html('Player [No.'+dat[0]+'] is <b>'+ROLEDATA[dat[1]].name+'</b>');
+        this._html.info['msg'].html('Player [No.'+dat[0]+'] is <b>'+(dat[1]===0?'Human':'Werewolf')+'</b>');
     }
 };
 

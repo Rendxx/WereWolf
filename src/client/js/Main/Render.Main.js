@@ -6,7 +6,7 @@ var ACTION = require('GLOBAL/js/ActionCode.js');
 var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var MSGCODE = require('GLOBAL/js/MessageCode.js');
-var INITCODE = require('GLOBAL/js/InitCode.js');
+var ACTIVECODE = require('GLOBAL/js/ActiveCode.js');
 var PHASE = require('GLOBAL/js/PhaseCode.js');
 var InfoBox = require('CLIENT/js/InfoBox.js');
 var RoleFactory = require('CLIENT/js/Role/RoleFactory.js');
@@ -18,7 +18,6 @@ require('CLIENT/less/Main/Main.ActionPanel.less');
 
 var HTML = {
     panel: {
-      setting: '<div class="_panel _setting"></div>',
       player: '<div class="_panel _playerList"></div>',
       status: '<div class="_panel _status"></div>',
       action: '<div class="_panel _action"></div>',
@@ -71,9 +70,9 @@ var Main = function (container) {
           roleInstance.dispose();
           roleInstance=null;
         }
-        index = setupData[1];
-        var initData = setupData[2];
-        var playerInfo = setupData[3];
+        index = setupData[0];
+        var initData = setupData[1];
+        var playerInfo = setupData[2];
 
         if (roleInstance!=null) roleInstance.dispose();
         roleInstance = RoleFactory(initData[2]);
@@ -108,9 +107,11 @@ var Main = function (container) {
             var aliveList = dat[3];
             var playerStatus = dat[4];
             var actionData = dat[5];
+            var resultData = dat[6];
 
             if (currentStep!==step) InfoBox.hide();
             roleInstance && roleInstance.update(aliveList, playerStatus);
+
             if (currentStep!==step) {
                 currentStep=step;
                 if (currentStep===PHASE.DAY){
@@ -118,17 +119,15 @@ var Main = function (container) {
                 }
             };
 
-            if (isActived){
+            if (isActived===ACTIVECODE.RESULT){
+                roleInstance && roleInstance.showRst(resultData);
+            } else if (isActived===ACTIVECODE.YES){
                 roleInstance && roleInstance.active(aliveList, actionData);
             } else{
                 roleInstance && roleInstance.inactive();
             }
             playerPanel.updateStatus(aliveList);
             statusPanel.updateAlive(roleInstance.alive);
-        };
-
-        _msg[MSGCODE.HOST.RESULT] = function (dat){
-            roleInstance && roleInstance.showRst(dat[1]);
         };
 
         _msg[MSGCODE.HOST.END] = function (dat){
@@ -161,7 +160,6 @@ var Main = function (container) {
     var _setupHtml = function (setupData) {
         html['container'].empty();
         html['panel'] = {};
-        html['panel']['setting'] = $(HTML.panel.setting).appendTo(html['container']);
         html['panel']['player'] = $(HTML.panel.player).appendTo(html['container']);
         html['panel']['status'] = $(HTML.panel.status).appendTo(html['container']);
         html['panel']['action'] = $(HTML.panel.action).appendTo(html['container']);
@@ -183,7 +181,7 @@ var Main = function (container) {
         _setupHtml();
         statusPanel = new StatusPanel(html['panel']['status'][0]);
         playerPanel = new PlayerPanel(html['panel']['player'][0]);
-        
+
         statusPanel.onToggle = function (data){
           playerPanel.show();
           statusPanel.hide();

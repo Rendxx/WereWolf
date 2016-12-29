@@ -12,7 +12,7 @@ var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var MSGCODE = require('GLOBAL/js/MessageCode.js');
 var PHASECODE = require('GLOBAL/js/PhaseCode.js');
-var INITCODE = require('GLOBAL/js/InitCode.js');
+var ACTIVECODE = require('GLOBAL/js/ActiveCode.js');
 var Charactor = require('./Charactor.js');
 
 var Core = function(opts) {
@@ -122,8 +122,7 @@ var Core = function(opts) {
         */
 
         if (setupData != null) {
-            var initCode = setupData[0];
-            var basicDat = setupData[1];
+            var basicDat = setupData[0];
 
             _players = [];
             _playersId = [];
@@ -149,16 +148,14 @@ var Core = function(opts) {
                 _playerIDXtoID[playerObj.idx] = playerObj.id;
             }
 
-            if (initCode===INITCODE.ALLDONE){
-                var infoList = setupData[2];
-                for (var i = 0; i < infoList.length; i++) {
-                    var number = infoList[i][0];
-                    var name = infoList[i][1];
-                    var role = infoList[i][2];
-                    var idx = i;
-                    var clientName = basicDat[i].name;
-                    addCharacter(idx, clientName, number, name, role);
-                }
+            var infoList = setupData[1];
+            for (var i = 0; i < infoList.length; i++) {
+                var number = infoList[i][0];
+                var name = infoList[i][1];
+                var role = infoList[i][2];
+                var idx = i;
+                var clientName = basicDat[i].name;
+                addCharacter(idx, clientName, number, name, role);
             }
         }
         if (gameData != null) {
@@ -219,18 +216,6 @@ var Core = function(opts) {
         for (var i = 0; i < _players.length; i++) {
             basicDat[i] = [_players[i].id, _players[i].name, _players[i].idx];
         }
-        //
-        // this.onSetuped([INITCODE.SETTING, basicDat, []]);
-        // for (var i = 0; i < _players.length; i++) {
-        //     this.clientSetup([_players[i].id], [
-        //         INITCODE.SETTING,
-        //         _players[i].idx,
-        //         playerNum,
-        //         _gameData.roleList,
-        //         [],
-        //         []
-        //     ]);
-        // }
     };
 
     // game ------------------------------------------------
@@ -357,10 +342,9 @@ var Core = function(opts) {
             _gameData.lockSetup = true;
 
             var infoList = getPlayerInfoArr(true);
-            that.onSetuped([INITCODE.ALLDONE, getBasicDataArr(), infoList]);
+            that.onSetuped([getBasicDataArr(), infoList]);
             for (var i = 0; i < playerList.length; i++) {
                 that.clientSetup([_players[i].id], [
-                    INITCODE.ALLDONE,
                     _players[i].idx,
                     infoList[i],
                     getPlayerInfoArr(false)
@@ -429,7 +413,7 @@ var Core = function(opts) {
 
         for (var i=0;i<playerList.length;i++){
             _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[i]],{
-               actived: 0,
+               actived: ACTIVECODE.NO,
                alive: _gameData.cacheAlive,
                status: playerList[i].status,
                action:[]
@@ -476,7 +460,7 @@ var Core = function(opts) {
 
 
             _send[MSGCODE.HOST.UPDATE](wolfIdList,{
-               actived: 1,
+               actived: ACTIVECODE.YES,
                alive: _gameData.cacheAlive,
                status: playerList[AliveWerewolf[0]].status,
                action:werewolfVote
@@ -511,7 +495,7 @@ var Core = function(opts) {
             werewolfVote[playerIdx] = victim;
         }
         _send[MSGCODE.HOST.UPDATE](wolfIdList,{
-           actived: 1,
+           actived: ACTIVECODE.YES,
            alive: _gameData.cacheAlive,
            status: playerList[playerIdx].status,
            action:werewolfVote
@@ -535,7 +519,7 @@ var Core = function(opts) {
             }
 
             _send[MSGCODE.HOST.UPDATE](wolfIdList,{
-               actived: 0,
+               actived: ACTIVECODE.RESULT,
                alive: _gameData.cacheAlive,
                status: playerList[playerIdx].status,
                action:werewolfVote,
@@ -561,7 +545,7 @@ var Core = function(opts) {
             } else {
                 // tell seer who can be tested
                 _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[_gameData.seerID]],{
-                   actived: 1,
+                   actived: ACTIVECODE.YES,
                    alive: _gameData.cacheAlive,
                    status: playerList[_gameData.seerID].status,
                    action:[]
@@ -596,7 +580,7 @@ var Core = function(opts) {
         playerList[playerIdx].status = [testIdx, testRst];
 
         _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[playerIdx]],{
-           actived: 0,
+           actived: ACTIVECODE.RESULT,
            alive: _gameData.cacheAlive,
            status: playerList[playerIdx].status,
            action:werewolfVote,
@@ -619,7 +603,7 @@ var Core = function(opts) {
                 phaseIncreament(~~(Math.random()*10000)+6000);
             }else{
                 _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[_gameData.witchID]],{
-                   actived: 1,
+                   actived: ACTIVECODE.YES,
                    alive: _gameData.cacheAlive,
                    status: playerList[_gameData.witchID].status,
                    action:[playerList[_gameData.witchID].status[0]>0?_gameData.WolfMark:-1]
@@ -652,7 +636,7 @@ var Core = function(opts) {
         }
 
         _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[playerIdx]],{
-           actived: 0,
+           actived: ACTIVECODE.RESULT,
            alive: _gameData.cacheAlive,
            status: playerList[playerIdx].status,
            action:werewolfVote,

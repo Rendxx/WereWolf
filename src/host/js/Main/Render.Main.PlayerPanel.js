@@ -1,7 +1,7 @@
 var ROLECODE = require('GLOBAL/js/RoleCode.js');
 var ROLEDATA = require('GLOBAL/js/RoleData.js');
 var INFO = require('HOST/js/Info.js');
-var INITCODE = require('GLOBAL/js/InitCode.js');
+var ACTIVECODE = require('GLOBAL/js/ActiveCode.js');
 var PHASEMESSAGE = require('HOST/js/Main/PhaseMessage.js');
 var PHASECODE = require('GLOBAL/js/PhaseCode.js');
 var InfoBox = require('HOST/js/InfoBox.js');
@@ -58,7 +58,6 @@ var PlayerPanel = function(container) {
     var _playerInfo = null;
     var _basicData = null;
     var _phase = PHASECODE.NONE;
-    var _initCode = null;
     var isRoleVisible = false;
     var status = {};
 
@@ -69,16 +68,13 @@ var PlayerPanel = function(container) {
     that.onEnd = null;
 
     // Public --------------------------------
-    this.reset = function(initCode, basicData, playerInfo) {
+    this.reset = function(basicData, playerInfo) {
         _basicData = basicData;
         _playerInfo = playerInfo;
-        _initCode = initCode;
         playerNum = _basicData.length;
         setupHtml();
         setupPlayer(_basicData, _playerInfo);
-        if (initCode===INITCODE.SETTING) _phase= PHASECODE.NONE;
-        // if (_phase === PHASECODE.NONE && initCode===INITCODE.ALLDONE)
-        //   html['start'].fadeIn(200);
+        _phase= PHASECODE.NONE;
         resize();
     };
 
@@ -140,7 +136,6 @@ var PlayerPanel = function(container) {
         setupPanel();
 
         html['skip'].click(function(){
-            if (_initCode!==INITCODE.ALLDONE) return false;
             InfoBox.check({
                 content: 'Do you want to SKIP this phase',
                 callbackYes: function() {
@@ -149,19 +144,11 @@ var PlayerPanel = function(container) {
             });
         });
 
-        // html['start'].click(function(){
-        //     if (_initCode!==INITCODE.ALLDONE) return false;
-        //     that.onSkip&&that.onSkip();
-        //     html['start'].fadeOut(200);
-        // });
-
         html['roleVisible'].click(function(){
-            if (_initCode!==INITCODE.ALLDONE) return false;
             that.showRole(!isRoleVisible);
         });
 
         html['status'].click(function(){
-            if (_initCode!==INITCODE.ALLDONE) return false;
             html['statusPanel'].fadeIn(200);
         });
 

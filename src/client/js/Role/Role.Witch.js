@@ -70,6 +70,8 @@ Witch.prototype.update = function (aliveListArr, dat){
   Basic.prototype.update.call(this,aliveListArr, dat);
     if (dat==null) return;
     this.potion = dat;
+    this._html.info['healer'].text(this.potion[0]===1?'Yes':'No');
+    this._html.info['poison'].text(this.potion[1]===1?'Yes':'No');
 };
 
 Witch.prototype.showRst = function (dat){
