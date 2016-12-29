@@ -24,20 +24,10 @@
     start : function (){
       window.msg('1|3|SERVER|12|null');
     },
-    init : function (id){
-      window.msg('2|4|HOST|1|[0,5,'+10+','+JSON.stringify(roleList)+',[],[]]');
-    },
-    inited : function (role){
+    init : function (role){
       role=role||2;
-      window.msg('2|4|HOST|1|[1,5,'+10+','+JSON.stringify(roleList)+',[6,"高俊敏",'+role+'],[]]');
+      window.msg('2|4|HOST|1|[5,[6,"高俊敏",'+role+'],'+JSON.stringify(playerInfo)+']');
     },
-    inited2 : function (role){
-      window.msg('2|4|HOST|1|[2,5,'+10+','+JSON.stringify(roleList)+',[6,"高俊敏",'+role+'],'+JSON.stringify(playerInfo)+']');
-    },
-    // update : function (phase){
-    //   phase=phase||2;
-    //   window.msg('2|5|HOST|2|[0,'+phase+',1,'+playerStatus+','+JSON.stringify(playerVote)+',[]]');
-    // },
     update2 : function (id){
       phase=phase||3;
       window.msg('2|5|HOST|2|[0,3,0,'+playerStatus+',[],[]]');
@@ -107,8 +97,6 @@
 
   console.group("%c TEST COMMAND ", 'background: #ddeeff; color: #003399;');
   console.log("%c test.init() ", 'color: #003399;');
-  console.log("%c test.inited() ", 'color: #003399;');
-  console.log("%c test.inited2() ", 'color: #003399;');
   console.log('');
 
   console.log("%c test.update[1]() ", 'color: #330099;');

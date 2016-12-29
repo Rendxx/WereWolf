@@ -26,9 +26,11 @@ Basic.prototype.setup = function (playerIdx){
 };
 
 Basic.prototype.dayTime = function (dat){
-    InfoBox.alert({
-        content: INFO.DAY,
-    });
+    if (this.alive){
+        InfoBox.alert({
+            content: INFO.DAY,
+        });
+    }
     this.inactive();
 };
 

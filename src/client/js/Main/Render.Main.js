@@ -37,8 +37,7 @@ var Main = function (container) {
         panel:{},
     };
 
-    var index = -1,
-        currentStep = PHASE.NONE,
+    var currentStep = PHASE.NONE,
         roleCode = null;
 
     var _msg = {};
@@ -66,17 +65,13 @@ var Main = function (container) {
         /* TODO: initialize the game */
         if (setupData==null) return;
         _resetHtml();
-        if (roleInstance!=null) {
-          roleInstance.dispose();
-          roleInstance=null;
-        }
-        index = setupData[0];
+        var playerIdx = setupData[0];
         var initData = setupData[1];
         var playerInfo = setupData[2];
 
         if (roleInstance!=null) roleInstance.dispose();
         roleInstance = RoleFactory(initData[2]);
-        roleInstance.setup(index);
+        roleInstance.setup(playerIdx);
         roleInstance.onActionEnd = function (idx){
           _send[MSGCODE.CLIENT.DECISION](idx);
         };
@@ -135,15 +130,6 @@ var Main = function (container) {
     };
 
     var _setupSend = function (){
-        _send[MSGCODE.CLIENT.SET_INIT] = function (dat){
-            that.message.action([
-              MSGCODE.CLIENT.SET_INIT,
-              dat.number,
-              dat.name,
-              dat.role
-            ]);
-        };
-
         _send[MSGCODE.CLIENT.DECISION] = function (idx){
             that.message.action([
               MSGCODE.CLIENT.DECISION,
@@ -165,7 +151,6 @@ var Main = function (container) {
         html['panel']['action'] = $(HTML.panel.action).appendTo(html['container']);
     };
     var _resetHtml = function (setupData) {
-        html['panel']['setting'].empty().hide();
         playerPanel.reset();
         html['panel']['status'].empty().hide();
         html['panel']['action'].empty().hide();
