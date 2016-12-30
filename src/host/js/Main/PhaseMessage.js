@@ -3,6 +3,7 @@ require('HOST/less/Main/PhaseMessage.less');
 
 var ImgSrc = {
     day: require('GLOBAL/design/Role/day.png'),
+    night: require('GLOBAL/design/Role/night.png'),
     tomb: require('GLOBAL/design/Role/tomb.png'),
     werewolf: require('GLOBAL/design/Role/werewolf.png'),
     seer: require('GLOBAL/design/Role/seer.png'),
@@ -13,12 +14,24 @@ var ImgSrc = {
 }
 
 var PHASEMESSAGE = {};
+PHASEMESSAGE[PHASE.PREDAY]=[
+  '<div class="phase_message">',
+    '<div class="_phase_message_icon" style="background-image:url(\''+ImgSrc.day+'\')"></div>',
+    '<div class="_phase_message_text">Day Time</div>',
+  '</div>'
+].join('');
 PHASEMESSAGE[PHASE.DAY]= [
       '<div class="phase_message">',
         '<div class="_phase_message_icon" style="background-image:url(\''+ImgSrc.day+'\')"></div>',
         '<div class="_phase_message_text">Vote Time</div>',
       '</div>'
     ].join('');
+PHASEMESSAGE[PHASE.PRENIGHT]=[
+  '<div class="phase_message">',
+    '<div class="_phase_message_icon" style="background-image:url(\''+ImgSrc.night+'\')"></div>',
+    '<div class="_phase_message_text">Night is coming</div>',
+  '</div>'
+].join('');
 PHASEMESSAGE[PHASE.WOLF]= [
   '<div class="phase_message">',
     '<div class="_phase_message_icon" style="background-image:url(\''+ImgSrc.werewolf+'\')"></div>',

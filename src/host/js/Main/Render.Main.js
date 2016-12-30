@@ -92,8 +92,9 @@ var Main = function (container) {
         if (gameData == null) return;
         var phase = gameData[0];
         var aliveList = gameData[1];
-        var statusList = gameData[2];
-        playerPanel.update(phase, aliveList, statusList);
+        var aliveListVisible = gameData[2];
+        var statusList = gameData[3];
+        playerPanel.update(phase, aliveList, aliveListVisible, statusList);
         if (currentPhase!==phase && PHASESOUND.hasOwnProperty(phase)){
             if (_timeoutFunc!==null){
               clearTimeout(_timeoutFunc);

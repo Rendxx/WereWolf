@@ -51,17 +51,16 @@ var Core = function(opts) {
     var _timeoutFunc = null;
     var _gameData = {
         // GAME PROGRESS INFO
-        roleList: [],
         phaseIdx: -1,
         dayNum:0,
         // SPECIAL ID INFO
         WolfMark: -1,
         seerID: -1,
         witchID: -1,
-        hunterID: -1,
-        // CACHE
-        cacheAlive: '',
+        hunterID: -1
     };
+
+    var cacheAlive = '';
 
     // message -----------------------------------------------
     this.send = null; /* TODO: this.send(code, content): This function should be set by Host-Manager, it is used to send message out */
@@ -153,16 +152,19 @@ var Core = function(opts) {
                 var role = infoList[i][2];
                 var idx = i;
                 var clientName = basicDat[i].name;
-                addCharacter(idx, clientName, number, name, role);
+                addCharacter(idx, number, name, role);
             }
         }
         if (gameData != null) {
-          var aliveList = gameData[1];
-          var statusList = gameData[2];
-          for (var i=0;i<playerList.length;i++){
-              playerList[i].alive = (aliveList[i]==='1');
-              playerList[i].status = statusList[i];
-          }
+            var aliveList = gameData[1];
+            var statusList = gameData[3];
+            cacheAlive = gameData[2];
+            _gameData = gameData[5];
+            for (var i=0;i<playerList.length;i++){
+                playerList[i].alive = (aliveList[i]==='1');
+                playerList[i].status = statusList[i];
+            }
+            GetAliveStatus(false);
         }
     };
 
@@ -171,7 +173,6 @@ var Core = function(opts) {
             setup the game with player data and initial options.
             then send the setup data out
         */
-        _gameData.roleList = para.roleList;
         _gameData.clientNumber = para.clientNumber;
 
         _gameData.phaseIdx = -1;
@@ -192,7 +193,7 @@ var Core = function(opts) {
         playerNum = playerData.length;
 
         // random give player roles
-        var roleDistribute = shuffleRole(_gameData.roleList);
+        var roleDistribute = shuffleRole(para.roleList);
 
         for (var i = 0, count = playerData.length; i < count; i++) {
             if (playerData[i] == null) continue;
@@ -262,6 +263,7 @@ var Core = function(opts) {
         that.onUpdated([
             PHASECODE.END,
             getAliveStr(),
+            cacheAlive,
             getStatusArr(),
             isVillager?1:0,
             _gameData
@@ -336,12 +338,7 @@ var Core = function(opts) {
         console.log(playerList);
     };
 
-    var waitingForStart = function (){
-        GetAliveStatus();
-        generalUpdate();
-    };
-
-    var GetAliveStatus = function() {
+    var GetAliveStatus = function(refreshAlive) {
         console.log("fucntion: GetAliveStatus")
             // clear alive list
         AliveWerewolf = [];
@@ -364,7 +361,7 @@ var Core = function(opts) {
         }
 
         AliveChara = AliveWerewolf.concat(AliveGods).concat(AliveMortal);
-        _gameData.cacheAlive = getAliveStr();
+        if (refreshAlive)cacheAlive = getAliveStr();
 
         console.log("AliveWerewolf", AliveWerewolf);
         console.log("AliveGods", AliveGods);
@@ -384,9 +381,14 @@ var Core = function(opts) {
         //        action:[]
         //      });
         // }
+        if (GamePhaseOrder[_gameData.phaseIdx] === PHASECODE.DAY
+          || GamePhaseOrder[_gameData.phaseIdx] === PHASECODE.PREDAY
+          || GamePhaseOrder[_gameData.phaseIdx] === PHASECODE.PRENIGHT)
+            cacheAlive = getAliveStr();
         that.onUpdated([
             (_gameData.phaseIdx===-1?PHASECODE.NONE:GamePhaseOrder[_gameData.phaseIdx]),
             getAliveStr(),
+            cacheAlive,
             getStatusArr(),
             -1,
             _gameData
@@ -395,7 +397,7 @@ var Core = function(opts) {
         for (var i=0;i<playerList.length;i++){
             _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[i]],{
                actived: ACTIVECODE.NO,
-               alive: _gameData.cacheAlive,
+               alive: cacheAlive,
                status: playerList[i].status,
                action:[]
             });
@@ -408,8 +410,7 @@ var Core = function(opts) {
 
     var preDay = function() {
         console.log("entering preDay");
-        GetAliveStatus();
-        phaseIncreament(1000);
+        GetAliveStatus(true);
     };
 
     var daytime = function() {
@@ -422,7 +423,7 @@ var Core = function(opts) {
         _gameData.dayNum++;
         console.log("entering preNight");
 
-        GetAliveStatus();
+        GetAliveStatus(true);
         phaseIncreament(8000);
     }
 
@@ -442,7 +443,7 @@ var Core = function(opts) {
 
             _send[MSGCODE.HOST.UPDATE](wolfIdList,{
                actived: ACTIVECODE.YES,
-               alive: _gameData.cacheAlive,
+               alive: cacheAlive,
                status: playerList[AliveWerewolf[0]].status,
                action:werewolfVote
             });
@@ -477,7 +478,7 @@ var Core = function(opts) {
         }
         _send[MSGCODE.HOST.UPDATE](wolfIdList,{
            actived: ACTIVECODE.YES,
-           alive: _gameData.cacheAlive,
+           alive: cacheAlive,
            status: playerList[playerIdx].status,
            action:werewolfVote
         });
@@ -501,7 +502,7 @@ var Core = function(opts) {
 
             _send[MSGCODE.HOST.UPDATE](wolfIdList,{
                actived: ACTIVECODE.RESULT,
-               alive: _gameData.cacheAlive,
+               alive: cacheAlive,
                status: playerList[playerIdx].status,
                action:werewolfVote,
                result: [val]
@@ -527,7 +528,7 @@ var Core = function(opts) {
                 // tell seer who can be tested
                 _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[_gameData.seerID]],{
                    actived: ACTIVECODE.YES,
-                   alive: _gameData.cacheAlive,
+                   alive: cacheAlive,
                    status: playerList[_gameData.seerID].status,
                    action:[]
                 });
@@ -562,7 +563,7 @@ var Core = function(opts) {
 
         _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[playerIdx]],{
            actived: ACTIVECODE.RESULT,
-           alive: _gameData.cacheAlive,
+           alive: cacheAlive,
            status: playerList[playerIdx].status,
            action:werewolfVote,
            result: [testIdx, testRst]
@@ -585,7 +586,7 @@ var Core = function(opts) {
             }else{
                 _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[_gameData.witchID]],{
                    actived: ACTIVECODE.YES,
-                   alive: _gameData.cacheAlive,
+                   alive: cacheAlive,
                    status: playerList[_gameData.witchID].status,
                    action:[playerList[_gameData.witchID].status[0]>0?_gameData.WolfMark:-1]
                 });
@@ -618,7 +619,7 @@ var Core = function(opts) {
 
         _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[playerIdx]],{
            actived: ACTIVECODE.RESULT,
-           alive: _gameData.cacheAlive,
+           alive: cacheAlive,
            status: playerList[playerIdx].status,
            action:werewolfVote,
            result: [healIdx, poisonIdx]
@@ -648,9 +649,6 @@ var Core = function(opts) {
 
     var _setupMsg = function() {
         _msg={};
-        _msg[MSGCODE.CLIENT.SET_INIT] = function(clientId, dat) {
-            //setupRole(clientId, dat);
-        };
 
         _msg[MSGCODE.CLIENT.DECISION] = function(clientId, dat) {
             GamePhase[GamePhaseOrder[_gameData.phaseIdx]](_playerIDtoIDX[clientId], dat);
@@ -691,12 +689,12 @@ var Core = function(opts) {
         GamePhase[PHASECODE.PREDAY] = preDay;
         GamePhase[PHASECODE.END] = end;
         GamePhaseOrder=[
-          PHASECODE.PREDAY,
           PHASECODE.DAY,
           PHASECODE.PRENIGHT,
           PHASECODE.WOLF,
           PHASECODE.SEER,
-          PHASECODE.WITCH
+          PHASECODE.WITCH,
+          PHASECODE.PREDAY,
         ];
         _setupMsg();
         _setupSend();

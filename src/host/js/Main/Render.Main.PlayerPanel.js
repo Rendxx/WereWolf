@@ -78,12 +78,11 @@ var PlayerPanel = function(container) {
         resize();
     };
 
-    this.update = function(phase, aliveList, statusList) {
+    this.update = function(phase, aliveList, aliveListVisible, statusList) {
         _phase = phase;
         for (var i=0;i<playerNum;i++){
             playerAlive[i] = aliveList[i]==='1';
-            if (_phase!==PHASECODE.DAY&&_phase!==PHASECODE.NONE) continue;
-            if (playerAlive[i]) html['player'][i].wrap.addClass(CSS.alive);
+            if (aliveListVisible[i]==='1') html['player'][i].wrap.addClass(CSS.alive);
             else html['player'][i].wrap.removeClass(CSS.alive);
         }
 
@@ -145,7 +144,15 @@ var PlayerPanel = function(container) {
         });
 
         html['roleVisible'].click(function(){
-            that.showRole(!isRoleVisible);
+            if (isRoleVisible) that.showRole(!isRoleVisible);
+            else {
+              InfoBox.check({
+                  content: 'Want to show all role?',
+                  callbackYes: function() {
+                      that.showRole(!isRoleVisible);
+                  }
+              });
+          }
         });
 
         html['status'].click(function(){
