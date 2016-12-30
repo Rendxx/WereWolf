@@ -110,8 +110,6 @@ var RoleSelection = function (container){
             // if cache not contain all player info, return
             if (playerNumber-roleCache.length>0 || playerNumber===0) return false;
 
-            var copy = roleCache.slice();
-
             // ================= move to core ==================
             // var roleMap = {};
             // var output = [];
@@ -129,28 +127,11 @@ var RoleSelection = function (container){
 
             // =================================================
 
-            var roleList2 = [];
-
-            copy.sort();
-
-            for ( var i = 0; i < copy.length; i++ ){
-                if (i == 0) {
-                  roleList2.push(copy[i]);
-                }
-                else{
-                    if (copy[i] != copy[i-1]){
-                       roleList2.push(copy[i]);
-                    }
-                }
-            }
-
             console.log("prepare");
             console.log(roleCache);
             // console.log(output);
-            console.log(roleList2);
 
-            that.onFinish && that.onFinish (roleCache,roleList2);
-
+            that.onFinish && that.onFinish (roleCache);
         });
 
         _html['roleList']=$(HTML.roleList).appendTo(_html['inner']);

@@ -54,8 +54,6 @@ var Core = function(opts) {
         roleList: [],
         phaseIdx: -1,
         dayNum:0,
-        // LOCK PHASECODE
-        lockSetup: false,
         // SPECIAL ID INFO
         WolfMark: -1,
         seerID: -1,
@@ -174,6 +172,7 @@ var Core = function(opts) {
             then send the setup data out
         */
         _gameData.roleList = para.roleList;
+        _gameData.clientNumber = para.clientNumber;
 
         _gameData.phaseIdx = -1;
         console.log("playerdata");
@@ -181,8 +180,6 @@ var Core = function(opts) {
 
         console.log("para");
         console.log(para);
-
-        _gameData.lockSetup = false;
 
         _players = [];
         _playersId = [];
@@ -195,14 +192,7 @@ var Core = function(opts) {
         playerNum = playerData.length;
 
         // random give player roles
-        var roleDistribute = [];
-        var copy = para.roleArrange.slice();
-
-        for (var i=playerNum;i>0;i--){
-            var k = ~~(Math.random()*i);
-            roleDistribute.push(copy[k]);
-            copy[k] = copy[i-1];
-        }
+        var roleDistribute = shuffleRole(_gameData.roleList);
 
         for (var i = 0, count = playerData.length; i < count; i++) {
             if (playerData[i] == null) continue;
@@ -217,21 +207,26 @@ var Core = function(opts) {
             _playerIDtoIDX[playerObj.id] = playerObj.idx;
             _playerIDXtoID[playerObj.idx] = playerObj.id;
             // changed
-            // _playerMap[playerObj.id] = playerData[i].name;
             _playerMap[playerObj.id] = playerObj;
-
         }
 
-        for (var i = 0, count = playerData.length; i < count; i++) {
-            setupRole( playerData[i].id, [1, i+1,  playerData[i].name, roleDistribute[i]]);
+        for (var i = 0, count = _players.length; i < count; i++) {
+            addCharacter(_players[i].idx, _gameData.clientNumber[_players[i].id], _players[i].name, roleDistribute[i]);
         }
+
+        var infoList = getPlayerInfoArr(true);
+        var infoList2 = getPlayerInfoArr(false);
+        that.onSetuped([getBasicDataArr(), infoList]);
+        for (var i = 0; i < playerList.length; i++) {
+            that.clientSetup([_players[i].id], [
+                _players[i].idx,
+                infoList[i],
+                infoList2
+            ]);
+        }
+        phaseIncreament(0);
 
         console.log("setup", JSON.stringify(_playerMap));
-
-        var basicDat = [];
-        for (var i = 0; i < _players.length; i++) {
-            basicDat[i] = [_players[i].id, _players[i].name, _players[i].idx];
-        }
     };
 
     // game ------------------------------------------------
@@ -277,6 +272,18 @@ var Core = function(opts) {
     };
 
     // game component --------------------------------------
+    var shuffleRole = function (roleList){
+        var roleDistribute = [];
+        var copy = roleList.slice();
+
+        for (var i=roleList.length;i>0;i--){
+            var k = ~~(Math.random()*i);
+            roleDistribute.push(copy[k]);
+            copy[k] = copy[i-1];
+        }
+        return roleDistribute;
+    };
+
     var getBasicDataArr = function() {
         var arr = [];
         for (var i = 0; i < _players.length; i++) {
@@ -310,15 +317,8 @@ var Core = function(opts) {
         return allPlayerList;
     };
 
-    var checkRoleSetuped = function() {
-        for (var i = 0; i < playerNum; i++) {
-            if (playerList[i] == null) return false;
-        }
-        return true;
-    };
-
-    var addCharacter = function (idx, clientName, number, name, role){
-        var p = new Charactor(idx, number, role, name, clientName);
+    var addCharacter = function (idx, number, name, role){
+        var p = new Charactor(idx, number, name, role);
         if (role == ROLECODE.WITCH) {
             _gameData.witchID = idx;
             p.status = [1, 1];
@@ -334,41 +334,6 @@ var Core = function(opts) {
 
         playerList[idx] = p;
         console.log(playerList);
-    };
-
-    var setupRole = function(clientId, dat) {
-        if (_gameData.lockSetup) {
-            return;
-        }
-        if (clientId == null || dat == null) return;
-        if (!_playerMap.hasOwnProperty(clientId)) return;
-
-        var number = dat[1];
-        var name = dat[2];
-        var role = dat[3];
-
-        // console.log("player " + clientId + ", " + _playerMap[clientId] + " set to role " + dat);
-        // get user instructions
-        var idx = _playerMap[clientId].idx;
-        var clientName = _playerMap[clientId].name;
-        addCharacter(idx, clientName, number, name, role);
-
-        if (checkRoleSetuped()) {
-            // tell all player game setuped
-            _gameData.lockSetup = true;
-
-            var infoList = getPlayerInfoArr(true);
-            that.onSetuped([getBasicDataArr(), infoList]);
-            for (var i = 0; i < playerList.length; i++) {
-                that.clientSetup([_players[i].id], [
-                    _players[i].idx,
-                    infoList[i],
-                    getPlayerInfoArr(false)
-                ]);
-            }
-            phaseIncreament(0);
-            //waitingForStart();
-        }
     };
 
     var waitingForStart = function (){

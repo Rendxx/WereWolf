@@ -1,9 +1,8 @@
-var Charactor = function (id, number, role, name, clientName,status) {
+var Charactor = function (id, number, name, role, status) {
     this.id = id;
     this.number = number;
     this.role = role;
     this.name = name;
-    this.clientName = clientName;
     this.alive = true;
     this.status = status || [];
 }

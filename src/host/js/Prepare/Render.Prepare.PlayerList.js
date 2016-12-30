@@ -1,7 +1,7 @@
 require('HOST/less/Prepare/Prepare.PlayerList.less');
 
 var HTML = {
-    wrap: '<div class="_playerList"></div>',
+    wrap: '<div class="playerList"></div>',
     inner: '<div class="_playerinner"></div>',
     item: '<div class="_playerItem"></div>',
     number: '<div class="_number"></div>',
@@ -15,7 +15,7 @@ var CSS={
 var PlayerList = function (container){
     var that = this;
     var container = $(container);
-    var playerNumber = 0;
+    this.playerNumber = 0;
     var clientMap = {};
     var playerMap = {};
     var swapItem = null;
@@ -26,6 +26,17 @@ var PlayerList = function (container){
     this.onChange = null;
 
     // public ------------------------------------
+    this.updatePlayer = function (clientData){
+        for (var id in clientMap){
+          if (clientData.hasOwnProperty(id)) continue;
+          this.removePlayer(id);
+        }
+        for (var id in clientData){
+          if (clientMap.hasOwnProperty(id)) continue;
+          this.addPlayer(id,clientData[id].name);
+        }
+    };
+
     this.addPlayer = function (id, name){
       if (clientMap.hasOwnProperty(id)) return;
       createItem(id, name);
@@ -34,24 +45,31 @@ var PlayerList = function (container){
     this.removePlayer = function (id){
       if (!clientMap.hasOwnProperty(id)) return;
       var n = clientMap[id];
-      delete playerMap[n];
-      delete clientMap[id];
-      for (var i in clientMap){
-        if (clientMap[i]>n){
-            clientMap[i]--;
-            playerMap[clientMap[i]]=i;
-        }
+      for (n;n<this.playerNumber;n++){
+          swap(n,n+1);
       }
-      _html['playerSlot'].pop();
+      delete playerMap[this.playerNumber];
+      delete clientMap[id];
+      this.playerNumber--;
+      var t = _html['playerSlot'].pop();
+      t.wrap.remove();
+    };
+
+    this.getClientNumber = function (){
+        var rst = {};
+        for (var id in clientMap){
+          rst[id] = clientMap[id];
+        }
+        return rst;
     };
 
     // private -----------------------------------
     var createItem = function (id, name){
-        var index = ++playerNumber;
+        var index = ++that.playerNumber;
         var pkg = {};
         pkg['wrap']=$(HTML.item).appendTo(_html['inner']);
         pkg['number']=$(HTML.number).appendTo(pkg['wrap']).text(index);
-        pkg['name']=$(HTML.name).appendTo(pkg['inner']).text(name);
+        pkg['name']=$(HTML.name).appendTo(pkg['wrap']).text(name);
         _html['playerSlot'][index] = pkg;
         clientMap[id] = index;
         playerMap[index] = id;

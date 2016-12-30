@@ -4,14 +4,13 @@
 */
 
 var RoleSelectPanel = require('HOST/js/Prepare/Render.Prepare.RoleSelectPanel.js');
+var PlayerList = require('HOST/js/Prepare/Render.Prepare.PlayerList.js');
 require('HOST/less/Prepare/Prepare.less');
 
 var HTML = {
     logo: '<div class="_logo"></div>',
     line: '<div class="_line"></div>',
     playerCount: '<div class="_playerCount">0</div>',
-    playerList: '<div class="_playerList"></div>',
-    item: '<div class="_item"></div>',
     startBtn: '<div class="_start">Game Start</div>'
 };
 
@@ -26,9 +25,9 @@ var Prepare = function (container, opts_in) {
         container: $(container)
     };
 
-    var cache_client = null,
-        clientNumber = 0;
-    var roleSelectPanel=null;
+    var cache_client = null;
+    var roleSelectPanel=null,
+        playerList=null;
     var setupOpt = {
         roleArrange:[],
         roleList:[]
@@ -74,22 +73,8 @@ var Prepare = function (container, opts_in) {
     // Private ---------------------------------------
     var _renderClient = function (clientData) {
         if (clientData == null) return;
-
-
-        for (var id in html['player']) {
-            if(clientData.hasOwnProperty(id))continue;
-            html['player'][id].remove();
-            delete html.player[id];
-        }
-
-        // player
-        clientNumber=0;
-        for (var id in clientData) {
-            clientNumber++;
-            if(html['player'].hasOwnProperty(id))continue;
-            html['player'][id] = $(HTML.item).appendTo(html['playerList']).text(clientData[id].name);
-        }
-        html['playerCount'].text(clientNumber);
+        playerList.updatePlayer(clientData)
+        html['playerCount'].text(playerList.playerNumber);
     };
 
     // Setup -----------------------------------------
@@ -98,29 +83,27 @@ var Prepare = function (container, opts_in) {
         html['line'] = $(HTML.line).appendTo(html['container']);
         // player list
         html['playerCount'] = $(HTML.playerCount).appendTo(html['container']);
-        html['playerList'] = $(HTML.playerList).appendTo(html['container']);
 
         // start btn
         html['startBtn'] = $(HTML.startBtn).appendTo(html['container']);
         html['startBtn'].click(function () {
-            roleSelectPanel.show(clientNumber);
+            roleSelectPanel.show(playerList.playerNumber);
         });
-        html['player'] = {};
     };
 
     var _init = function (opts_in) {
         _setupHtml();
         roleSelectPanel = new RoleSelectPanel(container);
+        playerList= new PlayerList(container);
         _onStart = opts_in && opts_in.onStart;
 
-        roleSelectPanel.onFinish = function (roleArr, roleList2){
+        roleSelectPanel.onFinish = function (roleList){
             console.log('FINISH ------------------------');
-            console.log(roleArr);
-            console.log(roleList2);
+            console.log(roleList);
             console.log('');
             setupOpt = {
-                roleArrange:roleArr,
-                roleList:roleList2
+                roleList:roleList,
+                clientNumber: playerList.getClientNumber()
             };
             _onStart && _onStart();
         };
