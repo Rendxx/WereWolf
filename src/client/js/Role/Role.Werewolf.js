@@ -73,7 +73,7 @@ WereWolf.prototype.initActionPanel = function (container, playerInfo){
     var that = this;
     this._playerInfo=playerInfo;
     this._html.action['container']=$(container);
-    this._action.playerList.setup(container, playerInfo, 'Choose your target');
+    this._action.playerList.setup(this.playerIdx, container, playerInfo, 'Choose your target');
     this._action.playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
 

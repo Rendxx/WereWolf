@@ -57,7 +57,8 @@ var Core = function(opts) {
         WolfMark: -1,
         seerID: -1,
         witchID: -1,
-        hunterID: -1
+        hunterID: -1,
+        passed: 0
     };
 
     var cacheAlive = '';
@@ -70,6 +71,10 @@ var Core = function(opts) {
         },
         setAlive:function (playerIdx, isAlive){
             playerList[playerIdx].alive = isAlive;
+            if (GamePhaseOrder[_gameData.phaseIdx] === PHASECODE.DAY
+              || GamePhaseOrder[_gameData.phaseIdx] === PHASECODE.PREDAY
+              || GamePhaseOrder[_gameData.phaseIdx] === PHASECODE.PRENIGHT)
+                GetAliveStatus(true);
             generalUpdate();
         },
         setStatus:function (role, status){
@@ -165,6 +170,7 @@ var Core = function(opts) {
                 playerList[i].status = statusList[i];
             }
             GetAliveStatus(false);
+            if (_gameData.passed===1)phaseIncreament(0);
         }
     };
 
@@ -214,6 +220,7 @@ var Core = function(opts) {
         for (var i = 0, count = _players.length; i < count; i++) {
             addCharacter(_players[i].idx, _gameData.clientNumber[_players[i].id], _players[i].name, roleDistribute[i]);
         }
+        GetAliveStatus(true);
 
         var infoList = getPlayerInfoArr(true);
         var infoList2 = getPlayerInfoArr(false);
@@ -370,21 +377,6 @@ var Core = function(opts) {
     }
 
     var generalUpdate = function() {
-        // phase= GamePhaseOrder[phaseId_in];
-        // for (var idx = 0; idx < playerList.length; idx++) {
-        //     var active = (phase!=PHASECODE.DAY && ROLEDATA[playerList[idx].role].activedPhase.indexOf(phase)>0)?1:0;
-        //
-        //     _send[MSGCODE.HOST.UPDATE]([_playerIDXtoID[idx]],{
-        //        actived: active,
-        //        alive: _gameData.cacheAlive,
-        //        status: playerList[idx].status,
-        //        action:[]
-        //      });
-        // }
-        if (GamePhaseOrder[_gameData.phaseIdx] === PHASECODE.DAY
-          || GamePhaseOrder[_gameData.phaseIdx] === PHASECODE.PREDAY
-          || GamePhaseOrder[_gameData.phaseIdx] === PHASECODE.PRENIGHT)
-            cacheAlive = getAliveStr();
         that.onUpdated([
             (_gameData.phaseIdx===-1?PHASECODE.NONE:GamePhaseOrder[_gameData.phaseIdx]),
             getAliveStr(),
@@ -429,7 +421,6 @@ var Core = function(opts) {
 
     var werewolf = function(playerIdx, dat) {
         // tell all alive werewolfs who can be voted
-
         var wolfIdList = [];
         for (var i = 0;i<AliveWerewolf.length;i++){
           wolfIdList.push(_playerIDXtoID[AliveWerewolf[i]]);
@@ -628,17 +619,31 @@ var Core = function(opts) {
     }
 
     var phaseIncreament = function(timeout) {
-        if (timeout==null) timeout=5000;
-        if (_timeoutFunc!==null){
-            clearTimeout(_timeoutFunc);
-        }
-        _gameData.phaseIdx = (_gameData.phaseIdx+1) %GamePhaseOrder.length;
-
-        _timeoutFunc = setTimeout(function(){
+        var cb = function(){
+            _gameData.passed=0;
             console.log("_gameData.phaseIdx", _gameData.phaseIdx);
             generalUpdate();
             GamePhase[GamePhaseOrder[_gameData.phaseIdx]]();
-        }, timeout);
+        };
+
+        if (timeout==null) timeout=5000;
+        if (_timeoutFunc!==null){
+            clearTimeout(_timeoutFunc);
+            _timeoutFunc=null;
+            // cb();
+            // return;
+        }
+        _gameData.passed=1;
+        that.onUpdated([
+            (_gameData.phaseIdx===-1?PHASECODE.NONE:GamePhaseOrder[_gameData.phaseIdx]),
+            getAliveStr(),
+            cacheAlive,
+            getStatusArr(),
+            -1,
+            _gameData
+        ]);
+        _gameData.phaseIdx = (_gameData.phaseIdx+1) %GamePhaseOrder.length;
+        _timeoutFunc = setTimeout(cb, timeout);
     }
 
     var gameEnd = function (){

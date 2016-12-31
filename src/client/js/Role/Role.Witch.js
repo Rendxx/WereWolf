@@ -112,7 +112,7 @@ Witch.prototype.initActionPanel = function (container, playerInfo){
     this._html.action['container']=$(container);
 
     // choice
-    this._action.choice.setup(container, 'Healer');
+    this._action.choice.setup(this.playerIdx, container, 'Healer');
     this._action.choice.onYes = function (idx){
         if (!that.actived) return;
         that.onActionEnd && that.onActionEnd([idx,-1]);
@@ -151,7 +151,7 @@ Witch.prototype.initActionPanel = function (container, playerInfo){
     };
 
     // player list
-    this._action.playerList.setup(container, playerInfo, 'Poison');
+    this._action.playerList.setup(this.playerIdx, container, playerInfo, 'Poison');
     this._action.playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
 

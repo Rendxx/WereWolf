@@ -109,7 +109,7 @@ var Main = function (container) {
 
             if (currentStep!==step) {
                 currentStep=step;
-                if (currentStep===PHASE.DAY){
+                if (currentStep===PHASE.PREDAY){
                     roleInstance && roleInstance.dayTime();
                 }
             };

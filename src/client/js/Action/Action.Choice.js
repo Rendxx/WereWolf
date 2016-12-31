@@ -20,6 +20,7 @@ var CSS = {
 var Choice = function (){
     var that = this;
     var container = null;
+    var playerIdx = -1;
     var _html = {
     };
     var _idx = -1;
@@ -30,7 +31,8 @@ var Choice = function (){
     this.onOk = null;
 
     // public ------------------------------------
-    this.setup = function (container_in, title){
+    this.setup = function (playerIdx_in, container_in, title){
+        playerIdx = playerIdx_in;
         container = $(container_in);
         setupHtml(title);
     };

@@ -47,7 +47,8 @@ Seer.prototype.update = function (aliveListArr, dat){
     this.lastRoleInfo = dat;
     if (!this._playerInfo.hasOwnProperty(dat[0])){
     } else {
-        this._html.info['msg'].html('Player [No.'+dat[0]+'] is <b>'+(dat[1]===0?'Human':'Werewolf')+'</b>');
+        var p = this._playerInfo[dat[0]];
+        this._html.info['msg'].html('['+p[0]+'] '+p[1]+'<br/><b>'+(dat[1]===0?'Human':'Werewolf')+'</b>');
     }
 };
 
@@ -87,7 +88,7 @@ Seer.prototype.initActionPanel = function (container, playerInfo){
     var that = this;
     this._playerInfo = playerInfo;
     this._html.action['container']=$(container);
-    this._action.playerList.setup(container, playerInfo, 'Choose your target');
+    this._action.playerList.setup(this.playerIdx, container, playerInfo, 'Choose your target');
     this._action.playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
 

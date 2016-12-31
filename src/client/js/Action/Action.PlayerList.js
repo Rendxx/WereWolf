@@ -18,12 +18,14 @@ var HTML = {
 var CSS = {
     alive: '_alive',
     show: '_show',
+    selected: '_selected',
     abstain:'_abstain'
 };
 
 var PlayerList = function (){
     var that = this;
     var container = null;
+    var playerIdx = -1;
     var _html = {
     };
 
@@ -32,7 +34,8 @@ var PlayerList = function (){
     this.onAbstain = null;
 
     // public ------------------------------------
-    this.setup = function (container_in, playerInfo, title){
+    this.setup = function (playerIdx_in, container_in, playerInfo, title){
+        playerIdx = playerIdx_in;
         container = $(container_in);
         setupHtml(playerInfo, title);
     };
@@ -42,11 +45,13 @@ var PlayerList = function (){
             if (playerAliveArr[i]==='1') _html['player'][i].wrap.addClass(CSS.alive);
             else _html['player'][i].wrap.removeClass(CSS.alive);
             _html['player'][i].vote.empty();
+            _html['player'][i].wrap.removeClass(CSS.selected);
         }
         _html['player']['-1'] && _html['player']['-1'].wrap.addClass(CSS.alive);
         if (voteArr==null) return;
         for (var i in voteArr){
             if (!_html['player'].hasOwnProperty(voteArr[i])) continue;
+            if (Number(i)===playerIdx)_html['player'][voteArr[i]].wrap.addClass(CSS.selected);
             _html['player'][voteArr[i]].vote.append(_html['voteCache'][i]);
         }
     };

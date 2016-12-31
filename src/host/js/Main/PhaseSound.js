@@ -2,7 +2,7 @@ var PHASE = require('GLOBAL/js/PhaseCode.js');
 
 var path = window.SoundPath;
 var PHASESOUND = {};
-PHASESOUND[PHASE.DAY] = new Howl({
+PHASESOUND[PHASE.PREDAY] = new Howl({
     src: [path+'sun_rise_wakeup.mp3'],
     loop: false,
     volume: 1
