@@ -117,7 +117,7 @@ Witch.prototype.initActionPanel = function (container, playerInfo){
     // choice
     this._action.choice.setup(this.playerIdx, container, 'Healer');
     this._action.choice.onYes = function (idx){
-        if (!that.actived) return;
+        if (!that.actived) return; 
         that.onActionEnd && that.onActionEnd([idx,-1]);
         that._action.choice.hide();
     };
