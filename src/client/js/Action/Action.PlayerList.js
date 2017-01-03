@@ -72,8 +72,15 @@ var PlayerList = function (){
         _html['list']=$(HTML.list).appendTo(_html['wrap']);
         _html['player']={};
         _html['space'] = $(HTML.space).appendTo(_html['list']);
+        var number = [];
+        for (var i=0;i<playerInfo.length;i++) number[i]=i;
+        number.sort(function(a, b){
+            return playerInfo[a][0] - playerInfo[b][0];
+        });
+
         for (var i=0;i<playerInfo.length;i++){
-            addPlayer(i, playerInfo[i][0],playerInfo[i][1]);
+            var k = number[i];
+            addPlayer(k, playerInfo[k][0],playerInfo[k][1]);
         }
         addAbstain();
         _html['space2'] = $(HTML.space).appendTo(_html['list']);

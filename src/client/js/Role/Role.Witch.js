@@ -34,12 +34,15 @@ Witch.prototype.active = function (aliveListArr, killedArr){
         });
 
         if (this.potion[0]===0 && this.potion[1]===0){
+            var that = this;
             InfoBox.alert({
                 content: 'You have no potion.',
+                callback:function(){
+                    that.onActionEnd && that.onActionEnd([-1, -1]);
+                }
             });
             this._action.choice.hide();
             this._action.playerList.hide();
-            this.onActionEnd && this.onActionEnd([-1, -1]);
         }else{
             this._action.choice.show();
             this._action.playerList.hide();
@@ -122,32 +125,47 @@ Witch.prototype.initActionPanel = function (container, playerInfo){
     this._action.choice.onNo = function (){
         if (!that.actived) return;
         if (that.potion[0]>0){
-          InfoBox.check({
-              content: 'Do you want to watch the player dying and do nothing?',
-              callbackYes: function() {
-                  that._action.choice.hide();
-                  that._action.playerList.show();
-                  setTimeout(function(){
-                    InfoBox.alert({
-                        content: INFO.WITCH_POISON,
-                    });
-                  },1);
-              }
-          });
-        }else{
+            that._action.choice.hide();
+            that._action.playerList.show();
+            setTimeout(function(){
+              InfoBox.alert({
+                  content: INFO.WITCH_POISON,
+              });
+            },1);
+        } else if (that.potion[1]>0){
             that._action.choice.hide();
             that._action.playerList.show();
             InfoBox.alert({
                 content: INFO.WITCH_POISON,
             });
+        } else {
+            that._action.choice.hide();
+            that._action.playerList.hide();
+            InfoBox.alert({
+                content: INFO.WITCH_NO_POISON,
+                callback: function(){
+                      that.onActionEnd && that.onActionEnd([-1, -1]);
+                }
+            });
         }
     };
     this._action.choice.onOk = function (){
-        that._action.choice.hide();
-        that._action.playerList.show();
-        InfoBox.alert({
-            content: INFO.WITCH_POISON,
-        });
+        if (that.potion[1]>0){
+            that._action.choice.hide();
+            that._action.playerList.show();
+            InfoBox.alert({
+                content: INFO.WITCH_POISON,
+            });
+        } else {
+            that._action.choice.hide();
+            that._action.playerList.hide();
+            InfoBox.alert({
+                content: INFO.WITCH_NO_POISON,
+                callback: function(){
+                      that.onActionEnd && that.onActionEnd([-1, -1]);
+                }
+            });
+        }
     };
 
     // player list

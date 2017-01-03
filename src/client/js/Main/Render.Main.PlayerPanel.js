@@ -81,9 +81,16 @@ var PlayerPanel = function(container) {
     };
 
     var setupPlayer = function(playerInfo) {
+        var number = [];
+        for (var i=0;i<playerNum;i++) number[i]=i;
+        number.sort(function(a, b){
+            return playerInfo[a][0] - playerInfo[b][0];
+        });
+
         html['player'] = [];
         for (var i=0;i<playerNum;i++){
-            addPlayer(i, playerInfo[i][0],playerInfo[i][1]);
+            var k = number[i];
+            addPlayer(k, playerInfo[k][0],playerInfo[k][1]);
         }
         html['space2'] = $(HTML.space).appendTo(html['inner']);
     };

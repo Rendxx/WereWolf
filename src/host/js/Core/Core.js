@@ -431,7 +431,7 @@ var Core = function(opts) {
             console.log("=       狼人请睁眼       =");
             console.log("=========================");
 
-
+            _gameData.WolfMark = -1;
             _send[MSGCODE.HOST.UPDATE](wolfIdList,{
                actived: ACTIVECODE.YES,
                alive: cacheAlive,
