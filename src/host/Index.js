@@ -16,4 +16,4 @@ window.GAME = {
   }
 };
 
-console.log('Werewolf v0.1.1');
+console.log('Werewolf v0.2.0');

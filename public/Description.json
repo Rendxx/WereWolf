@@ -1,9 +1,9 @@
 ﻿{
   "name": "WereWolf",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "authors": [
     "Rendxx <rendxx@gmail.edu>",
     "Guhao <gfan2@hawk.iit.edu>"
   ],
-  "description": "WereWolf."
+  "description": "WereWolf AI judge.<br/>Available role: Werewold, Villager, Seer, Witch, Hunter, Idiot."
 }
