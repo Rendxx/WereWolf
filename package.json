@@ -1,10 +1,12 @@
 {
-  "name": "package",
-  "version": "0.0.0",
+  "name": "werewolf",
+  "version": "1.0.0",
   "private": true,
   "devDependencies": {
+    // node server
     "body-parser": "^1.4.3",
     "express": "^4.4.5",
+    // webpack
     "babel-core": "*",
     "babel-loader": "*",
     "babel-preset-react": "*",
@@ -16,6 +18,30 @@
     "style-loader": "*",
     "url-loader": "*",
     "file-loader": "*",
-    "webpack": "^1.13.2"
+    "webpack": "^2.2.0",
+    "webpack-merge": "^2.4.0",
+    // other
+    "rimraf": "^2.5.2"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "webpack --config .webpack_config/webpack.dev.js -d",
+    "watch": "webpack --config .webpack_config/webpack.dev.js -d --watch",
+    "build": "rimraf public/Content && webpack --config .webpack_config/webpack.prod.js --progress --profile --bail"
+  },
+  "pository": {
+    "type": "git",
+    "url": "https://github.com/Rendxx/WereWolf.git"
+  },
+  "keywords": [
+    "camera controller",
+    "camera"
+  ],
+  "contributors": [
+    "Rendxx",
+    "Guhao Fan"
+  ],
+  "engines" : {
+    "node" : "0.12.x"
   }
 }
