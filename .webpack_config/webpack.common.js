@@ -38,7 +38,7 @@ module.exports = {
             {
               test   : /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
               exclude: /node_modules/,
-              loader : 'file-loader?name=../style/[name].[ext]'
+              loader : 'file-loader?name=../Font/[name].[ext]'
             }
         ]
     },
@@ -49,8 +49,5 @@ module.exports = {
             GLOBAL: root+'/src/global',
         },
         extensions: ['.js', '.json', '.less']
-    },
-    externals:{
-        three:"three"
     }
 };
