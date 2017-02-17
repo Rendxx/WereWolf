@@ -12,7 +12,7 @@ module.exports = {
         host : './src/host/Index',
         client : './src/client/Index',
         test : './src/test/Index'
-    },
+    }, 
     module: {
        loaders: [
             {
