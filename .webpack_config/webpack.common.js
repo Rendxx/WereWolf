@@ -9,12 +9,12 @@ module.exports = {
     extractTextPlugin
   ],
   entry: {
-    host: './src/host/Index',
-    client: './src/client/Index',
-    test: './src/test/Index'
+    host: './src/host/Wrap',
+    client: './src/client/Wrap',
+    test: './src/test/Wrap'
   },
   module: {
-    use: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -26,39 +26,22 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: /node_modules/,
-        loader: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          loaders: [
-            {
-              loader: 'css-loader'
-            }
-          ]
-        })
+        use: ['style-loader','css-loader']
       },
       {
         test: /\.less$/,
         exclude: /node_modules/,
-        loader: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          loaders: [
-            {
-              loader: 'css-loader'
-            },
-            {
-              loader: 'less-loader'
-            }
-          ]
-        })
+        use: ['style-loader','css-loader','less-loader']
       },
       {
         test: /\.(png|jpg)$/,
         exclude: /node_modules/,
-        loader: 'url-loader'
+        use: ['url-loader']
       },
       {
         test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
         exclude: /node_modules/,
-        loader: 'file-loader?name=../Font/[name].[ext]'
+        use: ['file-loader?name=../Font/[name].[ext]']
       }
     ]
   },
