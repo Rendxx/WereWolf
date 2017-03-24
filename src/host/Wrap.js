@@ -2,9 +2,8 @@
     Fetch all modules and put them into a global object.
     Then we can use them in Host.html.
 */
-
-var Style = require('./Wrap.less');
-var Font = require('GLOBAL/font/optimusprinceps/style.css');
+require('./Wrap.less');
+require('GLOBAL/font/optimusprinceps/style.css');
 
 window.GAME = {
   ClientList:require('./content/ClientList.js'),
