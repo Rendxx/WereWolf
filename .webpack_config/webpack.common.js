@@ -63,7 +63,7 @@ module.exports = {
       {
         test: /\.(png|jpg)$/,
         exclude: /node_modules/,
-        use: { loader: 'url-loader', options: styleUrlOptions }
+        use: { loader: 'url-loader?limit=10000!./file.png' }
       },
       {
         test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
