@@ -50,7 +50,6 @@ module.exports = {
           fallback: 'style-loader',
           use: [
             'css-loader',
-            'resolve-url-loader',
             'less-loader'
           ]
         })
