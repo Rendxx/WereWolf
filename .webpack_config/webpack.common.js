@@ -36,34 +36,44 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: /node_modules/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader'
-        }),
+        use: ['style-loader','css-loader']
+        // use: ExtractTextPlugin.extract({
+        //   fallback: 'style-loader',
+        //   use: 'css-loader'
+        // }),
       },
       {
         test: /\.less$/,
         exclude: /node_modules/,
+        //use: ['style-loader','css-loader','less-loader']
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
             'css-loader',
-            {
-              loader: 'less-loader',
-              options: {
-                //strictMath: true, strictUnits: true,
-                plugins: [
-                  lessPluginAutoPrefix
-                ]
-              }
-            }
+            'resolve-url-loader',
+            'less-loader'
           ]
         })
+        // use: ExtractTextPlugin.extract({
+        //   fallback: 'style-loader',
+        //   use: [
+        //     'css-loader',
+        //     {
+        //       loader: 'less-loader',
+        //       options: {
+        //         //strictMath: true, strictUnits: true,
+        //         plugins: [
+        //           lessPluginAutoPrefix
+        //         ]
+        //       }
+        //     }
+        //   ]
+        // })
       },
       {
         test: /\.(png|jpg)$/,
         exclude: /node_modules/,
-        use: { loader: 'url-loader?limit=10000!./file.png' }
+        use: { loader: 'url-loader', options: styleUrlOptions }
       },
       {
         test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
