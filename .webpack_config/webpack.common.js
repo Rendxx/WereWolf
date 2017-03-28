@@ -11,7 +11,7 @@ var styleUrlOptions = {
     limit: 10000,                 //embed up to 10k size image file into css as data url
     emitFile: true,              //do not copy file larger than 10k
     context: root,
-    name: '../Image/[name].[ext]'    //keep the original filename for those larger than 10k
+    name: '../Image/[hash].[ext]'    //keep the original filename for those larger than 10k
 };
 
 module.exports = {
