@@ -1,3 +1,6 @@
+"use strict";
+
+var Util = require('SRC/Util.js');
 var ROLEDATA = require('./Data.js');
 var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
@@ -58,10 +61,15 @@ Basic.prototype.showRst = function (dat){
 };
 
 Basic.prototype.initInfoPanel = function (container){
-    var container = $(container);
-    this._html.info['wrap'] = $('<div class="_roleInfo"></div>').appendTo(container);
-    this._html.info['icon'] = $('<div class="_icon"></div>').appendTo(this._html.info['wrap']);
-    this._html.info['name'] = $('<div class="_name"></div>').text('{ '+this.name+' }').appendTo(this._html.info['wrap']);
+    let wrap = Util.CreateDom('<div class="_roleInfo"></div>', container);
+    let icon = Util.CreateDom('<div class="_icon"></div>', wrap);
+    let name = Util.CreateDom('<div class="_name">{ '+this.name+' }</div>', wrap);
+    let instruction = Util.CreateDom('<div class="_instruction">'+this.instruction+'</div>', wrap);
+
+    this._html.info['wrap'] = wrap;
+    this._html.info['icon'] = icon;
+    this._html.info['name'] = name;
+    this._html.info['instruction'] = instruction;
 };
 
 Basic.prototype.updateInfoPanel = function (container){

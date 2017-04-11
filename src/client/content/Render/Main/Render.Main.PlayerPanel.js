@@ -34,7 +34,6 @@ var PlayerPanel = function(container) {
 
     // Callback ------------------------------
     this.onHide = null;
-    this.onSelect = null;
 
     // Public --------------------------------
     this.show = function() {

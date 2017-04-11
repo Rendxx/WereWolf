@@ -2,6 +2,7 @@
     Main-Screen is the main screen.
     It renders the game.
 */
+var Util = require('SRC/Util.js');
 var ACTION = require('GLOBAL/content/ActionCode.js');
 var ROLECODE = require('GLOBAL/content/RoleCode.js');
 var ROLEDATA = require('GLOBAL/content/RoleData.js');
@@ -33,17 +34,18 @@ var Main = function (container) {
     // Property -------------------------------------
     var that = this;
     var html = {
-        container: $(container),
+        container: container,
         panel:{},
     };
 
-    var currentStep = PHASE.NONE,
+    var currentPhase = PHASE.NONE,
         roleCode = null;
 
     var _msg = {};
     var _send = {};
     var statusPanel = null,
-        playerPanel = null;
+        playerPanel = null,
+        actionPanel = null;
     var roleInstance = null;
 
     // Callback -------------------------------------
@@ -51,13 +53,11 @@ var Main = function (container) {
 
     // interface controll --------------------------------
     this.show = function () {
-        /* TODO: show Prepare-Screen */
-        html['container'].fadeIn();
+        html['container'].classList.add('show');
     };
 
     this.hide = function () {
-        /* TODO: hide Prepare-Screen */
-        html['container'].fadeOut();
+        html['container'].classList.remove('show');
     };
 
     // Update ---------------------------------------
@@ -97,19 +97,19 @@ var Main = function (container) {
     // Message ---------------------------------------
     var _setupMsg = function (){
         _msg[MSGCODE.HOST.UPDATE] = function (dat){
-            var step = dat[1];
+            var phase = dat[1];
             var isActived = dat[2];
             var aliveList = dat[3];
             var playerStatus = dat[4];
             var actionData = dat[5];
             var resultData = dat[6];
 
-            if (currentStep!==step) InfoBox.hide();
+            if (currentPhase!==phase) InfoBox.hide();
             roleInstance && roleInstance.update(aliveList, playerStatus);
 
-            if (currentStep!==step) {
-                currentStep=step;
-                if (currentStep===PHASE.PREDAY){
+            if (currentPhase!==phase) {
+                currentPhase=phase;
+                if (currentPhase===PHASE.PREDAY){
                     roleInstance && roleInstance.dayTime();
                 }
             };
@@ -144,16 +144,16 @@ var Main = function (container) {
     };
 
     var _setupHtml = function (setupData) {
-        html['container'].empty();
+        html['container'].innerHTML = '';
         html['panel'] = {};
-        html['panel']['player'] = $(HTML.panel.player).appendTo(html['container']);
-        html['panel']['status'] = $(HTML.panel.status).appendTo(html['container']);
-        html['panel']['action'] = $(HTML.panel.action).appendTo(html['container']);
+        html['panel']['player'] = Util.CreateDom(HTML.panel.player, html['container']);
+        html['panel']['status'] = Util.CreateDom(HTML.panel.status, html['container']);
+        html['panel']['action'] = Util.CreateDom(HTML.panel.action, html['container']);
     };
     var _resetHtml = function (setupData) {
+        statusPanel.reset();
         playerPanel.reset();
-        html['panel']['status'].empty().hide();
-        html['panel']['action'].empty().hide();
+        actionPanel.reset();
     };
 
     var _select = function (id){
@@ -164,21 +164,9 @@ var Main = function (container) {
         _setupMsg();
         _setupSend();
         _setupHtml();
-        statusPanel = new StatusPanel(html['panel']['status'][0]);
-        playerPanel = new PlayerPanel(html['panel']['player'][0]);
-
-        statusPanel.onToggle = function (data){
-          playerPanel.show();
-          statusPanel.hide();
-        };
-
-        playerPanel.onHide = function (data){
-          statusPanel.show();
-        };
-
-        playerPanel.onSelect = function (idx){
-          _send[MSGCODE.CLIENT.DECISION](idx);
-        };
+        statusPanel = new StatusPanel(html['panel']['status']);
+        playerPanel = new PlayerPanel(html['panel']['player']);
+        actionPanel = new StatusPanel(html['panel']['action']);
     }();
 };
 
