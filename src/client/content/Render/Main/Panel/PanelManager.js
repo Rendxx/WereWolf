@@ -10,7 +10,8 @@ var HTML = {
 };
 
 var CSS = {
-    highlight: '_panel_highlight'
+    highlight: '_panel_highlight',
+    holding: '_holding'
 };
 
 var STYLE = {
@@ -31,19 +32,21 @@ var StatusPanel = function(container) {
         height = 0,
         width = 0,
         number = 0,
-        currentIdx = 0;
+        currentIdx = 0,
+        instances = [];
 
     // Public --------------------------------
     this.setup = function(panelList) {
         reset();
         number = panelList.length;
         for (let i=0;i<number;i++){
-            let tag = Util.CreateDom(HTML.tag, html['title']);
-            tag.innerHTML = panelList[i];
+            let tag = Util.CreateDom(HTML.tag, html['title'], panelList[i].name);
             html['tag'][i] = tag;
 
             let item =  Util.CreateDom(HTML.item, html['inner']);
             html['item'][i] = item;
+            panelList[i].panel.setup(item);
+            instances[i] = panelList[i].panel;
         }
         this.resize();
         goto(0);
@@ -58,6 +61,7 @@ var StatusPanel = function(container) {
         html['body'].style.height = height-STYLE.titleHeight+'px';
         for (let i=0;i<number;i++){
             html['item'][i].style.left = i*width+'px';
+            instances[i].resize(width, height);
         }
     };
 
@@ -78,26 +82,38 @@ var StatusPanel = function(container) {
         html['inner'].innerHTML = '';
         html['tag'] = [];
         html['item'] = [];
+        instances = [];
         number = 0;
     };
 
     var setupFunc = function (){
         let last = 0,
             left = 0,
-            touchId = -1;
+            touchId = -1,
+            lock = 1,
+            startTime = 0;
         let startPan = function (x){
             last = x;
+            lock = x;
             left = parseInt(html['inner'].style.left);
+            startTime = new Date();
+            html['inner'].classList.add(CSS.holding);
         };
         let pan = function (x){
+            if (lock>=0){
+                if (Math.abs(x-lock)>60 && new Date()-startTime<1000)lock=-1;
+                else return;
+            }
             let offset = x-last;
             last = x;
-            left = Math.min((number-1)*width, Math.max(0,left + offset));
+            left = Math.min(0, Math.max(-(number-1)*width,left + offset));
             html['inner'].style.left = left + 'px';
+            highlight(~~(-left/width+0.5));
         };
         let stopPan = function (x){
             pan(x);
-            goto(~~(left/width+0.5));
+            goto(~~(-left/width+0.5));
+            html['inner'].classList.remove(CSS.holding);
         };
 
         html['inner'].addEventListener('mousedown', function(e){startPan(e.clientX);}, false);
@@ -106,7 +122,7 @@ var StatusPanel = function(container) {
         html['inner'].addEventListener('mouseout', function(e){stopPan(e.clientX);}, false);
 
         html['inner'].addEventListener('touchstart', function(e){
-            if (e.touches.length>0) return;
+            if (e.touches.length>1) return;
             touchId = e.touches[0].identifier;
             startPan(e.touches[0].clientX);
         }, false);
@@ -120,11 +136,15 @@ var StatusPanel = function(container) {
         }, false);
     };
 
-    var goto = function (idx){
+    var highlight = function (idx){
         if (currentIdx<number) html['tag'][currentIdx].classList.remove(CSS.highlight);
         currentIdx = idx;
-        html['inner'].style.left = currentIdx*width+'px';
         html['tag'][currentIdx].classList.add(CSS.highlight);
+    };
+
+    var goto = function (idx){
+        highlight(idx);
+        html['inner'].style.left = -currentIdx*width+'px';
     };
 
     var _init = function() {

@@ -3,40 +3,31 @@
     It renders the game.
 */
 var Util = require('SRC/Util.js');
-var ACTION = require('GLOBAL/content/ActionCode.js');
-var ROLECODE = require('GLOBAL/content/RoleCode.js');
-var ROLEDATA = require('GLOBAL/content/RoleData.js');
 var MSGCODE = require('GLOBAL/content/MessageCode.js');
 var ACTIVECODE = require('GLOBAL/content/ActiveCode.js');
 var PHASE = require('GLOBAL/content/PhaseCode.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 var RoleFactory = require('CLIENT/content/Role/RoleFactory.js');
-var StatusPanel = require('./Render.Main.StatusPanel.js');
-var PlayerPanel = require('./Render.Main.PlayerPanel.js');
+var StatusPanel = require('./Panel/Panel.Status.js');
+var PlayerPanel = require('./Panel/Panel.Player.js');
+var PanelManager = require('./Panel/PanelManager.js');
 
 require('./Render.Main.less');
-require('./Render.Main.ActionPanel.less');
 
 var HTML = {
-    panel: {
-      player: '<div class="_panel _playerList"></div>',
-      status: '<div class="_panel _status"></div>',
-      action: '<div class="_panel _action"></div>',
-    }
+    panel: '<div class="panelList"></div>',
+    action: '<div class="actions"></div>',
 };
 
 var CSS = {
-    dead: '_dead'
+    show: '_show'
 };
 
 var Main = function (container) {
     "use strick";
     // Property -------------------------------------
     var that = this;
-    var html = {
-        container: container,
-        panel:{},
-    };
+    var html = {};
 
     var currentPhase = PHASE.NONE,
         roleCode = null;
@@ -45,19 +36,19 @@ var Main = function (container) {
     var _send = {};
     var statusPanel = null,
         playerPanel = null,
-        actionPanel = null;
-    var roleInstance = null;
+        panelManager = null,
+        roleInstance = null;
 
     // Callback -------------------------------------
     this.message = {};        /* TODO: this is a package of message hander. this.message.action(dat),  this.message.send(dat) */
 
     // interface controll --------------------------------
     this.show = function () {
-        html['container'].classList.add('show');
+        container.classList.add(CSS.show);
     };
 
     this.hide = function () {
-        html['container'].classList.remove('show');
+        container.classList.remove(CSS.show);
     };
 
     // Update ---------------------------------------
@@ -78,8 +69,6 @@ var Main = function (container) {
 
         roleInstance.initActionPanel(html['panel']['action'], playerInfo);
 
-        playerPanel.hide();
-        statusPanel.show();
         statusPanel.reset(initData[0],initData[1],initData[2],roleInstance);
         playerPanel.reset(playerInfo);
     };
@@ -121,7 +110,7 @@ var Main = function (container) {
             } else{
                 roleInstance && roleInstance.inactive();
             }
-            playerPanel.updateStatus(aliveList);
+            playerPanel.updateAlive(aliveList);
             statusPanel.updateAlive(roleInstance.alive);
         };
 
@@ -144,30 +133,33 @@ var Main = function (container) {
     };
 
     var _setupHtml = function (setupData) {
-        html['container'].innerHTML = '';
-        html['panel'] = {};
-        html['panel']['player'] = Util.CreateDom(HTML.panel.player, html['container']);
-        html['panel']['status'] = Util.CreateDom(HTML.panel.status, html['container']);
-        html['panel']['action'] = Util.CreateDom(HTML.panel.action, html['container']);
+        container.innerHTML = '';
+        html['panel'] = Util.CreateDom(HTML.panel, container);
+        html['action'] = Util.CreateDom(HTML.action, container);
     };
     var _resetHtml = function (setupData) {
         statusPanel.reset();
         playerPanel.reset();
-        actionPanel.reset();
-    };
-
-    var _select = function (id){
-
+        html['action'].innerHTML = '';
     };
 
     var _init = function () {
         _setupMsg();
         _setupSend();
         _setupHtml();
-        statusPanel = new StatusPanel(html['panel']['status']);
-        playerPanel = new PlayerPanel(html['panel']['player']);
-        actionPanel = new StatusPanel(html['panel']['action']);
-    }();
+        statusPanel = new StatusPanel();
+        playerPanel = new PlayerPanel();
+        panelManager = new PanelManager(html['panel']);
+        panelManager.resize(window.innerWidth, window.innerHeight);
+        panelManager.setup([
+            { name: 'Status',panel: statusPanel },
+            { name: 'Players',panel: playerPanel },
+        ]);
+        window.addEventListener("resize", function(e){
+            panelManager.resize(window.innerWidth, window.innerHeight);
+        });
+    };
+    _init();
 };
 
 module.exports = Main;
