@@ -8,9 +8,12 @@ var ACTIVECODE = require('GLOBAL/content/ActiveCode.js');
 var PHASE = require('GLOBAL/content/PhaseCode.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 var RoleFactory = require('CLIENT/content/Role/RoleFactory.js');
-var StatusPanel = require('./Panel/Panel.Status.js');
-var PlayerPanel = require('./Panel/Panel.Player.js');
 var PanelManager = require('./Panel/PanelManager.js');
+var Panel = {
+    Status: require('./Panel/Panel.Status.js'),
+    Player: require('./Panel/Panel.Player.js'),
+    Action: require('./Panel/Panel.Action.js')
+};
 
 require('./Render.Main.less');
 
@@ -36,6 +39,7 @@ var Main = function (container) {
     var _send = {};
     var statusPanel = null,
         playerPanel = null,
+        actionPanel = null,
         panelManager = null,
         roleInstance = null;
 
@@ -55,7 +59,6 @@ var Main = function (container) {
     this.reset = function (setupData) {
         /* TODO: initialize the game */
         if (setupData==null) return;
-        _resetHtml();
         var playerIdx = setupData[0];
         var initData = setupData[1];
         var playerInfo = setupData[2];
@@ -137,26 +140,29 @@ var Main = function (container) {
         html['panel'] = Util.CreateDom(HTML.panel, container);
         html['action'] = Util.CreateDom(HTML.action, container);
     };
-    var _resetHtml = function (setupData) {
-        statusPanel.reset();
-        playerPanel.reset();
-        html['action'].innerHTML = '';
-    };
 
     var _init = function () {
         _setupMsg();
         _setupSend();
         _setupHtml();
-        statusPanel = new StatusPanel();
-        playerPanel = new PlayerPanel();
+        statusPanel = new Panel.Status();
+        playerPanel = new Panel.Player();
         panelManager = new PanelManager(html['panel']);
         panelManager.resize(window.innerWidth, window.innerHeight);
         panelManager.setup([
             { name: 'Status',panel: statusPanel },
             { name: 'Players',panel: playerPanel },
         ]);
+
+        actionPanel = new Panel.Action();
+        actionPanel.setup(html['action']);
+        actionPanel.resize(window.innerWidth, window.innerHeight);
+
         window.addEventListener("resize", function(e){
-            panelManager.resize(window.innerWidth, window.innerHeight);
+            let w = window.innerWidth,
+                h = window.innerHeight;
+            panelManager.resize(w, h);
+            actionPanel.resize(w, h);
         });
     };
     _init();

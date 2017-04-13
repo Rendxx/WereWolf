@@ -30,7 +30,7 @@ Basic.prototype.resize = function (w, h){
 Basic.prototype.show = function (){
 };
 
-Basic.prototype.hide = function (w, h){
+Basic.prototype.hide = function (){
 };
 
 module.exports = Basic;

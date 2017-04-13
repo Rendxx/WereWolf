@@ -8,32 +8,31 @@ var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 var Basic= require('./Panel.Basic.js');
 require('./Client.less');
 
-var WereWolf = function () {
+var Werewolf = function () {
     Basic.call(this);
-    this._html.action = {
-        playerList :new Action.PlayerList()
-    };
 };
-WereWolf.prototype = Object.create(Basic.prototype);
-WereWolf.prototype.constructor = WereWolf;
+Werewolf.prototype = Object.create(Basic.prototype);
+Werewolf.prototype.constructor = Werewolf;
 
-WereWolf.prototype.active = function (dat){
+Werewolf.prototype.active = function (dat){
     if (!this.alive) return;
     if (!this.actived){
         this.actived = true;
         InfoBox.alert({
             content: INFO.WEREWOLF,
         });
-        this._action.playerList.show();
+        this._action.show();
+        this._action.components['playerList'].show();
     }
-    this._action.playerList.update(aliveListArr, voteArr);
+    this._action.components['playerList'].update(aliveListArr, voteArr);
 };
 
-WereWolf.prototype.inactive = function (){
+Werewolf.prototype.inactive = function (){
     this.actived = false;
+    this._action.hide();
 };
 
-WereWolf.prototype.update = function (aliveListArr, dat){
+Werewolf.prototype.update = function (aliveListArr, dat){
     var t = aliveListArr[this.playerIdx]==='1';
     if (t===false && this.alive){
         InfoBox.alert({
@@ -41,35 +40,53 @@ WereWolf.prototype.update = function (aliveListArr, dat){
         });
     }
     this.alive = t;
-    this.updateInfoPanel();
-    this.updateActionPanel();
 };
 
-WereWolf.prototype.showRst = function (dat){
+Werewolf.prototype.showRst = function (dat){
+    this.inactive();
+    if (dat[0]==-1){
+        InfoBox.alert({
+            content: 'You did not murder anyone this night',
+            callback: function() {
+              this._html.action['container'].fadeOut(200);
+            }.bind(this)
+        });
+    } else {
+        var p = this._playerInfo[dat[0]];
+        InfoBox.alert({
+            content: INFO.SHOWPLAYER(p[0], p[1],'This player has been murdered'),
+            callback: function() {
+              this._html.action['container'].fadeOut(200);
+            }.bind(this)
+        });
+    }
 };
 
-WereWolf.prototype.initInfoPanel = function (container){
-    let wrap = Util.CreateDom('<div class="_roleInfo"></div>', container);
-    let icon = Util.CreateDom('<div class="_icon"></div>', wrap);
-    let name = Util.CreateDom('<div class="_name">{ '+this.name+' }</div>', wrap);
-    let instruction = Util.CreateDom('<div class="_instruction">'+this.instruction+'</div>', wrap);
-
-    this._html.info['wrap'] = wrap;
-    this._html.info['icon'] = icon;
-    this._html.info['name'] = name;
-    this._html.info['instruction'] = instruction;
+Werewolf.prototype.initActionPanel = function (actionPanel, playerInfo){
+    Basic.prototype.initInfoPanel.call(this,actionPanel);
+    let playerList = new Action.PlayerList(playerInfo, 'Choose your target');
+    let that = this;
+    playerList.onSelect = function (idx, number, name){
+        if (!that.actived) return;
+        InfoBox.check({
+            content: INFO.SHOWPLAYER(number, name),
+            callbackYes: function() {
+                that.onActionEnd && that.onActionEnd([idx]);
+            }
+        });
+    };
+    playerList.onAbstain = function (){
+        if (!that.actived) return;
+        InfoBox.check({
+            content: 'Are you sure you want to do nothing?<br/>Noobdy will be murdered in this case.',
+            callbackYes: function() {
+                that.onActionEnd && that.onActionEnd([-1]);
+            }
+        });
+    };
+    this._action.reset({
+        'playerList': playerList
+    });
 };
 
-WereWolf.prototype.updateInfoPanel = function (container){
-};
-
-WereWolf.prototype.initActionPanel = function (container){
-};
-
-WereWolf.prototype.updateActionPanel = function (container){
-};
-
-WereWolf.prototype.dispose=function(){
-};
-
-module.exports = WereWolf;
+module.exports = Werewolf;

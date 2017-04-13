@@ -14,9 +14,8 @@ var Basic = function () {
     this.playerIdx = -1;
     this.onActionEnd = null;
     this._html = {
-        info:{},
-        action:{}
     };
+    this._action = null;
     this.status = {};
     this.alive = true;
     this.actived = false;
@@ -43,6 +42,7 @@ Basic.prototype.active = function (dat){
 
 Basic.prototype.inactive = function (){
     this.actived = false;
+    this._action.hide();
 };
 
 Basic.prototype.update = function (aliveListArr, dat){
@@ -66,19 +66,14 @@ Basic.prototype.initInfoPanel = function (container){
     let name = Util.CreateDom('<div class="_name">{ '+this.name+' }</div>', wrap);
     let instruction = Util.CreateDom('<div class="_instruction">'+this.instruction+'</div>', wrap);
 
-    this._html.info['wrap'] = wrap;
-    this._html.info['icon'] = icon;
-    this._html.info['name'] = name;
-    this._html.info['instruction'] = instruction;
+    this._html['wrap'] = wrap;
+    this._html['icon'] = icon;
+    this._html['name'] = name;
+    this._html['instruction'] = instruction;
 };
 
-Basic.prototype.updateInfoPanel = function (container){
-};
-
-Basic.prototype.initActionPanel = function (container){
-};
-
-Basic.prototype.updateActionPanel = function (container){
+Basic.prototype.initActionPanel = function (actionPanel){
+    this._action = actionPanel;
 };
 
 Basic.prototype.dispose=function(){
