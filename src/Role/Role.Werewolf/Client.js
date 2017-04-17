@@ -4,8 +4,11 @@ var Util = require('SRC/Util.js');
 var ROLEDATA = require('./Data.js');
 var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
+var Action = {
+    PlayerList : require('CLIENT/content/Action/Action.PlayerList.js')
+};
 
-var Basic= require('./Panel.Basic.js');
+var Basic= require('../Role.Basic/Client.js');
 require('./Client.less');
 
 var Werewolf = function () {
@@ -27,22 +30,7 @@ Werewolf.prototype.active = function (dat){
     this._action.components['playerList'].update(aliveListArr, voteArr);
 };
 
-Werewolf.prototype.inactive = function (){
-    this.actived = false;
-    this._action.hide();
-};
-
-Werewolf.prototype.update = function (aliveListArr, dat){
-    var t = aliveListArr[this.playerIdx]==='1';
-    if (t===false && this.alive){
-        InfoBox.alert({
-            content: INFO.DAED,
-        });
-    }
-    this.alive = t;
-};
-
-Werewolf.prototype.showRst = function (dat){
+Werewolf.prototype.actionResult = function (dat){
     this.inactive();
     if (dat[0]==-1){
         InfoBox.alert({
@@ -63,7 +51,7 @@ Werewolf.prototype.showRst = function (dat){
 };
 
 Werewolf.prototype.initActionPanel = function (actionPanel, playerInfo){
-    Basic.prototype.initInfoPanel.call(this,actionPanel);
+    Basic.prototype.initActionPanel.call(this,actionPanel);
     let playerList = new Action.PlayerList(playerInfo, 'Choose your target');
     let that = this;
     playerList.onSelect = function (idx, number, name){

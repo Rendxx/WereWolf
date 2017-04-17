@@ -43,6 +43,7 @@ Basic.prototype.active = function (dat){
 Basic.prototype.inactive = function (){
     this.actived = false;
     this._action.hide();
+    InfoBox.hide();
 };
 
 Basic.prototype.update = function (aliveListArr, dat){
@@ -53,11 +54,9 @@ Basic.prototype.update = function (aliveListArr, dat){
         });
     }
     this.alive = t;
-    this.updateInfoPanel();
-    this.updateActionPanel();
 };
 
-Basic.prototype.showRst = function (dat){
+Basic.prototype.actionResult = function (dat){
 };
 
 Basic.prototype.initInfoPanel = function (container){
@@ -72,11 +71,11 @@ Basic.prototype.initInfoPanel = function (container){
     this._html['instruction'] = instruction;
 };
 
-Basic.prototype.initActionPanel = function (actionPanel){
+Basic.prototype.initActionPanel = function (actionPanel, playerInfo){
     this._action = actionPanel;
 };
 
 Basic.prototype.dispose=function(){
-};
+}; 
 
 module.exports = Basic;

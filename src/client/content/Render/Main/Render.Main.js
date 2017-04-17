@@ -7,12 +7,12 @@ var MSGCODE = require('GLOBAL/content/MessageCode.js');
 var ACTIVECODE = require('GLOBAL/content/ActiveCode.js');
 var PHASE = require('GLOBAL/content/PhaseCode.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
-var RoleFactory = require('CLIENT/content/Role/RoleFactory.js');
-var PanelManager = require('./Panel/PanelManager.js');
+var Role = require('ROLE/Role.Client.js');
+var PanelManager = require('CLIENT/content/Panel/PanelManager.js');
 var Panel = {
-    Status: require('./Panel/Panel.Status.js'),
-    Player: require('./Panel/Panel.Player.js'),
-    Action: require('./Panel/Panel.Action.js')
+    Status: require('CLIENT/content/Panel/Panel.Status.js'),
+    Player: require('CLIENT/content/Panel/Panel.Player.js'),
+    Action: require('CLIENT/content/Panel/Panel.Action.js')
 };
 
 require('./Render.Main.less');
@@ -64,16 +64,16 @@ var Main = function (container) {
         var playerInfo = setupData[2];
 
         if (roleInstance!=null) roleInstance.dispose();
-        roleInstance = RoleFactory(initData[2]);
+        roleInstance = Role(initData[2]);
         roleInstance.setup(playerIdx);
         roleInstance.onActionEnd = function (idx){
           _send[MSGCODE.CLIENT.DECISION](idx);
         };
 
-        roleInstance.initActionPanel(html['panel']['action'], playerInfo);
-
-        statusPanel.reset(initData[0],initData[1],initData[2],roleInstance);
+        statusPanel.reset(initData[0],initData[1]);
         playerPanel.reset(playerInfo);
+        roleInstance.initActionPanel(actionPanel, playerInfo);
+        roleInstance.initInfoPanel(statusPanel.html['role']);
     };
 
     this.updateGame = function (gameData) {
@@ -107,7 +107,7 @@ var Main = function (container) {
             };
 
             if (isActived===ACTIVECODE.RESULT){
-                roleInstance && roleInstance.showRst(resultData);
+                roleInstance && roleInstance.actionResult(resultData);
             } else if (isActived===ACTIVECODE.YES){
                 roleInstance && roleInstance.active(aliveList, actionData);
             } else{

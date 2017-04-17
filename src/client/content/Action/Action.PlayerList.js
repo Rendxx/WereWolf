@@ -22,6 +22,57 @@ var CSS = {
     abstain:'_abstain'
 };
 
+var PlayerList = function (playerInfo, title){
+    Basic.call(this);
+    this.title = title;
+    this.playerInfo = playerInfo;
+};
+PlayerList.prototype = Object.create(Basic.prototype);
+PlayerList.prototype.constructor = PlayerList;
+
+PlayerList.prototype.setup = function (container){
+    Basic.prototype.setup.call(container);
+    _html['wrap']=$(HTML.wrap).appendTo(container);
+    _html['_title']=$(HTML.title).appendTo(_html['wrap']).html(title||'');
+    _html['list']=$(HTML.list).appendTo(_html['wrap']);
+    _html['player']={};
+    _html['space'] = $(HTML.space).appendTo(_html['list']);
+    var number = [];
+    for (var i=0;i<playerInfo.length;i++) number[i]=i;
+    number.sort(function(a, b){
+        return playerInfo[a][0] - playerInfo[b][0];
+    });
+
+    for (var i=0;i<playerInfo.length;i++){
+        var k = number[i];
+        addPlayer(k, playerInfo[k][0],playerInfo[k][1]);
+    }
+    addAbstain();
+    _html['space2'] = $(HTML.space).appendTo(_html['list']);
+
+    _html['voteCache'] = [];
+    for (var i=0;i<playerInfo.length;i++){
+        _html['voteCache'].push($(HTML.player.voteMarker).text(playerInfo[i][0]));
+    }
+};
+
+PlayerList.prototype.update = function (){
+};
+
+PlayerList.prototype.resize = function (w, h){
+    this.width = w;
+    this.height = h;
+};
+
+PlayerList.prototype.show = function (){
+};
+
+PlayerList.prototype.hide = function (){
+};
+
+module.exports = PlayerList;
+
+
 var PlayerList = function (){
     var that = this;
     var container = null;

@@ -75,6 +75,7 @@ module.exports = {
       CLIENT: root + '/../src/client',
       HOST: root + '/../src/host',
       GLOBAL: root + '/../src/global',
+      ROLE: root + '/../src/Role',
     },
     extensions: ['.js', '.json', '.less']
   }

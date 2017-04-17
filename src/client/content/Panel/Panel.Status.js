@@ -24,9 +24,8 @@ var StatusPanel = function (){
 StatusPanel.prototype = Object.create(Basic.prototype);
 StatusPanel.prototype.constructor = StatusPanel;
 
-StatusPanel.prototype.reset = function (number, name, role, roleInstance){
-    this._setupHtml(number, name, role);
-    if(roleInstance!=null) roleInstance.initInfoPanel(this.html['role']);
+StatusPanel.prototype.reset = function (number, name){
+    this._setupHtml(number, name);
 };
 
 StatusPanel.prototype.updateAlive = function(isAlive) {
@@ -36,7 +35,7 @@ StatusPanel.prototype.updateAlive = function(isAlive) {
         this.html['wrap'].classList.add(CSS.dead);
 };
 
-StatusPanel.prototype._setupHtml = function(number, name, role) {
+StatusPanel.prototype._setupHtml = function(number, name) {
     var that = this;
     this.container.innerHTML = '';
     this.html['wrap'] = Util.CreateDom(HTML.wrap, this.container);
