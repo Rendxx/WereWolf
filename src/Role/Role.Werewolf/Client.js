@@ -1,5 +1,6 @@
 "use strict";
 
+var Basic= require('../Role.Basic/Client.js');
 var Util = require('SRC/Util.js');
 var ROLEDATA = require('./Data.js');
 var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
@@ -8,16 +9,19 @@ var Action = {
     PlayerList : require('CLIENT/content/Action/Action.PlayerList.js')
 };
 
-var Basic= require('../Role.Basic/Client.js');
 require('./Client.less');
 
 var Werewolf = function () {
     Basic.call(this);
+    this.code = ROLEDATA.Code;
+    this.name = ROLEDATA.Name;
+    this.description = ROLEDATA.Description;
+    this.instruction = ROLEDATA.Instruction;
 };
 Werewolf.prototype = Object.create(Basic.prototype);
 Werewolf.prototype.constructor = Werewolf;
 
-Werewolf.prototype.active = function (dat){
+Werewolf.prototype.active = function (aliveListArr, voteArr){
     if (!this.alive) return;
     if (!this.actived){
         this.actived = true;

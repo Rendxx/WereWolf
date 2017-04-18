@@ -1,11 +1,10 @@
+var Util = require('SRC/Util.js');
+var Basic= require('./Action.Basic.js');
 require('./Action.PlayerList.less');
 
 var HTML = {
     wrap: '<div class="action_playerList"></div>',
     title: '<div class="_title"><span></span></div>',
-    list: '<div class="_playerList"></div>',
-    space: '<div class="_space"></div>',
-
     player: {
       wrap: '<div class="_player"></div>',
       number: '<div class="_number"></div>',
@@ -19,168 +18,164 @@ var CSS = {
     alive: '_alive',
     show: '_show',
     selected: '_selected',
-    abstain:'_abstain'
+    abstain:'_abstain',
+    empty:'_empty'
 };
 
 var PlayerList = function (playerInfo, title){
     Basic.call(this);
-    this.title = title;
+    this.title = title||'';
     this.playerInfo = playerInfo;
+
+    // callback ----------------------------------
+    this.onSelect = null;
+    this.onAbstain = null;
 };
 PlayerList.prototype = Object.create(Basic.prototype);
 PlayerList.prototype.constructor = PlayerList;
 
 PlayerList.prototype.setup = function (container){
-    Basic.prototype.setup.call(container);
-    _html['wrap']=$(HTML.wrap).appendTo(container);
-    _html['_title']=$(HTML.title).appendTo(_html['wrap']).html(title||'');
-    _html['list']=$(HTML.list).appendTo(_html['wrap']);
-    _html['player']={};
-    _html['space'] = $(HTML.space).appendTo(_html['list']);
-    var number = [];
-    for (var i=0;i<playerInfo.length;i++) number[i]=i;
-    number.sort(function(a, b){
-        return playerInfo[a][0] - playerInfo[b][0];
-    });
-
-    for (var i=0;i<playerInfo.length;i++){
-        var k = number[i];
-        addPlayer(k, playerInfo[k][0],playerInfo[k][1]);
-    }
-    addAbstain();
-    _html['space2'] = $(HTML.space).appendTo(_html['list']);
-
-    _html['voteCache'] = [];
-    for (var i=0;i<playerInfo.length;i++){
-        _html['voteCache'].push($(HTML.player.voteMarker).text(playerInfo[i][0]));
-    }
+    Basic.prototype.setup.call(this, container);
+    this._setupHtml();
 };
 
-PlayerList.prototype.update = function (){
+PlayerList.prototype.update = function (playerAliveArr, voteArr){
+    for (let i in this.html['player']){
+        if (playerAliveArr[i]==='1') this.html['player'][i].wrap.classList.add(CSS.alive);
+        else this.html['player'][i].wrap.classList.remove(CSS.alive);
+        Util.EmptyDom(this.html['player'][i].vote);
+        this.html['player'][i].wrap.classList.remove(CSS.selected);
+    }
+    this.html['player']['-1'] && this.html['player']['-1'].wrap.classList.add(CSS.alive);
+    if (voteArr==null) return;
+    for (let i in voteArr){
+        if (!this.html['player'].hasOwnProperty(voteArr[i])) continue;
+        if (Number(i)===this.playerIdx)this.html['player'][voteArr[i]].wrap.classList.add(CSS.selected);
+        this.html['player'][voteArr[i]].vote.appendChild(this.html['voteCache'][i]);
+    }
 };
 
 PlayerList.prototype.resize = function (w, h){
-    this.width = w;
-    this.height = h;
+    Basic.prototype.resize.call(this, w, h);
 };
 
 PlayerList.prototype.show = function (){
+    this.html['wrap'].classList.add(CSS.show);
 };
 
 PlayerList.prototype.hide = function (){
+    this.html['wrap'].classList.remove(CSS.show);
 };
 
-module.exports = PlayerList;
+PlayerList.prototype._setupHtml = function (){
+    Util.EmptyDom(this.container);
+    // create slot
+    let size = ~~(this.height+this.width)*2/(6+this.playerInfo.length);
+    let w = ~~(this.width/size)-2,
+        h = ~~(this.height/size),
+        n = (w+h)*2,
+        slotIdx = 0,
+        top = ~~((this.height-h*size)/2),
+        left = ~~((this.width-w*size)/2);
 
-
-var PlayerList = function (){
-    var that = this;
-    var container = null;
-    var playerIdx = -1;
-    var _html = {
-    };
-
-    // callback ----------------------------------
-    this.onSelect = null;
-    this.onAbstain = null;
-
-    // public ------------------------------------
-    this.setup = function (playerIdx_in, container_in, playerInfo, title){
-        playerIdx = playerIdx_in;
-        container = $(container_in);
-        setupHtml(playerInfo, title);
-    };
-
-    this.update = function (playerAliveArr, voteArr){
-        for (var i in _html['player']){
-            if (playerAliveArr[i]==='1') _html['player'][i].wrap.addClass(CSS.alive);
-            else _html['player'][i].wrap.removeClass(CSS.alive);
-            _html['player'][i].vote.empty();
-            _html['player'][i].wrap.removeClass(CSS.selected);
-        }
-        _html['player']['-1'] && _html['player']['-1'].wrap.addClass(CSS.alive);
-        if (voteArr==null) return;
-        for (var i in voteArr){
-            if (!_html['player'].hasOwnProperty(voteArr[i])) continue;
-            if (Number(i)===playerIdx)_html['player'][voteArr[i]].wrap.addClass(CSS.selected);
-            _html['player'][voteArr[i]].vote.append(_html['voteCache'][i]);
-        }
-    };
-
-    this.show = function (){
-        _html['wrap'].addClass(CSS.show);
-        resize();
-    };
-
-    this.hide = function (){
-        _html['wrap'].removeClass(CSS.show);
-    };
-
-    // private -----------------------------------
-    var setupHtml = function (playerInfo, title){
-        _html['wrap']=$(HTML.wrap).appendTo(container);
-        _html['_title']=$(HTML.title).appendTo(_html['wrap']).html(title||'');
-        _html['list']=$(HTML.list).appendTo(_html['wrap']);
-        _html['player']={};
-        _html['space'] = $(HTML.space).appendTo(_html['list']);
-        var number = [];
-        for (var i=0;i<playerInfo.length;i++) number[i]=i;
-        number.sort(function(a, b){
-            return playerInfo[a][0] - playerInfo[b][0];
+    this.html['wrap'] = Util.CreateDom(HTML.wrap, this.container);
+    this.html['slot']=[];
+    for (let i=0;i<h;i++){
+        this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+            left: '10px',
+            right: 'auto',
+            top: top+i*size+'px',
+            bottom: 'auto'
         });
-
-        for (var i=0;i<playerInfo.length;i++){
-            var k = number[i];
-            addPlayer(k, playerInfo[k][0],playerInfo[k][1]);
-        }
-        addAbstain();
-        _html['space2'] = $(HTML.space).appendTo(_html['list']);
-
-        _html['voteCache'] = [];
-        for (var i=0;i<playerInfo.length;i++){
-            _html['voteCache'].push($(HTML.player.voteMarker).text(playerInfo[i][0]));
-        }
-    };
-
-    var addPlayer = function (idx, number, name){
-        var pkg = {};
-        pkg['wrap'] = $(HTML.player.wrap).appendTo(_html['list']);
-        pkg['number'] = $(HTML.player.number).appendTo(pkg['wrap']).text(number);
-        pkg['name'] = $(HTML.player.name).appendTo(pkg['wrap']).text(name);
-        pkg['vote'] = $(HTML.player.vote).appendTo(pkg['wrap']);
-        pkg['wrap'].addClass(CSS.alive);
-        pkg['wrap'].click(function(e){
-            if (!pkg['wrap'].hasClass(CSS.alive)) return false;
-            that.onSelect && that.onSelect (idx, number, name);
+    }
+    for (let i=0;i<w;i++){
+        this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+            left: left+i*size+'px',
+            right: 'auto',
+            top: 'auto',
+            bottom: '10px'
         });
-        _html['player'][idx] = pkg;
-    };
-
-    var addAbstain = function (){
-        var pkg = {};
-        pkg['wrap'] = $(HTML.player.wrap).appendTo(_html['list']).addClass(CSS.abstain);
-        pkg['number'] = $(HTML.player.number).appendTo(pkg['wrap']);
-        pkg['name'] = $(HTML.player.name).appendTo(pkg['wrap']).text('Abstain');
-        pkg['vote'] = $(HTML.player.vote).appendTo(pkg['wrap']);
-        pkg['wrap'].addClass(CSS.alive);
-        pkg['wrap'].click(function(e){
-            if (!pkg['wrap'].hasClass(CSS.alive)) return false;
-            that.onAbstain && that.onAbstain ();
+    }
+    for (let i=h-1;i>=0;i--){
+        this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+            left: 'auto',
+            right: '10px',
+            top: top+i*size+'px',
+            bottom: 'auto'
         });
-        _html['player']['-1'] = pkg;
-    };
+    }
+    for (let i=w-1;i>=0;i--){
+        this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+            left: left+i*size+'px',
+            right: 'auto',
+            top: '10px',
+            bottom: 'auto'
+        });
+    }
 
-    var resize = function (){
-        if (_html['list']){
-          var w =~~(_html['wrap'].width()/120)*120;
-          if (w===0) w = ~~($(window.document).width()/120)*120;
-           _html['list'].width(w);
-         }
-    };
+    this.html['_title'] = Util.CreateDom(HTML.title, this.html['wrap'], this.title);
+    
+    this.html['player']={};
+    let number = [];
+    for (let i=0;i<this.playerInfo.length;i++) number[i]=i;
+    let that = this;
+    number.sort(function(a, b){
+        return that.playerInfo[a][0] - that.playerInfo[b][0];
+    });
 
-    var _init = function() {
-        $( window ).resize(resize);
-    }();
+    let slotIdx = h+~~(w/2)-this.playerInfo[this.playerIdx][0]-1;
+    for (let i=0;i<this.playerInfo.length;i++){
+        let k = number[i];
+        this.html['player'][k] = this._addPlayer(k, this.playerInfo[k][0],this.playerInfo[k][1], this.html['slot'][(slotIdx++)%n], this.onSelect);
+    }
+    this.html['player']['-1'] = this._addAbstain(this.html['wrap'], this.onAbstain);
+
+    this.html['voteCache'] = [];
+    for (let i=0;i<this.playerInfo.length;i++){
+        this.html['voteCache'].push(Util.CreateDom(HTML.player.voteMarker, null, this.playerInfo[i][0]));
+    }
+};
+
+PlayerList.prototype._addSlot = function (container, css){
+    let pkg = {};    
+    pkg['wrap'] = Util.CreateDom(HTML.player.wrap, container);
+    pkg['number'] = Util.CreateDom(HTML.player.number, pkg['wrap']);
+    pkg['name'] = Util.CreateDom(HTML.player.name, pkg['wrap']);
+    pkg['vote'] = Util.CreateDom(HTML.player.vote, pkg['wrap']);
+    pkg['wrap'].classList.add(CSS.empty);
+    for(let i in css){
+        pkg['wrap'].style[i]=css[i];
+    }
+    return pkg;
+};
+
+PlayerList.prototype._addPlayer = function (idx, number, name, pkg, onSelect){
+    pkg['wrap'] = Util.CreateDom(HTML.player.wrap, container);
+    pkg['number'].innerHTML = number;
+    pkg['name'].innerHTML = name;
+    pkg['wrap'].classList.add(CSS.alive);
+    pkg['wrap'].classList.remove(CSS.empty);
+
+    Util.BindClick(pkg['wrap'], function (){
+        if (!pkg['wrap'].classList.contains(CSS.alive)) return false;
+        onSelect && onSelect (idx, number, name);
+    });
+    return pkg;
+};
+
+PlayerList.prototype._addAbstain = function (container, onSelect){
+    var pkg = {};
+    pkg['wrap'] = Util.CreateDom(HTML.player.wrap, container);
+    pkg['number'] = Util.CreateDom(HTML.player.number, pkg['wrap']);
+    pkg['name'] = Util.CreateDom(HTML.player.name, pkg['wrap'], 'Abstain');
+    pkg['vote'] = Util.CreateDom(HTML.player.vote, pkg['wrap']);
+    pkg['wrap'].classList.add(CSS.abstain);
+    pkg['wrap'].classList.add(CSS.alive);
+
+    Util.BindClick(pkg['wrap'], function (){
+        onSelect && onSelect ();
+    });
+    return pkg;
 };
 
 module.exports = PlayerList;

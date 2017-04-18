@@ -36,7 +36,7 @@ Basic.prototype.dayTime = function (){
     this.inactive();
 };
 
-Basic.prototype.active = function (dat){
+Basic.prototype.active = function (aliveListArr, dat){
     this.actived = true;
 };
 

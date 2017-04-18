@@ -49,6 +49,7 @@ var Main = function (container) {
     // interface controll --------------------------------
     this.show = function () {
         container.classList.add(CSS.show);
+        resize();
     };
 
     this.hide = function () {
@@ -74,6 +75,7 @@ var Main = function (container) {
         playerPanel.reset(playerInfo);
         roleInstance.initActionPanel(actionPanel, playerInfo);
         roleInstance.initInfoPanel(statusPanel.html['role']);
+        resize();
     };
 
     this.updateGame = function (gameData) {
@@ -141,6 +143,13 @@ var Main = function (container) {
         html['action'] = Util.CreateDom(HTML.action, container);
     };
 
+    var resize = function (){
+        let w = window.innerWidth,
+            h = window.innerHeight;
+        panelManager.resize(w, h);
+        actionPanel.resize(w, h);
+    };
+
     var _init = function () {
         _setupMsg();
         _setupSend();
@@ -148,7 +157,6 @@ var Main = function (container) {
         statusPanel = new Panel.Status();
         playerPanel = new Panel.Player();
         panelManager = new PanelManager(html['panel']);
-        panelManager.resize(window.innerWidth, window.innerHeight);
         panelManager.setup([
             { name: 'Status',panel: statusPanel },
             { name: 'Players',panel: playerPanel },
@@ -156,13 +164,9 @@ var Main = function (container) {
 
         actionPanel = new Panel.Action();
         actionPanel.setup(html['action']);
-        actionPanel.resize(window.innerWidth, window.innerHeight);
-
+        resize();
         window.addEventListener("resize", function(e){
-            let w = window.innerWidth,
-                h = window.innerHeight;
-            panelManager.resize(w, h);
-            actionPanel.resize(w, h);
+            resize();
         });
     };
     _init();

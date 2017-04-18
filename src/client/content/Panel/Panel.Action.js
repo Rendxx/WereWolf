@@ -26,6 +26,17 @@ ActionPanel.prototype.reset = function (components){
     }
 };
 
+ActionPanel.prototype.resize = function (w, h){
+    Basic.prototype.resize.call(this, w, h);
+    if (this.html['wrap']){
+        this.html['wrap'].style.width = w+'px';
+        this.html['wrap'].style.height = h+'px';
+    }
+    for (let i in this.components){
+        this.components[i].resize(w, h);
+    }
+};
+
 ActionPanel.prototype._setupHtml = function() {
     this.container.innerHTML = '';
     this.html['wrap'] = Util.CreateDom(HTML.wrap, this.container);
