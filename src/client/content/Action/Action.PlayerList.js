@@ -7,6 +7,7 @@ var HTML = {
     title: '<div class="_title"><span></span></div>',
     player: {
       wrap: '<div class="_player"></div>',
+      abstain:'<div class="_abstain"></div>',
       number: '<div class="_number"></div>',
       name: '<div class="_name"></div>',
       vote: '<div class="_vote"></div>',
@@ -18,7 +19,6 @@ var CSS = {
     alive: '_alive',
     show: '_show',
     selected: '_selected',
-    abstain:'_abstain',
     empty:'_empty'
 };
 
@@ -26,6 +26,8 @@ var PlayerList = function (playerInfo, title){
     Basic.call(this);
     this.title = title||'';
     this.playerInfo = playerInfo;
+    this._playerAliveArr = null;
+    this._voteArr = null;
 
     // callback ----------------------------------
     this.onSelect = null;
@@ -40,23 +42,32 @@ PlayerList.prototype.setup = function (container){
 };
 
 PlayerList.prototype.update = function (playerAliveArr, voteArr){
+    this._playerAliveArr=playerAliveArr;
+    this._voteArr=voteArr;
+    this._update();
+};
+
+PlayerList.prototype._update = function (){
+    if (this._playerAliveArr==null||this._voteArr==null) return;
     for (let i in this.html['player']){
-        if (playerAliveArr[i]==='1') this.html['player'][i].wrap.classList.add(CSS.alive);
+        if (this._playerAliveArr[i]==='1') this.html['player'][i].wrap.classList.add(CSS.alive);
         else this.html['player'][i].wrap.classList.remove(CSS.alive);
         Util.EmptyDom(this.html['player'][i].vote);
         this.html['player'][i].wrap.classList.remove(CSS.selected);
     }
     this.html['player']['-1'] && this.html['player']['-1'].wrap.classList.add(CSS.alive);
-    if (voteArr==null) return;
-    for (let i in voteArr){
-        if (!this.html['player'].hasOwnProperty(voteArr[i])) continue;
-        if (Number(i)===this.playerIdx)this.html['player'][voteArr[i]].wrap.classList.add(CSS.selected);
-        this.html['player'][voteArr[i]].vote.appendChild(this.html['voteCache'][i]);
+    if (this._voteArr==null) return;
+    for (let i in this._voteArr){
+        if (!this.html['player'].hasOwnProperty(this._voteArr[i])) continue;
+        if (Number(i)===this.playerIdx)this.html['player'][this._voteArr[i]].wrap.classList.add(CSS.selected);
+        this.html['player'][this._voteArr[i]].vote.appendChild(this.html['voteCache'][i]);
     }
 };
 
 PlayerList.prototype.resize = function (w, h){
     Basic.prototype.resize.call(this, w, h);
+    this._setupHtml();
+    this._update();
 };
 
 PlayerList.prototype.show = function (){
@@ -74,7 +85,7 @@ PlayerList.prototype._setupHtml = function (){
     let w = ~~(this.width/size)-2,
         h = ~~(this.height/size),
         n = (w+h)*2,
-        slotIdx = 0,
+        idx = 0,
         top = ~~((this.height-h*size)/2),
         left = ~~((this.width-w*size)/2);
 
@@ -82,6 +93,8 @@ PlayerList.prototype._setupHtml = function (){
     this.html['slot']=[];
     for (let i=0;i<h;i++){
         this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+            width: size+'px',
+            height: size+'px',
             left: '10px',
             right: 'auto',
             top: top+i*size+'px',
@@ -90,6 +103,8 @@ PlayerList.prototype._setupHtml = function (){
     }
     for (let i=0;i<w;i++){
         this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+            width: size+'px',
+            height: size+'px',
             left: left+i*size+'px',
             right: 'auto',
             top: 'auto',
@@ -98,6 +113,8 @@ PlayerList.prototype._setupHtml = function (){
     }
     for (let i=h-1;i>=0;i--){
         this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+            width: size+'px',
+            height: size+'px',
             left: 'auto',
             right: '10px',
             top: top+i*size+'px',
@@ -106,6 +123,8 @@ PlayerList.prototype._setupHtml = function (){
     }
     for (let i=w-1;i>=0;i--){
         this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+            width: size+'px',
+            height: size+'px',
             left: left+i*size+'px',
             right: 'auto',
             top: '10px',
@@ -165,12 +184,9 @@ PlayerList.prototype._addPlayer = function (idx, number, name, pkg, onSelect){
 
 PlayerList.prototype._addAbstain = function (container, onSelect){
     var pkg = {};
-    pkg['wrap'] = Util.CreateDom(HTML.player.wrap, container);
-    pkg['number'] = Util.CreateDom(HTML.player.number, pkg['wrap']);
+    pkg['wrap'] = Util.CreateDom(HTML.player.abstain, container);
     pkg['name'] = Util.CreateDom(HTML.player.name, pkg['wrap'], 'Abstain');
     pkg['vote'] = Util.CreateDom(HTML.player.vote, pkg['wrap']);
-    pkg['wrap'].classList.add(CSS.abstain);
-    pkg['wrap'].classList.add(CSS.alive);
 
     Util.BindClick(pkg['wrap'], function (){
         onSelect && onSelect ();

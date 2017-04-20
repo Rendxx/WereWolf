@@ -11,7 +11,7 @@
     transition: 0.2s;
     backface-visibility: hidden;
     background-color: #222;
-    background-image: url('../../../global/design/bg-cloth.png');
+    background-image: url('~GLOBAL/design/bg-cloth.png');
     background-repeat: repeat;
     background-size: auto;
     z-index:10;
@@ -68,48 +68,27 @@
         overflow: hidden;
         box-sizing: border-box;
 
-        ._space {
-            overflow: visible;
-            width: 100%;
-            height:70px;
-            clear:both;
-            position:relative;
-            top:0;
-            left:0;
-
-            &:after{
-              content: '';
-              position:absolute;
-              top: -1px;
-              left: 0;
-              width:100%;
-              height:1px;
-              background-color: #1e1e1e;
-              z-index:1;
-            }
-        }
-
         ._player {
             width: 90px;
             height:90px;
-            position:relative;
-            top:0;
-            left:0;
+            position:absolute;
             line-height: 40px;
             padding:15px 15px 40px;
             overflow: hidden;
             float:left;
             border-bottom: 1px solid #1e1e1e;
+            overflow: hidden;
 
             &:before{
               content: '';
               position:absolute;
-              top: 10px;
+              top: 50%;
               left: 50%;
               width:100px;
               height:100px;
+              margin-top:-64px;
               margin-left:-50px;
-              background-image: url('../../design/slash.png');
+              background-image: url('~CLIENT/design/slash.png');
               background-size: contain;
               z-index:100;
             }
@@ -118,12 +97,13 @@
               opacity: 0.2;
               content: '';
               position:absolute;
-              top: 15px;
+              top: 50%;
               left: 50%;
               width:90px;
               height:90px;
+              margin-top:-59px;
               margin-left:-45px;
-              background-image: url('../../../global/design/Portrait-Bg.png');
+              background-image: url('~GLOBAL/design/Portrait-Bg.png');
               background-size: contain;
               z-index:1;
             }
@@ -145,7 +125,6 @@
             ._name {
                 overflow: hidden;
                 display: block;
-                width: 100px;
                 height:20px;
                 line-height: 20px;
                 text-align: center;
@@ -153,12 +132,17 @@
                 margin:0;
                 overflow: hidden;
                 position: absolute;
-                top:110px;
-                left:50%;
-                margin-left:-50px;
+                top:auto;
+                bottom:10px;
+                left:10px;
+                right:10px;
+                padding:4px;
                 font-size: 16px;
                 font-family: Calibri, 微软雅黑;
                 z-index:10;
+                white-space:nowrap;
+                background-color: rgba(0,0,0,0.4);
+                border-radius: 3px;
             }
 
             ._vote {
@@ -166,9 +150,10 @@
                 text-align: left;
                 position: absolute;
                 top: 5px;
-                left: 50%;
+                bottom: 5px;
+                left: 10px;
+                right: 10px;
                 width:96px;
-                margin-left:-48px;
                 z-index: 60;
 
                 ._voteMarker {
@@ -179,7 +164,7 @@
                     text-align: center;
                     color: #ccc;
                     text-shadow: 0 0 3px #200;
-                    background-image: url('../../design/vote-bg.png');
+                    background-image: url('~CLIENT/design/vote-bg.png');
                     background-position: center center;
                     background-size: 22px 22px;
                     background-repeat: no-repeat;
@@ -208,7 +193,121 @@
                 }
             }
 
-            &._abstain {
+            &._selected{
+                &:after{
+                  background-image: url('~GLOBAL/design/Portrait-Bg2.png');
+                }
+            }
+        }
+
+        
+        ._abstain {
+            width: 90px;
+            height:90px;
+            position:absolute;
+            line-height: 40px;
+            padding:15px 15px 40px;
+            overflow: hidden;
+            float:left;
+            border-bottom: 1px solid #1e1e1e;
+            overflow: hidden;
+
+            &:before{
+              content: '';
+              position:absolute;
+              top: 50%;
+              left: 50%;
+              width:100px;
+              height:100px;
+              margin-top:-64px;
+              margin-left:-50px;
+              background-image: url('~CLIENT/design/slash.png');
+              background-size: contain;
+              z-index:100;
+            }
+
+            &:after{
+              opacity: 0.2;
+              content: '';
+              position:absolute;
+              top: 50%;
+              left: 50%;
+              width:90px;
+              height:90px;
+              margin-top:-59px;
+              margin-left:-45px;
+              background-image: url('~GLOBAL/design/Portrait-Bg.png');
+              background-size: contain;
+              z-index:1;
+            }
+
+            ._number {
+                display: block;
+                line-height: 90px;
+                height:80px;
+                border: 0;
+                text-align: center;
+                color: #444;
+                margin: 0 auto;
+                font-size: 40px;
+                text-shadow: 0 0 5px #000;
+                z-index:30;
+                opacity: 0.75;
+            }
+
+            ._name {
+                overflow: hidden;
+                display: block;
+                height:20px;
+                line-height: 20px;
+                text-align: center;
+                color: #444;
+                margin:0;
+                overflow: hidden;
+                position: absolute;
+                top:auto;
+                bottom:10px;
+                left:10px;
+                right:10px;
+                padding:4px;
+                font-size: 16px;
+                font-family: Calibri, 微软雅黑;
+                z-index:10;
+                white-space:nowrap;
+                background-color: rgba(0,0,0,0.4);
+                border-radius: 3px;
+            }
+
+            ._vote {
+                display: block;
+                text-align: left;
+                position: absolute;
+                top: 5px;
+                bottom: 5px;
+                left: 10px;
+                right: 10px;
+                width:96px;
+                z-index: 60;
+
+                ._voteMarker {
+                    display: inline-block;
+                    height: 20px;
+                    width: 20px;
+                    line-height: 20px;
+                    text-align: center;
+                    color: #ccc;
+                    text-shadow: 0 0 3px #200;
+                    background-image: url('~CLIENT/design/vote-bg.png');
+                    background-position: center center;
+                    background-size: 22px 22px;
+                    background-repeat: no-repeat;
+                    padding:5px 2px;
+                    font-size: 12px;
+                    font-family: "Agency FB";
+                }
+            }
+
+            &._alive {
                 &:before{
                   display: none;
                 }
@@ -216,17 +315,20 @@
                   opacity: 0.75;
                 }
                 ._number {
-                    background-image: url('../../design/abstain.png');
+                    color:#fff;
                     opacity: 1;
                 }
                 ._name {
-                    color: #777;
+                    color: #999;
+                }
+                &:hover{
+                    opacity: 1;
                 }
             }
-
+            
             &._selected{
                 &:after{
-                  background-image: url('../../../global/design/Portrait-Bg2.png');
+                  background-image: url('~GLOBAL/design/Portrait-Bg2.png');
                 }
             }
         }
