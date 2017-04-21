@@ -20,6 +20,7 @@ var CSS = {
     alive: '_alive',
     show: '_show',
     selected: '_selected',
+    abstain: '_abstain',
     empty:'_empty'
 };
 
@@ -82,7 +83,8 @@ PlayerList.prototype.hide = function (){
 PlayerList.prototype._setupHtml = function (){
     Util.EmptyDom(this.container);
     // create slot
-    let size = ~~((this.height-50+this.width)*2/(6+this.playerInfo.length));
+    let titleHeight = 50,
+        size = ~~((this.height-titleHeight+this.width)*2/(8+this.playerInfo.length));
     if (size*3>this.width) size = ~~(this.width/3);
 
     let w = ~~(this.width/size)-2,
@@ -94,9 +96,9 @@ PlayerList.prototype._setupHtml = function (){
     this.html['title'] = Util.CreateDom(HTML.title, this.html['wrap'], this.title);
     this.html['inner'] = Util.CreateDom(HTML.inner, this.html['wrap']);
     this.html['inner'].style.width = (w+2)*size+'px';
-    this.html['inner'].style.height = h*size+'px';
+    this.html['inner'].style.height = (h+1)*size+'px';
     this.html['inner'].style.marginLeft = (-((w+2)*size)>>1)+'px';
-    this.html['inner'].style.marginTop = (-(h*size)>>1)+'px';
+    this.html['inner'].style.marginTop = (-((h+1)*size-titleHeight)>>1)+'px';
 
     this.html['slot']=[];
     for (let i=0;i<h;i++){
@@ -105,7 +107,7 @@ PlayerList.prototype._setupHtml = function (){
             height: size+'px',
             left: '0',
             right: 'auto',
-            top: i*size+'px',
+            top: ~~((0.5+i)*size)+'px',
             bottom: 'auto'
         });
     }
@@ -125,7 +127,7 @@ PlayerList.prototype._setupHtml = function (){
             height: size+'px',
             left: 'auto',
             right: '0',
-            top: i*size+'px',
+            top: ~~((0.5+i)*size)+'px',
             bottom: 'auto'
         });
     }
@@ -139,6 +141,14 @@ PlayerList.prototype._setupHtml = function (){
             bottom: 'auto'
         });
     }
+    this.html['slot']['-1'] = this._addSlot(this.html['inner'],{
+        width: size+'px',
+        height: size+'px',
+        left: ~~((1+(w-1)/2)*size)+'px',
+        right: 'auto',
+        top: 'auto',
+        bottom:  ~~(1*size) + 'px'
+    });
     
     this.html['player']={};
     let number = [];
@@ -148,12 +158,11 @@ PlayerList.prototype._setupHtml = function (){
         return that.playerInfo[a][0] - that.playerInfo[b][0];
     });
 
-    let slotIdx = h+~~(w/2)-this.playerInfo[this.playerIdx][0]-1+n;
     for (let i=0;i<this.playerInfo.length;i++){
         let k = number[i];
-        this.html['player'][k] = this._addPlayer(k, this.playerInfo[k][0],this.playerInfo[k][1], this.html['slot'][(slotIdx++)%n], this.onSelect);
+        this.html['player'][k] = this._addPlayer(k, this.playerInfo[k][0],this.playerInfo[k][1], this.html['slot'][i], this.onSelect);
     }
-    this.html['player']['-1'] = this._addAbstain(this.html['wrap'], this.onAbstain);
+    this.html['player']['-1'] = this._addAbstain(this.html['slot'][-1], this.onAbstain);
 
     this.html['voteCache'] = [];
     for (let i=0;i<this.playerInfo.length;i++){
@@ -187,11 +196,11 @@ PlayerList.prototype._addPlayer = function (idx, number, name, pkg, onSelect){
     return pkg;
 };
 
-PlayerList.prototype._addAbstain = function (container, onSelect){
-    var pkg = {};
-    pkg['wrap'] = Util.CreateDom(HTML.player.abstain, container);
-    pkg['name'] = Util.CreateDom(HTML.player.name, pkg['wrap'], 'Abstain');
-    pkg['vote'] = Util.CreateDom(HTML.player.vote, pkg['wrap']);
+PlayerList.prototype._addAbstain = function (pkg, onSelect){
+    pkg['name'].innerHTML = 'GIVE UP';
+    pkg['wrap'].classList.add(CSS.alive);
+    pkg['wrap'].classList.add(CSS.abstain);
+    pkg['wrap'].classList.remove(CSS.empty);
 
     Util.BindClick(pkg['wrap'], function (){
         onSelect && onSelect ();
