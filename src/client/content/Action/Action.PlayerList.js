@@ -4,6 +4,7 @@ require('./Action.PlayerList.less');
 
 var HTML = {
     wrap: '<div class="action_playerList"></div>',
+    inner: '<div class="_playerList"></div>',
     title: '<div class="_title"><span></span></div>',
     player: {
       wrap: '<div class="_player"></div>',
@@ -22,8 +23,8 @@ var CSS = {
     empty:'_empty'
 };
 
-var PlayerList = function (playerInfo, title){
-    Basic.call(this);
+var PlayerList = function (playerIdx, playerInfo, title){
+    Basic.call(this, playerIdx);
     this.title = title||'';
     this.playerInfo = playerInfo;
     this._playerAliveArr = null;
@@ -36,9 +37,9 @@ var PlayerList = function (playerInfo, title){
 PlayerList.prototype = Object.create(Basic.prototype);
 PlayerList.prototype.constructor = PlayerList;
 
-PlayerList.prototype.setup = function (container){
+PlayerList.prototype.setup = function (container, width, height){
     Basic.prototype.setup.call(this, container);
-    this._setupHtml();
+    this.resize(width, height);
 };
 
 PlayerList.prototype.update = function (playerAliveArr, voteArr){
@@ -81,58 +82,63 @@ PlayerList.prototype.hide = function (){
 PlayerList.prototype._setupHtml = function (){
     Util.EmptyDom(this.container);
     // create slot
-    let size = ~~(this.height+this.width)*2/(6+this.playerInfo.length);
+    let size = ~~((this.height-50+this.width)*2/(6+this.playerInfo.length));
+    if (size*3>this.width) size = ~~(this.width/3);
+
     let w = ~~(this.width/size)-2,
-        h = ~~(this.height/size),
+        h = (this.playerInfo.length-w*2+1)>>1,
         n = (w+h)*2,
-        idx = 0,
-        top = ~~((this.height-h*size)/2),
-        left = ~~((this.width-w*size)/2);
+        idx = 0;
 
     this.html['wrap'] = Util.CreateDom(HTML.wrap, this.container);
+    this.html['title'] = Util.CreateDom(HTML.title, this.html['wrap'], this.title);
+    this.html['inner'] = Util.CreateDom(HTML.inner, this.html['wrap']);
+    this.html['inner'].style.width = (w+2)*size+'px';
+    this.html['inner'].style.height = h*size+'px';
+    this.html['inner'].style.marginLeft = (-((w+2)*size)>>1)+'px';
+    this.html['inner'].style.marginTop = (-(h*size)>>1)+'px';
+
     this.html['slot']=[];
     for (let i=0;i<h;i++){
-        this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+        this.html['slot'][idx++] = this._addSlot(this.html['inner'],{
             width: size+'px',
             height: size+'px',
-            left: '10px',
+            left: '0',
             right: 'auto',
-            top: top+i*size+'px',
+            top: i*size+'px',
             bottom: 'auto'
         });
     }
     for (let i=0;i<w;i++){
-        this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+        this.html['slot'][idx++] = this._addSlot(this.html['inner'],{
             width: size+'px',
             height: size+'px',
-            left: left+i*size+'px',
+            left: (i+1)*size+'px',
             right: 'auto',
             top: 'auto',
-            bottom: '10px'
+            bottom: '0'
         });
     }
     for (let i=h-1;i>=0;i--){
-        this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+        this.html['slot'][idx++] = this._addSlot(this.html['inner'],{
             width: size+'px',
             height: size+'px',
             left: 'auto',
-            right: '10px',
-            top: top+i*size+'px',
+            right: '0',
+            top: i*size+'px',
             bottom: 'auto'
         });
     }
     for (let i=w-1;i>=0;i--){
-        this.html['slot'][idx++] = _addSlot(this.html['wrap'],{
+        this.html['slot'][idx++] = this._addSlot(this.html['inner'],{
             width: size+'px',
             height: size+'px',
-            left: left+i*size+'px',
+            left: (i+1)*size+'px',
             right: 'auto',
-            top: '10px',
+            top: '0',
             bottom: 'auto'
         });
     }
-
-    this.html['_title'] = Util.CreateDom(HTML.title, this.html['wrap'], this.title);
     
     this.html['player']={};
     let number = [];
@@ -142,7 +148,7 @@ PlayerList.prototype._setupHtml = function (){
         return that.playerInfo[a][0] - that.playerInfo[b][0];
     });
 
-    let slotIdx = h+~~(w/2)-this.playerInfo[this.playerIdx][0]-1;
+    let slotIdx = h+~~(w/2)-this.playerInfo[this.playerIdx][0]-1+n;
     for (let i=0;i<this.playerInfo.length;i++){
         let k = number[i];
         this.html['player'][k] = this._addPlayer(k, this.playerInfo[k][0],this.playerInfo[k][1], this.html['slot'][(slotIdx++)%n], this.onSelect);
@@ -169,7 +175,6 @@ PlayerList.prototype._addSlot = function (container, css){
 };
 
 PlayerList.prototype._addPlayer = function (idx, number, name, pkg, onSelect){
-    pkg['wrap'] = Util.CreateDom(HTML.player.wrap, container);
     pkg['number'].innerHTML = number;
     pkg['name'].innerHTML = name;
     pkg['wrap'].classList.add(CSS.alive);

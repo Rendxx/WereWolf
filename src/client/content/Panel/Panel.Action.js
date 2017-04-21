@@ -22,18 +22,18 @@ ActionPanel.prototype.reset = function (components){
     this._setupHtml();
     this.components = components||{};
     for (let i in this.components){
-        this.components[i].setup(this.html['wrap']);
+        this.components[i].setup(this.html['wrap'], this.width, this.height);
     }
 };
 
 ActionPanel.prototype.resize = function (w, h){
     Basic.prototype.resize.call(this, w, h);
     if (this.html['wrap']){
-        this.html['wrap'].style.width = w+'px';
-        this.html['wrap'].style.height = h+'px';
+        this.html['wrap'].style.width = this.width+'px';
+        this.html['wrap'].style.height = this.height+'px';
     }
     for (let i in this.components){
-        this.components[i].resize(w, h);
+        this.components[i].resize(this.width, this.height);
     }
 };
 

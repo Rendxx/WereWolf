@@ -6,11 +6,12 @@ var HTML = {
 var CSS = {
 };
 
-var Basic = function (){
+var Basic = function (playerIdx){
     this.container = null;
     this.html = {};
     this.width = 0;
     this.height = 0;
+    this.playerIdx=playerIdx;
 };
 Basic.prototype = Object.create(null);
 Basic.prototype.constructor = Basic;

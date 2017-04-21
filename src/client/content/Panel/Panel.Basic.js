@@ -23,8 +23,8 @@ Basic.prototype.reset = function (w, h){
 };
 
 Basic.prototype.resize = function (w, h){
-    this.width = w;
-    this.height = h;
+    this.width = w || this.width;
+    this.height = h || this.height;
 };
 
 Basic.prototype.show = function (){

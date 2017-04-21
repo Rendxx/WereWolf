@@ -56,7 +56,7 @@ Werewolf.prototype.actionResult = function (dat){
 
 Werewolf.prototype.initActionPanel = function (actionPanel, playerInfo){
     Basic.prototype.initActionPanel.call(this,actionPanel);
-    let playerList = new Action.PlayerList(playerInfo, 'Choose your target');
+    let playerList = new Action.PlayerList(this.playerIdx, playerInfo, 'Choose your target');
     let that = this;
     playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;

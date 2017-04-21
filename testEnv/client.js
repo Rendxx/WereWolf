@@ -14,7 +14,7 @@
     [10, '不说话的草莓味'],
   ];
   var playerAlive =  '1101111101';
-  var playerVote = [5,-1,-1,-1,-1,5,-1,-1,-1,3];
+  var playerVote = [5,-2,-2,-2,-2,5,-2,-2,-2,3];
   var roleList = [1,2,3,4,5];
 
   window.test={

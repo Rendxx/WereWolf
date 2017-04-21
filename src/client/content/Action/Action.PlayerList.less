@@ -61,35 +61,28 @@
     ._playerList {
         height: 100%;
         margin:0 auto;
-        position:relative;
+        position:absolute;
+        top: 50%;
+        left: 50%;
         overflow: hidden;
-        overflow-y: visible;
         z-index: 1;
-        overflow: hidden;
         box-sizing: border-box;
 
         ._player {
-            width: 90px;
-            height:90px;
             position:absolute;
-            line-height: 40px;
-            padding:15px 15px 40px;
-            overflow: hidden;
-            float:left;
-            border-bottom: 1px solid #1e1e1e;
             overflow: hidden;
 
             &:before{
               content: '';
               position:absolute;
-              top: 50%;
-              left: 50%;
-              width:100px;
-              height:100px;
-              margin-top:-64px;
-              margin-left:-50px;
+              top:0px;
+              bottom:30px;
+              left:0px;
+              right:0px;
               background-image: url('~CLIENT/design/slash.png');
               background-size: contain;
+              background-position: center center;
+              background-repeat: no-repeat;
               z-index:100;
             }
 
@@ -97,25 +90,30 @@
               opacity: 0.2;
               content: '';
               position:absolute;
-              top: 50%;
-              left: 50%;
-              width:90px;
-              height:90px;
-              margin-top:-59px;
-              margin-left:-45px;
+              top:0px;
+              bottom:30px;
+              left:0px;
+              right:0px;
               background-image: url('~GLOBAL/design/Portrait-Bg.png');
               background-size: contain;
+              background-position: center center;
+              background-repeat: no-repeat;
               z-index:1;
             }
 
             ._number {
                 display: block;
+                position:absolute;
+                top: 50%;
+                left: 50%;
                 line-height: 90px;
                 height:80px;
+                width:80px;
+                margin-top:-55px;
+                margin-left:-40px;
                 border: 0;
                 text-align: center;
                 color: #444;
-                margin: 0 auto;
                 font-size: 40px;
                 text-shadow: 0 0 5px #000;
                 z-index:30;
@@ -136,8 +134,8 @@
                 bottom:10px;
                 left:10px;
                 right:10px;
-                padding:4px;
-                font-size: 16px;
+                padding:0 5px;
+                font-size: 12px;
                 font-family: Calibri, 微软雅黑;
                 z-index:10;
                 white-space:nowrap;
