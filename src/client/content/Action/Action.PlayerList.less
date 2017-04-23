@@ -110,11 +110,9 @@
                 margin-left:-40px;
                 border: 0;
                 text-align: center;
-                color: #444;
+                color:#333;
                 font-size: 40px;
-                text-shadow: 0 0 5px #999;
                 z-index:30;
-                opacity: 0.75;
                 border-radius:50%;
                 font-family: "D_Day_Stencil","Agency FB";
             }
@@ -158,7 +156,7 @@
                     text-align: center;
                     color: #ccc;
                     text-shadow: 0 0 3px #200;
-                    background-image: url('~CLIENT/design/vote-bg.png');
+                    background-image: url('~CLIENT/design/vote-bg-2.png');
                     background-position: center center;
                     background-size: 22px 22px;
                     background-repeat: no-repeat;
@@ -178,6 +176,7 @@
                 ._number {
                     color:#333;
                     opacity: 1;
+                    text-shadow: 0 0 5px #999;
                 }
                 ._name {
                     color: #999;
@@ -209,6 +208,9 @@
             }
 
             &._selected{
+                ._number {
+                    color:#8c3535;
+                }
                 &:after{
                     background-image: url('~CLIENT/design/Number-Bg-Highlight.png');
                 }
