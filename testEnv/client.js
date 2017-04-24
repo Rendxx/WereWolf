@@ -14,6 +14,7 @@
     [10, '不说话的草莓味'],
   ];
   var playerAlive =  '1101111101';
+  var wolvies = [0,5,6,9];
   var playerVote = [5,-2,-2,-2,-2,5,-2,-2,-2,3];
   var roleList = [1,2,3,4,5];
 
@@ -40,7 +41,7 @@
         window.msg('2|5|HOST|2|[1,1,0,"'+playerAlive+'",[],[]]');
       },
       2: function (){   // werewolf
-        window.msg('2|5|HOST|2|[1,2,1,"'+playerAlive+'",[],'+JSON.stringify(playerVote)+']');
+        window.msg('2|5|HOST|2|[1,2,1,"'+playerAlive+'",[],'+JSON.stringify([wolvies,playerVote])+']');
       },
       3: function (k){   // seer
         if (k===1) window.msg('2|5|HOST|2|[1,2,0,"'+playerAlive+'",[2,3],[]]');

@@ -8,8 +8,11 @@ var HTML = {
     title: '<div class="_title"><span></span></div>',
     player: {
       wrap: '<div class="_player"></div>',
-      abstain:'<div class="_abstain"></div>',
+      inner: '<div class="_playerInner"></div>',
       number: '<div class="_number"></div>',
+      bgAfter: '<div class="_bgAfter"></div>',
+      bgBefore: '<div class="_bgBefore"></div>',
+      marker: '<div class="_marker"></div>',
       name: '<div class="_name"></div>',
       vote: '<div class="_vote"></div>',
       voteMarker: '<div class="_voteMarker"></div>',
@@ -17,11 +20,16 @@ var HTML = {
 };
 
 var CSS = {
+    werewolf:'_werewolf',
     alive: '_alive',
     show: '_show',
     selected: '_selected',
     abstain: '_abstain',
     empty:'_empty'
+};
+
+var Data = {
+    maxSize:120
 };
 
 var PlayerList = function (playerIdx, playerInfo, title){
@@ -30,6 +38,7 @@ var PlayerList = function (playerIdx, playerInfo, title){
     this.playerInfo = playerInfo;
     this._playerAliveArr = null;
     this._voteArr = null;
+    this._werewolfArr = null;
 
     // callback ----------------------------------
     this.onSelect = null;
@@ -43,26 +52,35 @@ PlayerList.prototype.setup = function (container, width, height){
     this.resize(width, height);
 };
 
-PlayerList.prototype.update = function (playerAliveArr, voteArr){
+PlayerList.prototype.update = function (playerAliveArr, dat){
     this._playerAliveArr=playerAliveArr;
-    this._voteArr=voteArr;
+    this._werewolfArr=dat[0];
+    this._voteArr=dat[1];
     this._update();
 };
 
 PlayerList.prototype._update = function (){
     if (this._playerAliveArr==null||this._voteArr==null) return;
     for (let i in this.html['player']){
-        if (this._playerAliveArr[i]==='1') this.html['player'][i].wrap.classList.add(CSS.alive);
-        else this.html['player'][i].wrap.classList.remove(CSS.alive);
+        if (this._playerAliveArr[i]==='1') this.html['player'][i].inner.classList.add(CSS.alive);
+        else this.html['player'][i].inner.classList.remove(CSS.alive);
         Util.EmptyDom(this.html['player'][i].vote);
-        this.html['player'][i].wrap.classList.remove(CSS.selected);
+        this.html['player'][i].inner.classList.remove(CSS.selected);
+        this.html['player'][i].inner.classList.remove(CSS.werewolf);
     }
-    this.html['player']['-1'] && this.html['player']['-1'].wrap.classList.add(CSS.alive);
-    if (this._voteArr==null) return;
-    for (let i in this._voteArr){
-        if (!this.html['player'].hasOwnProperty(this._voteArr[i])) continue;
-        if (Number(i)===this.playerIdx)this.html['player'][this._voteArr[i]].wrap.classList.add(CSS.selected);
-        this.html['player'][this._voteArr[i]].vote.appendChild(this.html['voteCache'][i]);
+    this.html['player']['-1'] && this.html['player']['-1'].inner.classList.add(CSS.alive);
+    if (this._voteArr!=null) {
+        for (let i in this._voteArr){
+            if (!this.html['player'].hasOwnProperty(this._voteArr[i])) continue;
+            if (Number(i)===this.playerIdx)this.html['player'][this._voteArr[i]].inner.classList.add(CSS.selected);
+            this.html['player'][this._voteArr[i]].vote.appendChild(this.html['voteCache'][i]);
+        }
+    }
+    if (this._werewolfArr!=null) {
+        for (let i in this._werewolfArr){
+            if (!this.html['player'].hasOwnProperty(this._werewolfArr[i])) continue;
+            this.html['player'][this._werewolfArr[i]].inner.classList.add(CSS.werewolf);
+        }
     }
 };
 
@@ -102,9 +120,7 @@ PlayerList.prototype._setupHtml = function (){
 
     this.html['slot']=[];
     for (let i=0;i<h;i++){
-        this.html['slot'][idx++] = this._addSlot(this.html['inner'],{
-            width: size+'px',
-            height: size+'px',
+        this.html['slot'][idx++] = this._addSlot(this.html['inner'], size, {
             left: '0',
             right: 'auto',
             top: ~~((0.5+i)*size)+'px',
@@ -112,9 +128,7 @@ PlayerList.prototype._setupHtml = function (){
         });
     }
     for (let i=0;i<w;i++){
-        this.html['slot'][idx++] = this._addSlot(this.html['inner'],{
-            width: size+'px',
-            height: size+'px',
+        this.html['slot'][idx++] = this._addSlot(this.html['inner'], size, {
             left: (i+1)*size+'px',
             right: 'auto',
             top: 'auto',
@@ -122,9 +136,7 @@ PlayerList.prototype._setupHtml = function (){
         });
     }
     for (let i=h-1;i>=0;i--){
-        this.html['slot'][idx++] = this._addSlot(this.html['inner'],{
-            width: size+'px',
-            height: size+'px',
+        this.html['slot'][idx++] = this._addSlot(this.html['inner'], size, {
             left: 'auto',
             right: '0',
             top: ~~((0.5+i)*size)+'px',
@@ -132,18 +144,14 @@ PlayerList.prototype._setupHtml = function (){
         });
     }
     for (let i=w-1;i>=0;i--){
-        this.html['slot'][idx++] = this._addSlot(this.html['inner'],{
-            width: size+'px',
-            height: size+'px',
+        this.html['slot'][idx++] = this._addSlot(this.html['inner'], size, {
             left: (i+1)*size+'px',
             right: 'auto',
             top: '0',
             bottom: 'auto'
         });
     }
-    this.html['slot']['-1'] = this._addSlot(this.html['inner'],{
-        width: size+'px',
-        height: size+'px',
+    this.html['slot']['-1'] = this._addSlot(this.html['inner'], size, {
         left: ~~((1+(w-1)/2)*size)+'px',
         right: 'auto',
         top: ~~(((h)/2)*size)+'px',
@@ -166,31 +174,65 @@ PlayerList.prototype._setupHtml = function (){
 
     this.html['voteCache'] = [];
     for (let i=0;i<this.playerInfo.length;i++){
-        this.html['voteCache'].push(Util.CreateDom(HTML.player.voteMarker, null, this.playerInfo[i][0]));
+        //this.html['voteCache'].push(Util.CreateDom(HTML.player.voteMarker, null, this.playerInfo[i][0]));
+        this.html['voteCache'].push(Util.CreateDom(HTML.player.voteMarker, null));
     }
 };
 
-PlayerList.prototype._addSlot = function (container, css){
+PlayerList.prototype._addSlot = function (container, size, css){
     let pkg = {};    
     pkg['wrap'] = Util.CreateDom(HTML.player.wrap, container);
-    pkg['number'] = Util.CreateDom(HTML.player.number, pkg['wrap']);
-    pkg['name'] = Util.CreateDom(HTML.player.name, pkg['wrap']);
-    pkg['vote'] = Util.CreateDom(HTML.player.vote, pkg['wrap']);
-    pkg['wrap'].classList.add(CSS.empty);
+    pkg['inner'] = Util.CreateDom(HTML.player.inner, pkg['wrap']);
+    pkg['number'] = Util.CreateDom(HTML.player.number, pkg['inner']);
+    pkg['before'] = Util.CreateDom(HTML.player.bgBefore, pkg['inner']);
+    pkg['after'] = Util.CreateDom(HTML.player.bgAfter, pkg['inner']);
+    pkg['marker'] = Util.CreateDom(HTML.player.marker, pkg['inner']);
+    pkg['name'] = Util.CreateDom(HTML.player.name, pkg['inner']);
+    pkg['vote'] = Util.CreateDom(HTML.player.vote, pkg['inner']);
+    pkg['inner'].classList.add(CSS.empty);
+
     for(let i in css){
         pkg['wrap'].style[i]=css[i];
     }
+    pkg['wrap'].style['width'] = size+'px';
+    pkg['wrap'].style['height'] = size+'px';
+    
+    if (size>Data.maxSize) {
+        pkg['inner'].style['top']= ((size-Data.maxSize)>>1)+'px';
+        pkg['inner'].style['left']= ((size-Data.maxSize)>>1)+'px';
+        size = Data.maxSize;  
+        pkg['inner'].style['width']= size+'px';
+        pkg['inner'].style['height']= size+'px';
+        
+    }
+
+    let s = size-40;
+    let css2 = {
+        'width':s+'px',
+        'height':s+'px',
+        'margin-left':-((s+1)>>1)+'px',
+        'margin-top': -((s+1)>>1)-15+'px',
+        'line-height':s+'px',
+        'font-size':s/2+'px'
+    }
+    for(let i in css2){
+        pkg['number'].style[i]=css2[i];
+        pkg['before'].style[i]=css2[i];
+        pkg['after'].style[i]=css2[i];
+    }
+    pkg['marker'].style['top']=~~(s*0.4+s*0.5)+'px';
+    pkg['marker'].style['left']=~~(s*0.4+size*0.5)+'px';
     return pkg;
 };
 
 PlayerList.prototype._addPlayer = function (idx, number, name, pkg, onSelect){
     pkg['number'].innerHTML = number;
     pkg['name'].innerHTML = name;
-    pkg['wrap'].classList.add(CSS.alive);
-    pkg['wrap'].classList.remove(CSS.empty);
+    pkg['inner'].classList.add(CSS.alive);
+    pkg['inner'].classList.remove(CSS.empty);
 
-    Util.BindClick(pkg['wrap'], function (){
-        if (!pkg['wrap'].classList.contains(CSS.alive)) return false;
+    Util.BindClick(pkg['inner'], function (){
+        if (!pkg['inner'].classList.contains(CSS.alive)) return false;
         onSelect && onSelect (idx, number, name);
     });
     return pkg;
@@ -198,11 +240,11 @@ PlayerList.prototype._addPlayer = function (idx, number, name, pkg, onSelect){
 
 PlayerList.prototype._addAbstain = function (pkg, onSelect){
     pkg['name'].innerHTML = 'GIVE UP';
-    pkg['wrap'].classList.add(CSS.alive);
-    pkg['wrap'].classList.add(CSS.abstain);
-    pkg['wrap'].classList.remove(CSS.empty);
+    pkg['inner'].classList.add(CSS.alive);
+    pkg['inner'].classList.add(CSS.abstain);
+    pkg['inner'].classList.remove(CSS.empty);
 
-    Util.BindClick(pkg['wrap'], function (){
+    Util.BindClick(pkg['inner'], function (){
         onSelect && onSelect ();
     });
     return pkg;
