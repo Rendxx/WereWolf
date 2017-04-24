@@ -146,8 +146,8 @@ PlayerList.prototype._setupHtml = function (){
         height: size+'px',
         left: ~~((1+(w-1)/2)*size)+'px',
         right: 'auto',
-        top: 'auto',
-        bottom:  ~~(1*size) + 'px'
+        top: ~~(((h)/2)*size)+'px',
+        bottom:  'auto'
     });
     
     this.html['player']={};
