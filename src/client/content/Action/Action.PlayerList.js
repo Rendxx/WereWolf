@@ -205,8 +205,7 @@ PlayerList.prototype._addSlot = function (container, size, css){
         pkg['inner'].style['left']= ((size-Data.maxSize)>>1)+'px';
         size = Data.maxSize;  
         pkg['inner'].style['width']= size+'px';
-        pkg['inner'].style['height']= size+'px';
-        
+        pkg['inner'].style['height']= size+'px';        
     }
 
     let s = size-40;

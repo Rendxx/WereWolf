@@ -2,7 +2,7 @@
 
 var Util = require('SRC/Util.js');
 var ROLEDATA = require('./Data.js');
-var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
+var INFO = require('./Info.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 require('./Client.less');
 
