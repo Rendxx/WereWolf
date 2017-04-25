@@ -91,10 +91,12 @@ PlayerList.prototype.resize = function (w, h){
 };
 
 PlayerList.prototype.show = function (){
+    Basic.prototype.show.call(this);
     this.html['wrap'].classList.add(CSS.show);
 };
 
 PlayerList.prototype.hide = function (){
+    Basic.prototype.show.hide(this);
     this.html['wrap'].classList.remove(CSS.show);
 };
 
@@ -177,6 +179,7 @@ PlayerList.prototype._setupHtml = function (){
         //this.html['voteCache'].push(Util.CreateDom(HTML.player.voteMarker, null, this.playerInfo[i][0]));
         this.html['voteCache'].push(Util.CreateDom(HTML.player.voteMarker, null));
     }
+    if (this._shown) this.show();
 };
 
 PlayerList.prototype._addSlot = function (container, size, css){

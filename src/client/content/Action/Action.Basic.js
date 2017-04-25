@@ -12,6 +12,7 @@ var Basic = function (playerIdx){
     this.width = 0;
     this.height = 0;
     this.playerIdx=playerIdx;
+    this._shown = false;
 };
 Basic.prototype = Object.create(null);
 Basic.prototype.constructor = Basic;
@@ -29,9 +30,11 @@ Basic.prototype.resize = function (w, h){
 };
 
 Basic.prototype.show = function (){
+    this._shown = true;
 };
 
 Basic.prototype.hide = function (){
+    this._shown = false;
 };
 
 module.exports = Basic;
