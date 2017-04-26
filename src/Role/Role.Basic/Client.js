@@ -2,7 +2,8 @@
 
 var Util = require('SRC/Util.js');
 var ROLEDATA = require('./Data.js');
-var INFO = require('./Info.js');
+var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
+var INFO2 = require('./Info.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 require('./Client.less');
 
@@ -29,8 +30,10 @@ Basic.prototype.setup = function (playerIdx){
 
 Basic.prototype.dayTime = function (){
     if (this.alive){
-        InfoBox.alert({
-            content: INFO.DAY,
+        InfoBox.alert2({
+            title: 'Day Time',
+            content: 'Find out the werewolf and execute it!',
+            className: 'info_client_phase_day'
         });
     }
     this.inactive();
@@ -49,8 +52,10 @@ Basic.prototype.inactive = function (){
 Basic.prototype.update = function (aliveListArr, dat){
     var t = aliveListArr[this.playerIdx]==='1';
     if (t===false && this.alive){
-        InfoBox.alert({
-            content: INFO.DAED,
+        InfoBox.alert2({
+            title: 'You Are Dead',
+            content: 'Rest In Peace',
+            className: 'info_client_phase_dead'
         });
     }
     this.alive = t;

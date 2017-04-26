@@ -4,6 +4,7 @@ var Basic= require('../Role.Basic/Client.js');
 var Util = require('SRC/Util.js');
 var ROLEDATA = require('./Data.js');
 var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
+var INFO2 = require('./Info.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 var Action = {
     PlayerList : require('CLIENT/content/Action/Action.PlayerList.js')
@@ -25,8 +26,10 @@ Werewolf.prototype.active = function (aliveListArr, voteArr){
     if (!this.alive) return;
     if (!this.actived){
         this.actived = true;
-        InfoBox.alert({
-            content: INFO.WEREWOLF,
+        InfoBox.alert2({
+            title: 'Werewolf',
+            content: 'Choose the victim with your companions.',
+            className: 'info_client_phase_werewolf'
         });
         this._action.show();
         this._action.components['playerList'].show();

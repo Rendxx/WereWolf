@@ -1,4 +1,5 @@
 require('./InfoBox.alert.less');
+require('./InfoBox.alert2.less');
 require('./InfoBox.check.less');
 
 var InfoBox = function (){
@@ -14,6 +15,46 @@ var InfoBox = function (){
         var that =this;
         var btnOK = wrap.querySelector('._ok');
         btnOK.addEventListener("click", function(e){
+            callback && callback(e);
+            that.hide();
+        }, false);
+
+        $$.info({
+          content: wrap,
+          bg: "rgba(0, 0, 0, 0.9)"
+        });
+    };
+
+    this.alert2 = function (opts){
+        var title = opts.title||'',
+            content = opts.content||'',
+            className = opts.className||'',
+            callback = opts.callback||null;
+
+        var wrap = document.createElement("DIV");
+        wrap.className = 'info_client_phase '+className+'';
+        wrap.innerHTML =  [
+            '<div class="_icon"></div>',
+            '<div class="_light"></div>',
+            '<div class="_word">',
+                '<div class="_title">'+title+'</div>',
+                '<div class="_content">'+content+'</div>',
+                '<div class="_bracket_left">',
+                    '<div class="_bracket_top"></div>',
+                    '<div class="_bracket_mid"></div>',
+                    '<div class="_bracket_btm"></div>',
+                '</div>',
+                '<div class="_bracket_right">',
+                    '<div class="_bracket_top"></div>',
+                    '<div class="_bracket_mid"></div>',
+                    '<div class="_bracket_btm"></div>',
+                '</div>',
+                '<div class="_tapGuide">&lt;Tap to continue&gt;</div>',
+            '</div>'
+        ].join('');
+
+        var that =this;
+        wrap.addEventListener("click", function(e){
             callback && callback(e);
             that.hide();
         }, false);

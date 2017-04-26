@@ -96,6 +96,28 @@ var INFO = {
           '<div class="_name '+(isHeal?'_green':'_gray')+'">'+name+'</div>',
         '</div>'
        ].join('');
+    },
+    PHASE: function (title, content, className){
+      return [
+        '<div class="info_client_phase '+className+'">',
+          '<div class="_icon"></div>',
+          '<div class="_light"></div>',
+          '<div class="_word">',
+            '<div class="_title">'+title+'</div>',
+            '<div class="_content">'+content+'</div>',
+            '<div class="_bracket_left">',
+              '<div class="_bracket_top"></div>',
+              '<div class="_bracket_mid"></div>',
+              '<div class="_bracket_btm"></div>',
+            '</div>',
+            '<div class="_bracket_right">',
+              '<div class="_bracket_top"></div>',
+              '<div class="_bracket_mid"></div>',
+              '<div class="_bracket_btm"></div>',
+            '</div>',
+          '</div>',
+        '</div>'
+       ].join('');
     }
 }
 
