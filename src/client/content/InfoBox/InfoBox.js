@@ -34,8 +34,10 @@ var InfoBox = function (){
         var wrap = document.createElement("DIV");
         wrap.className = 'info_client_phase '+className+'';
         wrap.innerHTML =  [
-            '<div class="_icon"></div>',
-            '<div class="_light"></div>',
+            '<div class="_iconWrap">',
+                '<div class="_icon"></div>',
+                '<div class="_light"></div>',
+            '</div>',
             '<div class="_word">',
                 '<div class="_title">'+title+'</div>',
                 '<div class="_content">'+content+'</div>',
