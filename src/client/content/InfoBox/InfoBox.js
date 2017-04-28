@@ -51,7 +51,7 @@ var InfoBox = function (){
                     '<div class="_bracket_mid"></div>',
                     '<div class="_bracket_btm"></div>',
                 '</div>',
-                '<div class="_tapGuide">&lt;Tap to continue&gt;</div>',
+                '<div class="_tapGuide">Tap to continue</div>',
             '</div>'
         ].join('');
 
