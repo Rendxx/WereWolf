@@ -63,21 +63,11 @@ Werewolf.prototype.initActionPanel = function (actionPanel, playerInfo){
     let that = this;
     playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
-        InfoBox.check({
-            content: INFO.SHOWPLAYER(number, name),
-            callbackYes: function() {
-                that.onActionEnd && that.onActionEnd([idx]);
-            }
-        });
+        that.onActionEnd && that.onActionEnd([idx]);
     };
     playerList.onAbstain = function (){
         if (!that.actived) return;
-        InfoBox.check({
-            content: 'Are you sure you want to do nothing?<br/>Noobdy will be murdered in this case.',
-            callbackYes: function() {
-                that.onActionEnd && that.onActionEnd([-1]);
-            }
-        });
+        that.onActionEnd && that.onActionEnd([-1]);
     };
     this._action.reset({
         'playerList': playerList
