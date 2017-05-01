@@ -1,0 +1,221 @@
+.info_client_phase{
+    color:#ccc;
+    width:100%;
+    height:100%;
+    margin:0;
+    border:0;
+    padding:0;
+    background-color: #000;
+
+    .__item {
+        position:absolute;
+        top: 50%;
+        left: 50%;
+    }
+
+    ._iconWrap {
+        .__item;
+        width:80%;
+        height:60%;
+        max-height:300px;
+        transform: translate(-50%,-80%);
+        overflow: visible;
+
+        ._icon{
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            z-index:100;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        ._light{
+            .__item;
+            width:300%;
+            height:300%;
+            transform: translate(-50%,-50%);
+            z-index:80;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+    }
+    ._word{
+        .__item;
+        width:200px;
+        height:auto;
+        margin-top:15%;
+        margin-left:-100px;
+        z-index:80;
+        color:#fff;
+        overflow: visible;
+
+        ._title{
+            font-size: 36px;
+            line-height: 40px;
+            width:180px;
+            margin:0 10px 10px;
+            text-align: center;
+        }
+
+        ._content{
+            font-size: 12px;
+            line-height: 20px;
+            width:160px;
+            margin:0 20px;
+            font-family: Arial;
+            opacity: 0.75;
+        }
+
+        ._tapGuide {
+            text-align: center;
+            opacity: 0.5;
+            position:absolute;
+            width:100%;
+            bottom:-60px;
+            left:0;
+            color:#fff;
+            font-size: 12px;
+            font-family: Arial;
+            animation-name: blink;
+            animation-duration: 3s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        
+        .__bracket{
+            width:4px;
+            height:100%;
+            position:absolute;
+            top:0;
+
+            ._bracket_top{
+                position:absolute;
+                top:0;
+                left:0;
+                width:4px;
+                height:50%;
+
+                &:before{
+                    content:'';
+                    display: block;
+                    position:absolute;
+                    top:0;
+                    left:0;
+                    width:4px;
+                    height:4px;
+                }
+
+                &:after{
+                    content:'';
+                    display: block;
+                    position:absolute;
+                    top:4px;
+                    bottom:2px;
+                    left:0;
+                    right:0;
+                }
+            }
+            ._bracket_mid{
+                position:absolute;
+                top:50%;
+                left:0;
+                width:4px;
+                height:4px;
+                margin-top:-2px;
+            }
+            ._bracket_btm{
+                position:absolute;
+                bottom:0;
+                left:0;
+                width:4px;
+                height:50%;
+
+                &:before{
+                    content:'';
+                    display: block;
+                    position:absolute;
+                    bottom:0;
+                    left:0;
+                    width:4px;
+                    height:4px;
+                }
+
+                &:after{
+                    content:'';
+                    display: block;
+                    position:absolute;
+                    top:2px;
+                    bottom:4px;
+                    left:0;
+                    right:0;
+                }
+            }
+        }
+
+        ._bracket_left{
+            .__bracket;
+            left:0;
+            ._bracket_top{
+                &:before{
+                    background-image: url('~CLIENT/design/brackets_l_1.png');
+                }
+
+                &:after{
+                    background-image: url('~CLIENT/design/brackets_l_3.png');
+                }
+            }
+            ._bracket_mid{
+                background-image: url('~CLIENT/design/brackets_l_2.png');
+            }
+            ._bracket_btm{
+                &:before{
+                    background-image: url('~CLIENT/design/brackets_l_4.png');
+                }
+
+                &:after{
+                    background-image: url('~CLIENT/design/brackets_l_3.png');
+                }
+            }
+        }
+
+        ._bracket_right{
+            .__bracket;
+            right:0;
+            ._bracket_top{
+                &:before{
+                    background-image: url('~CLIENT/design/brackets_r_1.png');
+                }
+
+                &:after{
+                    background-image: url('~CLIENT/design/brackets_r_3.png');
+                }
+            }
+            ._bracket_mid{
+                background-image: url('~CLIENT/design/brackets_r_2.png');
+            }
+            ._bracket_btm{
+                &:before{
+                    background-image: url('~CLIENT/design/brackets_r_4.png');
+                }
+
+                &:after{
+                    background-image: url('~CLIENT/design/brackets_r_3.png');
+                }
+            }
+        }
+    }
+}
+
+@keyframes blink {
+    0%   {opacity: 0.2;}
+    10%   {opacity: 0.2;}
+    40% {opacity: 0.5;}
+    60% {opacity: 0.5;}
+    90% {opacity: 0.2;}
+    100% {opacity: 0.2;}
+}

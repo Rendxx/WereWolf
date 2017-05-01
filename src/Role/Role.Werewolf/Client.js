@@ -26,7 +26,7 @@ Werewolf.prototype.active = function (aliveListArr, voteArr){
     if (!this.alive) return;
     if (!this.actived){
         this.actived = true;
-        InfoBox.alert2({
+        InfoBox.phase({
             title: 'Werewolf',
             content: 'Choose the victim with your companions.',
             className: 'info_client_phase_werewolf'

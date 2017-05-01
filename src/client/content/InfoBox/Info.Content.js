@@ -118,6 +118,27 @@ var INFO = {
           '</div>',
         '</div>'
        ].join('');
+    },
+    RESULT: function (playerNumber, content, className){
+      return [
+        '<div class="info_client_result '+className+'">',
+          '<div class="_effort"></div>',
+          '<div class="_number">'+playerNumber+'</div>',
+          '<div class="_word">',
+            '<div class="_content">'+content+'</div>',
+            '<div class="_bracket_left">',
+              '<div class="_bracket_top"></div>',
+              '<div class="_bracket_mid"></div>',
+              '<div class="_bracket_btm"></div>',
+            '</div>',
+            '<div class="_bracket_right">',
+              '<div class="_bracket_top"></div>',
+              '<div class="_bracket_mid"></div>',
+              '<div class="_bracket_btm"></div>',
+            '</div>',
+          '</div>',
+        '</div>'
+       ].join('');
     }
 }
 

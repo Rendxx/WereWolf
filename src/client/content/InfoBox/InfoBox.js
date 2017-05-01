@@ -1,5 +1,6 @@
 require('./InfoBox.alert.less');
-require('./InfoBox.alert2.less');
+require('./InfoBox.Phase.less');
+require('./InfoBox.ActionResult.less');
 require('./InfoBox.check.less');
 
 var InfoBox = function (){
@@ -25,7 +26,7 @@ var InfoBox = function (){
         });
     };
 
-    this.alert2 = function (opts){
+    this.phase = function (opts){
         var title = opts.title||'',
             content = opts.content||'',
             className = opts.className||'',
@@ -53,6 +54,36 @@ var InfoBox = function (){
                 '</div>',
                 '<div class="_tapGuide">Tap to continue</div>',
             '</div>'
+        ].join('');
+
+        var that =this;
+        wrap.addEventListener("click", function(e){
+            callback && callback(e);
+            that.hide();
+        }, false);
+
+        $$.info({
+          content: wrap,
+          bg: "rgba(0, 0, 0, 0.9)"
+        });
+    };
+
+    this.actionResult = function (opts){
+        var number = opts.number||'',
+            name = opts.name||'',
+            content = opts.content||'',
+            className = opts.className||'',
+            callback = opts.callback||null;
+
+        var wrap = document.createElement("DIV");
+        wrap.className = 'info_client_result '+className+'';
+        wrap.innerHTML =  [
+            '<div class="_word">',
+                '<div class="_name">['+number+'] '+name+'</div>',
+                '<div class="_content">'+content+'</div>',
+                '<div class="_tapGuide">Tap to continue</div>',
+            '</div>',
+            '<div class="_bg"></div>'
         ].join('');
 
         var that =this;
