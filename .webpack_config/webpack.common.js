@@ -48,7 +48,7 @@ module.exports = {
             {
               loader: 'less-loader',
               options: {
-                strictMath: true, strictUnits: true,
+                //strictMath: true, strictUnits: true,
                 plugins: [
                   lessPluginAutoPrefix
                 ]

@@ -7,14 +7,10 @@
     padding:0;
     background-color: #000;
 
-    .__item {
+    ._iconWrap {
         position:absolute;
         top: 50%;
         left: 50%;
-    }
-
-    ._iconWrap {
-        .__item;
         width:80%;
         height:60%;
         max-height:300px;
@@ -34,7 +30,9 @@
         }
 
         ._light{
-            .__item;
+            position:absolute;
+            top: 50%;
+            left: 50%;
             width:300%;
             height:300%;
             transform: translate(-50%,-50%);
@@ -45,7 +43,9 @@
         }
     }
     ._word{
-        .__item;
+        position:absolute;
+        top: 50%;
+        left: 50%;
         width:200px;
         height:auto;
         margin-top:15%;

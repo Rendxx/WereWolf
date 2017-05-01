@@ -96,7 +96,7 @@ PlayerList.prototype.show = function (){
 };
 
 PlayerList.prototype.hide = function (){
-    Basic.prototype.show.hide(this);
+    Basic.prototype.hide.call(this);
     this.html['wrap'].classList.remove(CSS.show);
 };
 

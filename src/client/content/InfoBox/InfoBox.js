@@ -78,12 +78,16 @@ var InfoBox = function (){
         var wrap = document.createElement("DIV");
         wrap.className = 'info_client_result '+className+'';
         wrap.innerHTML =  [
+            '<div class="_numberWrap">',
+                '<div class="_effort"></div>',
+                '<div class="_number">'+number+'</div>',
+                '<div class="_bg"></div>',
+                '<div class="_name">'+name+'</div>',
+            '</div>',
             '<div class="_word">',
-                '<div class="_name">['+number+'] '+name+'</div>',
                 '<div class="_content">'+content+'</div>',
                 '<div class="_tapGuide">Tap to continue</div>',
-            '</div>',
-            '<div class="_bg"></div>'
+            '</div>'
         ].join('');
 
         var that =this;

@@ -7,32 +7,33 @@ var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
 var INFO2 = require('./Info.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 var Action = {
-    PlayerList : require('CLIENT/content/Action/Action.PlayerList.js')
+    PlayerList : require('CLIENT/content/Action/Action.PlayerList.js'),
+    Item : require('CLIENT/content/Action/Action.Item.js')
 };
 
 require('./Client.less');
 
-var Werewolf = function () {
+var Witch = function () {
     Basic.call(this);
     this.code = ROLEDATA.Code;
     this.name = ROLEDATA.Name;
     this.description = ROLEDATA.Description;
     this.instruction = ROLEDATA.Instruction;
 };
-Werewolf.prototype = Object.create(Basic.prototype);
-Werewolf.prototype.constructor = Werewolf;
+Witch.prototype = Object.create(Basic.prototype);
+Witch.prototype.constructor = Witch;
 
-Werewolf.prototype.active = function (aliveListArr, voteArr){
+Witch.prototype.active = function (aliveListArr, voteArr){
     if (!this.alive) return;
     if (!this.actived){
         this.actived = true;
         InfoBox.phase({
-            title: 'Werewolf',
-            content: 'Choose the victim with your companions.',
-            className: 'info_client_phase_werewolf'
+            title: 'Witch',
+            content: 'Save a player with good potion. Or eliminate one with bad potion.',
+            className: 'info_client_phase_witch'
         });
         this._action.show();
-        this._action.components['playerList'].show();
+        //this._action.components['playerList'].show();
     }
     this._action.components['playerList'].update(aliveListArr, voteArr);
 };
@@ -61,9 +62,29 @@ Werewolf.prototype.actionResult = function (dat){
     }
 };
 
-Werewolf.prototype.initActionPanel = function (actionPanel, playerInfo){
+Witch.prototype.update = function (aliveListArr, dat){
+    Basic.prototype.update.call(this,aliveListArr, dat);
+    this._html['potion'][0].innerHTML = 'x '+dat[0];
+    this._html['potion'][1].innerHTML = 'x '+dat[1];
+    this._action.components['potionGood'].update(dat[0]);
+    this._action.components['potionBad'].update(dat[1]);
+};
+
+Witch.prototype.initInfoPanel = function (container){
+    Basic.prototype.initActionPanel.call(this,actionPanel);
+    let potionWrap = Util.CreateDom('<div class="_potionWrap"></div>', this._html['wrap']);
+    let potion = [];
+    potion[0] = Util.CreateDom('<div class="_potion _potionGood"></div>', potionWrap);
+    potion[1] = Util.CreateDom('<div class="_potion _potionBad"></div>', potionWrap);
+    this._html['potionWrap'] = potionWrap;
+    this._html['potion'] = potion;
+};
+
+Witch.prototype.initActionPanel = function (actionPanel, playerInfo){
     Basic.prototype.initActionPanel.call(this,actionPanel);
     let playerList = new Action.PlayerList(this.playerIdx, playerInfo, 'Choose your target');
+    let potionGood = new Action.Item(this.playerIdx, playerInfo, 'Choose your target');
+    let potionBad = new Action.Item(this.playerIdx, playerInfo, 'Choose your target');
     let that = this;
     playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
