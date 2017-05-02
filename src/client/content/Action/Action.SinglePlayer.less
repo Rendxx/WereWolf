@@ -1,249 +1,124 @@
-.action_playerList {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    overflow: hidden;
-    margin: 0;
-    border: 0;
-    padding: 0;
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.2s;
-    backface-visibility: hidden;
-    background-color: #222;
-    background-image: url('~GLOBAL/design/bg-cloth.png');
-    background-repeat: repeat;
-    background-size: auto;
-    z-index:10;
+.action_singlePlayer{
+    color:#ccc;
+    width:100%;
+    height:100%;
+    margin:0;
+    border:0;
+    padding:0;
+    background-color: #000;
 
-    &:after {
-        content: '';
-        display: block;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        background-color: #111;
-        box-shadow: 0 0 10px 2px rgba(0,0,0, 0.4);
-        z-index: 9;
-        pointer-events: none;
-    }
-
-    &._show {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    ._title {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 50px;
-        line-height: 50px;
-        overflow: hidden;
-        background-color: #111;
-        box-shadow: 0 0 10px 2px rgba(0,0,0, 0.4);
-        z-index: 10;
-        color: #999;
-
-        span {
-            display: block;
-            text-align: center;
-            margin: 0 30px;
-            font-size: 24px;
-            color: #fff;
-            text-shadow: 0 0 5px #000;
-        }
-    }
-
-    ._playerList {
+    ._inner{
         position:absolute;
         top: 50%;
         left: 50%;
-        overflow: hidden;
-        z-index: 1;
+        transform: translate(-50%, -50%);
+        overflow: visible;
+        width:240px;
 
-        ._player{
-            position:absolute;
+        ._numberWrap {
+            @size: 160px;
+            width:@size;
+            height:@size;
+            font-size: 80px;
+            line-height: @size;
             overflow: visible;
+            text-align: center;
+            position:relative;
+            top:0;
+            left:0;
+            margin:0 auto;
 
-            ._playerInner {
+            ._effort{
                 position:absolute;
-                overflow: visible;
                 top:0;
                 left:0;
                 width:100%;
                 height:100%;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center center;
+                z-index:100;
+            }
 
-                ._bgBefore{
-                    opacity:0.5;
-                    position:absolute;
-                    top: 50%;
-                    left: 50%;
-                    background-image: url('~CLIENT/design/Number-Bg-Broken2.png');
-                    background-size: contain;
-                    background-position: center center;
-                    background-repeat: no-repeat;
-                    z-index:100;
+            ._number{
+                font-family: "D_Day_Stencil","Agency FB";
+                color:#fff;
+                text-shadow: 0 0 1px #000;
+                position:absolute;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
+                z-index:80;
+            }
+
+            ._bg{
+                position:absolute;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
+                z-index:60;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center center;
+                opacity: 0.5;
+                background-image: url('~GLOBAL/design/Portrait-Bg.png');
+            }
+        }
+
+        ._name{
+            width:100%;
+            padding:10px 20px;
+            margin-bottom:20px;
+            box-sizing: border-box;
+            z-index:80;
+            font-size:14px;
+            line-height:20px;
+        }
+        ._content{
+            width:100%;
+            padding:10px 20px;
+            box-sizing: border-box;
+            margin-bottom:20px;
+            font-size: 12px;
+            line-height: 20px;
+            font-family: Arial;
+            opacity: 0.75;
+            text-align: center;
+            color:#fff;
+            text-shadow: 0 0 5px rgba(255,255,255,0.2);
+        }  
+        ._btns {
+            width:100%;
+            height:40px;
+            position:relative;
+            top:0;
+            left:0;
+            border-top: 1px dashed #333;
+
+            ._btn{
+                position:absolute;
+                top:0;
+                width:110px;
+                height:40px;
+                line-height:40px;
+                text-align: center;
+                color:#000;
+                font-size: 16px;
+                background-color: #eee;
+                box-shadow: 0 0 5px #000;
+                cursor: pointer;
+
+                &._btn_yes{
+                    left:6px;
                 }
-
-                ._bgAfter{
-                    opacity: 0.07;
-                    position:absolute;
-                    top: 50%;
-                    left: 50%;
-                    background-image: url('~CLIENT/design/Number-Bg-Broken.png');
-                    background-size: contain;
-                    background-position: center center;
-                    background-repeat: no-repeat;
-                    z-index:1;
+                &._btn_no{
+                    right:6px;
                 }
-
-                ._marker{
-                    display: none;
-                    opacity:1;
-                    position:absolute;  
-                    width:30px;
-                    height:30px;
-                    margin-top:-15px;
-                    margin-left:-15px;
-                    background-size: contain;
-                    background-position: center center;
-                    background-repeat: no-repeat;
-                    z-index:110;
-                }
-
-                ._number {
-                    display: block;
-                    position:absolute;
-                    top: 50%;
-                    left: 50%;
-                    border: 0;
-                    text-align: center;
-                    color:#444;
-                    //font-size: 40px;
-                    z-index:30;
-                    border-radius:50%;
-                    font-family: "D_Day_Stencil","Agency FB";
-                    text-shadow: 0 0 1px #000;
-                }
-
-                ._name {
-                    overflow: hidden;
-                    display: block;
-                    height:20px;
-                    line-height: 20px;
-                    text-align: center;
-                    color: #444;
-                    margin:0;
-                    overflow: hidden;
-                    position: absolute;
-                    top:auto;
-                    bottom:10px;
-                    left:5px;
-                    right:5px;
-                    padding:0 5px;
-                    font-size: 12px;
-                    font-family: Calibri, 微软雅黑;
-                    z-index:10;
-                    white-space:nowrap;
-                }
-
-                ._vote {
-                    display: block;
-                    text-align: left;
-                    position: absolute;
-                    top: 0;
-                    bottom: 0;
-                    left: 10px;
-                    right: 10px;
-                    z-index: 120;
-
-                    ._voteMarker {
-                        display: inline-block;
-                        height: 22px;
-                        width: 22px;
-                        line-height: 22px;
-                        text-align: center;
-                        color: #ccc;
-                        text-shadow: 0 0 3px #200;
-                        background-image: url('~CLIENT/design/vote-bg-3.png');
-                        background-position: center center;
-                        background-size: 30px 30px;
-                        background-repeat: no-repeat;
-                        font-size: 12px;
-                        font-family: "Agency FB";
-                    }
-                }
-
-                &._werewolf{
-                    ._marker{
-                        display: block;
-                        background-image: url('~CLIENT/design/marker_werewolf.png');
-                    }
-                }
-
-                &._alive {
-                    ._bgBefore{
-                        display: none;
-                    }
-                    ._bgAfter{
-                        opacity: 0.75;
-                        background-image: url('~CLIENT/design/Number-Bg.png');
-                    }
-                    ._number {
-                        color:#333;
-                        opacity: 1;
-                        text-shadow: 0 0 5px #999;
-                    }
-                    ._name {
-                        color: #999;
-                    }
-                    &:hover{
-                        opacity: 1;
-                    }
-                }
-
-                &._abstain {
-                    ._bgBefore{
-                        display: none;
-                    }
-                    ._bgAfter{
-                        background-image: url('~CLIENT/design/Number-Bg-Abstain.png');
-                    }
-                    ._number {
-                        // background-color: rgba(0,0,0,0.2);
-                        // border-radius:50%;
-                        background-image: url('~CLIENT/design/abstain.png');
-                        background-size: contain;
-                        background-position: center center;
-                        background-repeat: no-repeat;
-                        opacity: 1;
-                    }
-                    ._name {
-                        color: #777;
-                    }
-                }
-
-                &._selected{
-                    ._number {
-                        color:#eee;
-                        text-shadow: 0 0 0 #000;
-                    }
-                    // ._bgBefore{
-                    //     display: block !important;
-                    //     background-image: url('~CLIENT/design/Number-Bg-Highlight.png');
-                    //     animation-name: rotation;
-                    //     animation-duration: 2s;
-                    //     animation-iteration-count: infinite;
-                    //     animation-timing-function: linear;
-                    //     opacity: 1;
-                    // }
-                    ._bgAfter{
-                        background-image: url('~CLIENT/design/Number-Bg-2.png');
-                    }
+                &._btn_yes{
+                    left:50%;
+                    margin-left:-60px;
                 }
             }
         }

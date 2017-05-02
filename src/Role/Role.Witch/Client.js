@@ -8,7 +8,7 @@ var INFO2 = require('./Info.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 var Action = {
     PlayerList : require('CLIENT/content/Action/Action.PlayerList.js'),
-    Item : require('CLIENT/content/Action/Action.Item.js')
+    SinglePlayer : require('CLIENT/content/Action/Action.SinglePlayer.js')
 };
 
 require('./Client.less');
@@ -19,11 +19,12 @@ var Witch = function () {
     this.name = ROLEDATA.Name;
     this.description = ROLEDATA.Description;
     this.instruction = ROLEDATA.Instruction;
+    this.potion = [1, 1];
 };
 Witch.prototype = Object.create(Basic.prototype);
 Witch.prototype.constructor = Witch;
 
-Witch.prototype.active = function (aliveListArr, voteArr){
+Witch.prototype.active = function (aliveListArr, dat){
     if (!this.alive) return;
     if (!this.actived){
         this.actived = true;
@@ -35,8 +36,79 @@ Witch.prototype.active = function (aliveListArr, voteArr){
         this._action.show();
         //this._action.components['playerList'].show();
     }
-    this._action.components['playerList'].update(aliveListArr, voteArr);
+    let canHeal = Number(dat[0]),
+        victim = Number(dat[1]);
+
+
+    this._action.components['potionGood'].update(dat[0]);
+    this._action.components['potionBad'].update(aliveListArr);
 };
+
+Witch.prototype._showPotionGood = function (aliveListArr, canHeal, victim){
+    if (this.potion[0]===0){
+        this._action.components['potionGood'].update({
+            className: 'action_singlePlayer_witch_noPotion',
+            content: 'You don\'t have potion to heal.',
+            isAvailable: false,
+            isOk: function (){
+                this._showPotionBad(aliveListArr, true, false);
+            }.bind(this)
+        });
+    } else if (canHeal===0){
+        let p = this._playerInfo[victim];
+        this._action.components['potionGood'].update({
+            className: 'action_singlePlayer_witch_cantHeal',
+            content: 'You can not heal this player.',
+            number: p[0],
+            name: p[1],
+            isAvailable: false,
+            isOk: function (){
+                this._showPotionBad(aliveListArr, true, false);
+            }.bind(this)
+        });
+    } else{
+        let p = this._playerInfo[victim];
+        this._action.components['potionGood'].update({
+            className: 'action_singlePlayer_witch_heal',
+            content: 'Do you want to heal this victim with your healing potion?',
+            number: p[0],
+            name: p[1],
+            isAvailable: true,
+            isYes: function (){
+                this._showPotionBad(aliveListArr, false, true);
+            }.bind(this),
+            isNo: function (){
+                this._showPotionBad(aliveListArr, true, false);
+            }.bind(this)
+        });
+    }
+};
+
+Witch.prototype._showPotionGood = function (aliveListArr, canPoison, isHealed){
+    if (!canPoison){
+        this._action.components['potionBad'].update({
+            className: 'action_singlePlayer_witch_cantPoison',
+            content: 'You have already used a potion tonight.',
+            aliveListArr: aliveListArr,
+            isAvailable: false
+        });
+    } else if (this.potion[1]===0){
+        this._action.components['potionBad'].update({
+            className: 'action_singlePlayer_witch_noPoison',
+            content: 'You don\'t have potion to poison.',
+            aliveListArr: aliveListArr,
+            isAvailable: false
+        });
+    } else{
+        this._action.components['potionBad'].update({
+            className: 'action_singlePlayer_witch_poison',
+            content: 'You can poison a player with your potion. Choose one from the list or select "cancel" to do nothing.',
+            aliveListArr: aliveListArr,
+            isAvailable: true
+        });
+    }
+};
+
 
 Werewolf.prototype.actionResult = function (dat){
     this.inactive();
@@ -64,10 +136,9 @@ Werewolf.prototype.actionResult = function (dat){
 
 Witch.prototype.update = function (aliveListArr, dat){
     Basic.prototype.update.call(this,aliveListArr, dat);
-    this._html['potion'][0].innerHTML = 'x '+dat[0];
-    this._html['potion'][1].innerHTML = 'x '+dat[1];
-    this._action.components['potionGood'].update(dat[0]);
-    this._action.components['potionBad'].update(dat[1]);
+    this.potion = [dat[0], dat[1]];
+    this._html['potion'][0].innerHTML = 'x '+this.potion[0];
+    this._html['potion'][1].innerHTML = 'x '+this.potion[1];
 };
 
 Witch.prototype.initInfoPanel = function (container){
@@ -81,21 +152,20 @@ Witch.prototype.initInfoPanel = function (container){
 };
 
 Witch.prototype.initActionPanel = function (actionPanel, playerInfo){
-    Basic.prototype.initActionPanel.call(this,actionPanel);
-    let playerList = new Action.PlayerList(this.playerIdx, playerInfo, 'Choose your target');
-    let potionGood = new Action.Item(this.playerIdx, playerInfo, 'Choose your target');
-    let potionBad = new Action.Item(this.playerIdx, playerInfo, 'Choose your target');
-    let that = this;
-    playerList.onSelect = function (idx, number, name){
-        if (!that.actived) return;
-        that.onActionEnd && that.onActionEnd([idx]);
-    };
-    playerList.onAbstain = function (){
-        if (!that.actived) return;
-        that.onActionEnd && that.onActionEnd([-1]);
-    };
+    Basic.prototype.initActionPanel.call(this,actionPanel, playerInfo);
+    let potionGood = new Action.SinglePlayer();
+    let potionBad = new Action.PlayerList(this.playerIdx, playerInfo, 'Choose your target');
+    potionBad.onSelect = function (idx, number, name){
+        if (!this.actived) return;
+        this.onActionEnd && this.onActionEnd([idx]);
+    }.bind(this);
+    potionBad.onAbstain = function (){
+        if (!this.actived) return;
+        this.onActionEnd && this.onActionEnd([-1]);
+    }.bind(this);
     this._action.reset({
-        'playerList': playerList
+        'potionGood': potionGood,
+        'potionBad': potionBad
     });
 };
 

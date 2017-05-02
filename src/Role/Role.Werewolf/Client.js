@@ -11,6 +11,7 @@ var Action = {
 };
 
 require('./Client.less');
+require('./Action.less');
 
 var Werewolf = function () {
     Basic.call(this);
@@ -22,7 +23,7 @@ var Werewolf = function () {
 Werewolf.prototype = Object.create(Basic.prototype);
 Werewolf.prototype.constructor = Werewolf;
 
-Werewolf.prototype.active = function (aliveListArr, voteArr){
+Werewolf.prototype.active = function (aliveListArr, dat){
     if (!this.alive) return;
     if (!this.actived){
         this.actived = true;
@@ -32,9 +33,18 @@ Werewolf.prototype.active = function (aliveListArr, voteArr){
             className: 'info_client_phase_werewolf'
         });
         this._action.show();
+        this._action.components['playerList'].reset({
+            playerAlive: aliveListArr,
+            isAvailable: true,
+            className: 'action_playerList_werewolf',
+            content: 'Choose a victim. The player will be attacked after all werewolf choosing the same target.'
+        });
         this._action.components['playerList'].show();
     }
-    this._action.components['playerList'].update(aliveListArr, voteArr);
+    this._action.components['playerList'].update({
+        werewolf: dat[0],
+        vote: dat[1]
+    });
 };
 
 Werewolf.prototype.actionResult = function (dat){
@@ -48,7 +58,7 @@ Werewolf.prototype.actionResult = function (dat){
             }.bind(this)
         });
     } else {
-        var p = this._action.components['playerList'].playerInfo[dat[0]];
+        var p = this._playerInfo[dat[0]];
         InfoBox.actionResult({
             content: 'This player has been murdered',
             number: p[0],
@@ -62,7 +72,7 @@ Werewolf.prototype.actionResult = function (dat){
 };
 
 Werewolf.prototype.initActionPanel = function (actionPanel, playerInfo){
-    Basic.prototype.initActionPanel.call(this,actionPanel);
+    Basic.prototype.initActionPanel.call(this,actionPanel, playerInfo);
     let playerList = new Action.PlayerList(this.playerIdx, playerInfo, 'Choose your target');
     let that = this;
     playerList.onSelect = function (idx, number, name){
