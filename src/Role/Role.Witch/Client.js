@@ -110,7 +110,7 @@ Witch.prototype._showPotionGood = function (aliveListArr, canPoison, isHealed){
 };
 
 
-Werewolf.prototype.actionResult = function (dat){
+Witch.prototype.actionResult = function (dat){
     this.inactive();
     if (dat[0]==-1){
         InfoBox.actionResult({
@@ -142,7 +142,7 @@ Witch.prototype.update = function (aliveListArr, dat){
 };
 
 Witch.prototype.initInfoPanel = function (container){
-    Basic.prototype.initActionPanel.call(this,actionPanel);
+    Basic.prototype.initInfoPanel.call(this,container);
     let potionWrap = Util.CreateDom('<div class="_potionWrap"></div>', this._html['wrap']);
     let potion = [];
     potion[0] = Util.CreateDom('<div class="_potion _potionGood"></div>', potionWrap);
@@ -169,4 +169,4 @@ Witch.prototype.initActionPanel = function (actionPanel, playerInfo){
     });
 };
 
-module.exports = Werewolf;
+module.exports = Witch;
