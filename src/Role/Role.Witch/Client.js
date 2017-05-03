@@ -137,8 +137,8 @@ Witch.prototype.actionResult = function (dat){
 Witch.prototype.update = function (aliveListArr, dat){
     Basic.prototype.update.call(this,aliveListArr, dat);
     this.potion = [dat[0], dat[1]];
-    this._html['potion'][0].innerHTML = 'x '+this.potion[0];
-    this._html['potion'][1].innerHTML = 'x '+this.potion[1];
+    this._html['potion'][0].innerHTML = this.potion[0];
+    this._html['potion'][1].innerHTML = this.potion[1];
 };
 
 Witch.prototype.initInfoPanel = function (container){

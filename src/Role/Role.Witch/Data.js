@@ -5,7 +5,7 @@ var Data = {
     Code: ROLECODE.WITCH,
     Name: 'Witch',
     Description: 'You have 2 potions. One to save the werewolves\'s victim, one to eliminate a player. You can only use 1 potion in the same night.',
-    Instruction: '',
+    Instruction: 'Use potion at night',
     Status:{
         /* name: number */
     }

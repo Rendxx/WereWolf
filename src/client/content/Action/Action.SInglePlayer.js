@@ -20,6 +20,7 @@ SinglePlayer.prototype.constructor = SinglePlayer;
 
 SinglePlayer.prototype.setup = function (container, width, height){
     Basic.prototype.setup.call(this, container);
+    this._setupHtml();
     this.resize(width, height);
 };
 
