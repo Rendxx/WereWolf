@@ -5,6 +5,7 @@ var ROLEDATA = require('./Data.js');
 var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
 var INFO2 = require('./Info.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
+var ATTR = require('./Attr.js');
 require('./Client.less');
 
 var Basic = function () {

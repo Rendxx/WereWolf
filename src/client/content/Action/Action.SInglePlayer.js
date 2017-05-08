@@ -59,7 +59,7 @@ SinglePlayer.prototype.hide = function (){
 };
 
 SinglePlayer.prototype._setupHtml = function (){
-    Util.EmptyDom(this.container);
+    if (this.html['wrap']) this.container.removeChild(this.html['wrap']);
     let wrap = document.createElement("DIV");
     wrap.className = CSS.wrap;
     wrap.innerHTML =  [
@@ -73,8 +73,8 @@ SinglePlayer.prototype._setupHtml = function (){
             '<div class="_content"></div>',
             '<div class="_btns">',
                 '<div class="_btn _btn_yes">YES</div>',
-                '<div class="_btn _btn_no">NO</div>',
-                '<div class="_btn _btn_ok">OK</div>',
+                '<div class="_btn _btn_no">N O</div>',
+                '<div class="_btn _btn_ok">O K</div>',
             '</div>',
         '</div>'
     ].join('');

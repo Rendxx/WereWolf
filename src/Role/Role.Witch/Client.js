@@ -10,8 +10,10 @@ var Action = {
     PlayerList : require('CLIENT/content/Action/Action.PlayerList.js'),
     SinglePlayer : require('CLIENT/content/Action/Action.SinglePlayer.js')
 };
+var ATTR = require('./Attr.js');
 
 require('./Client.less');
+require('./Action.less');
 
 var Witch = function () {
     Basic.call(this);
@@ -30,7 +32,7 @@ Witch.prototype.active = function (aliveListArr, dat){
         this.actived = true;
         InfoBox.phase({
             title: 'Witch',
-            content: 'Save a player with good potion. Or eliminate one with bad potion.',
+            content: 'Heal a player or eliminate one instead.',
             className: 'info_client_phase_witch'
         });
         this._action.show();
@@ -39,9 +41,7 @@ Witch.prototype.active = function (aliveListArr, dat){
     let canHeal = Number(dat[0]),
         victim = Number(dat[1]);
 
-
-    this._action.components['potionGood'].update(dat[0]);
-    this._action.components['potionBad'].update(aliveListArr);
+    this._showPotionGood(aliveListArr, canHeal, victim);
 };
 
 Witch.prototype._showPotionGood = function (aliveListArr, canHeal, victim){
@@ -84,7 +84,7 @@ Witch.prototype._showPotionGood = function (aliveListArr, canHeal, victim){
     }
 };
 
-Witch.prototype._showPotionGood = function (aliveListArr, canPoison, isHealed){
+Witch.prototype._showPotionBad = function (aliveListArr, canPoison, isHealed){
     if (!canPoison){
         this._action.components['potionBad'].update({
             className: 'action_singlePlayer_witch_cantPoison',

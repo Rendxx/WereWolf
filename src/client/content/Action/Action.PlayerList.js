@@ -107,7 +107,7 @@ PlayerList.prototype.hide = function (){
 };
 
 PlayerList.prototype._setupHtml = function (){
-    Util.EmptyDom(this.container);
+    if (this.html['wrap']) this.container.removeChild(this.html['wrap']);
     this.html['wrap'] = Util.CreateDom('<div class="action_playerList"></div>', this.container);
     this._setupEnterScreen(this.html['wrap']);
     this._setupPlayerList(this.html['wrap']);
