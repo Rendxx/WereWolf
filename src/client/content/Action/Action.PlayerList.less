@@ -41,7 +41,7 @@
         position: absolute;
         overflow: hidden;
         z-index:20;
-        background-color: #111;
+        background-color: #000;
         opacity: 0;
         visibility: hidden;
         transition: 0.2s;
@@ -61,14 +61,16 @@
             width:240px;
 
             ._icon{
-                width:160px;
-                height:160px;
+                width:220px;
+                height:220px;
                 overflow: visible;
                 text-align: center;
                 position:relative;
                 top:0;
                 left:0;
                 margin:0 auto 10px;
+                background-position: center center;
+                background-size: contain;
             }
             ._content{
                 width:100%;
@@ -98,6 +100,7 @@
                 box-shadow: 0 0 5px #000;
                 font-family: Arial;
                 cursor: pointer;
+                border-radius:3px;
             }
         }
     }

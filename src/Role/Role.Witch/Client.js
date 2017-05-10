@@ -50,7 +50,7 @@ Witch.prototype._showPotionGood = function (aliveListArr, canHeal, victim){
             className: 'action_singlePlayer_witch_noPotion',
             content: 'You don\'t have potion to heal.',
             isAvailable: false,
-            isOk: function (){
+            onOk: function (){
                 this._showPotionBad(aliveListArr, true, false);
             }.bind(this)
         });
@@ -62,7 +62,7 @@ Witch.prototype._showPotionGood = function (aliveListArr, canHeal, victim){
             number: p[0],
             name: p[1],
             isAvailable: false,
-            isOk: function (){
+            onOk: function (){
                 this._showPotionBad(aliveListArr, true, false);
             }.bind(this)
         });
@@ -74,39 +74,43 @@ Witch.prototype._showPotionGood = function (aliveListArr, canHeal, victim){
             number: p[0],
             name: p[1],
             isAvailable: true,
-            isYes: function (){
+            onYes: function (){
                 this._showPotionBad(aliveListArr, false, true);
             }.bind(this),
-            isNo: function (){
+            onNo: function (){
                 this._showPotionBad(aliveListArr, true, false);
             }.bind(this)
         });
     }
+    this._action.components['potionGood'].show();
 };
 
 Witch.prototype._showPotionBad = function (aliveListArr, canPoison, isHealed){
+    this._action.components['potionGood'].hide();
     if (!canPoison){
-        this._action.components['potionBad'].update({
+        this._action.components['potionBad'].reset({
             className: 'action_singlePlayer_witch_cantPoison',
             content: 'You have already used a potion tonight.',
             aliveListArr: aliveListArr,
             isAvailable: false
         });
     } else if (this.potion[1]===0){
-        this._action.components['potionBad'].update({
+        this._action.components['potionBad'].reset({
             className: 'action_singlePlayer_witch_noPoison',
             content: 'You don\'t have potion to poison.',
             aliveListArr: aliveListArr,
             isAvailable: false
         });
     } else{
-        this._action.components['potionBad'].update({
+        this._action.components['potionBad'].reset({
             className: 'action_singlePlayer_witch_poison',
             content: 'You can poison a player with your potion. Choose one from the list or select "cancel" to do nothing.',
             aliveListArr: aliveListArr,
             isAvailable: true
         });
     }
+    this._action.components['potionBad'].update();
+    this._action.components['potionBad'].show();
 };
 
 

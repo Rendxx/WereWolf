@@ -59,6 +59,7 @@ PlayerList.prototype.reset = function (opts){
 };
 
 PlayerList.prototype.update = function (opts){
+    opts=opts||{};
     this._werewolfArr=opts.werewolf;
     this._voteArr=opts.vote;
     this._update();

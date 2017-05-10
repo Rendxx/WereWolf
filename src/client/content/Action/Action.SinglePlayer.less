@@ -10,6 +10,14 @@
     top:0;
     left:0;
     z-index:20;
+    visibility: hidden;
+    transition: 0.2s;
+    backface-visibility: hidden;
+    
+    &._show {
+        opacity: 1;
+        visibility: visible;
+    }
 
     ._inner{
         position:absolute;
@@ -99,7 +107,6 @@
             position:relative;
             top:0;
             left:0;
-            border-top: 1px dashed #333;
 
             ._btn{
                 position:absolute;
@@ -109,10 +116,13 @@
                 line-height:40px;
                 text-align: center;
                 color:#000;
-                font-size: 16px;
+                font-size: 12px;
                 background-color: #eee;
                 box-shadow: 0 0 5px #000;
                 cursor: pointer;
+                font-family: Arial;
+                border-radius:3px;
+                display: none;
 
                 &._btn_yes{
                     left:6px;
@@ -123,6 +133,10 @@
                 &._btn_ok{
                     left:50%;
                     margin-left:-60px;
+                }
+
+                &._show{
+                    display: block;
                 }
             }
         }

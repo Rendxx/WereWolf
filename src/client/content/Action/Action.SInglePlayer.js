@@ -34,13 +34,13 @@ SinglePlayer.prototype.update = function (opts){
     this._onNo = opts.onNo;
     this._onOk = opts.onOk;
     if (isAvailable===true){
-        this.html['yes'].style.display = 'block';
-        this.html['no'].style.display = 'block';
-        this.html['ok'].style.display = 'none';
+        this.html['yes'].classList.add(CSS.show);
+        this.html['no'].classList.add(CSS.show);
+        this.html['ok'].classList.remove(CSS.show);
     }else{
-        this.html['yes'].style.display = 'none';
-        this.html['no'].style.display = 'none';
-        this.html['ok'].style.display = 'block';
+        this.html['yes'].classList.remove(CSS.show);
+        this.html['no'].classList.remove(CSS.show);
+        this.html['ok'].classList.add(CSS.show);
     }
     this.html['number'].innerHTML = number;
     this.html['name'].innerHTML = name;

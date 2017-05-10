@@ -52,6 +52,7 @@
         else if (k===1) window.msg('2|5|HOST|2|[1,4,1,"'+playerAlive+'",[0,1],[1,1]]');
         else if (k===2) window.msg('2|5|HOST|2|[1,4,1,"'+playerAlive+'",[0,0],[1,1]]');
         else if (k===3) window.msg('2|5|HOST|2|[1,4,1,"'+playerAlive+'",[1,1],[1,5]]');
+        else if (k===4) window.msg('2|5|HOST|2|[1,4,1,"'+playerAlive+'",[1,1],[0,5]]');
         else window.msg('2|5|HOST|2|[1,4,1,"'+playerAlive+'",[1,1],[1,2]]');
       },
       5: function (){   // hunter
