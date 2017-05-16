@@ -147,6 +147,7 @@ Witch.prototype.update = function (aliveListArr, dat){
 
 Witch.prototype.initInfoPanel = function (container){
     Basic.prototype.initInfoPanel.call(this,container);
+    this._html['wrap'].classList.add('_roleInfo_witch');
     let potionWrap = Util.CreateDom('<div class="_potionWrap"></div>', this._html['wrap']);
     let potion = [];
     potion[0] = Util.CreateDom('<div class="_potion _potionGood"></div>', potionWrap);

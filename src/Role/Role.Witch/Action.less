@@ -2,16 +2,12 @@
     &.action_singlePlayer_witch_noPotion{
         ._inner{
             ._numberWrap{
-                height: 240px;
-                width:240px;
-                ._bg{
+                height: 200px;
+                width: 200px;
+                ._effort{
                     opacity: 1;
                     background-image: url('./Image/witch-action-no-good-potion.png');
                 }
-            }
-
-            ._name{
-                display:none;
             }
         }
     }
@@ -43,23 +39,29 @@
     .action_playerList_enterScreen{
         &.action_singlePlayer_witch_poison{
             ._inner{
-                ._icon{
-                    background-image: url('./Image/witch-action-bad-potion.png');
+                ._iconWrap{
+                    ._icon{
+                        background-image: url('./Image/witch-action-bad-potion.png');
+                    }
                 }
             }
         }
         &.action_singlePlayer_witch_cantPoison{
             ._inner{
-                ._icon{
-                    background-image: url('./Image/witch-action-ignore-bad-potion.png');
+                ._iconWrap{
+                    ._icon{
+                        background-image: url('./Image/witch-action-ignore-bad-potion.png');
+                    }
                 }
             }
         }
 
         &.action_singlePlayer_witch_noPoison{
             ._inner{
-                ._icon{
-                    background-image: url('./Image/witch-action-no-bad-potion.png');
+                ._iconWrap{
+                    ._icon{
+                        background-image: url('./Image/witch-action-no-bad-potion.png');
+                    }
                 }
             }
         }

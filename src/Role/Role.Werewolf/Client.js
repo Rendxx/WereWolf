@@ -71,6 +71,11 @@ Werewolf.prototype.actionResult = function (dat){
     }
 };
 
+Werewolf.prototype.initInfoPanel = function (container){
+    Basic.prototype.initInfoPanel.call(this,container);
+    this._html['wrap'].classList.add('_roleInfo_werewolf');
+};
+
 Werewolf.prototype.initActionPanel = function (actionPanel, playerInfo){
     Basic.prototype.initActionPanel.call(this,actionPanel, playerInfo);
     let playerList = new Action.PlayerList(this.playerIdx, playerInfo, 'Choose your target');

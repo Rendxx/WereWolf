@@ -121,7 +121,10 @@ PlayerList.prototype._setupEnterScreen = function (container){
     wrap.className = CSS.enterScreen;
     wrap.innerHTML =  [
         '<div class="_inner">',
-            '<div class="_icon"></div>',
+            '<div class="_iconWrap">',
+                '<div class="_icon"></div>',
+                '<div class="_bg"></div>',
+            '</div>',
             '<div class="_content"></div>',
             '<div class="_btn_ok">O K</div>',
         '</div>'
@@ -286,7 +289,7 @@ PlayerList.prototype._addPlayer = function (idx, number, name, pkg, onSelect){
 };
 
 PlayerList.prototype._addAbstain = function (pkg, onSelect){
-    pkg['name'].innerHTML = 'GIVE UP';
+    pkg['name'].innerHTML = 'CANCEL';
     pkg['inner'].classList.add(CSS.alive);
     pkg['inner'].classList.add(CSS.abstain);
     pkg['inner'].classList.remove(CSS.empty);
