@@ -91,21 +91,21 @@ Witch.prototype._showPotionBad = function (aliveListArr, canPoison, isHealed){
         this._action.components['potionBad'].reset({
             className: 'action_singlePlayer_witch_cantPoison',
             content: 'You have already used a potion tonight.',
-            aliveListArr: aliveListArr,
+            playerAlive: aliveListArr,
             isAvailable: false
         });
     } else if (this.potion[1]===0){
         this._action.components['potionBad'].reset({
             className: 'action_singlePlayer_witch_noPoison',
             content: 'You don\'t have potion to poison.',
-            aliveListArr: aliveListArr,
+            playerAlive: aliveListArr,
             isAvailable: false
         });
     } else{
         this._action.components['potionBad'].reset({
             className: 'action_singlePlayer_witch_poison',
             content: 'You can poison a player with your potion. Choose one from the list or select "cancel" to do nothing.',
-            aliveListArr: aliveListArr,
+            playerAlive: aliveListArr,
             isAvailable: true
         });
     }
@@ -116,26 +116,37 @@ Witch.prototype._showPotionBad = function (aliveListArr, canPoison, isHealed){
 
 Witch.prototype.actionResult = function (dat){
     this.inactive();
-    if (dat[0]==-1){
+    if (dat[0]!=-1){
+        let p = this._playerInfo[dat[0]];
         InfoBox.actionResult({
-            content: 'You did not murder anyone this night',
-            className: 'info_client_result_werewolf_hideNumber',
+            content: 'This player has been healed',
+            number: p[0],
+            name: p[1],
+            className: 'info_client_result_witch_healed',
+            callback: function() {
+                this._action.hide();
+            }.bind(this)
+        });
+    } else if (dat[1]!=-1) {
+        let p = this._playerInfo[dat[1]];
+        InfoBox.actionResult({
+            content: 'This player has been poisoned',
+            number: p[0],
+            name: p[1],
+            className: 'info_client_result_witch_poisoned',
             callback: function() {
                 this._action.hide();
             }.bind(this)
         });
     } else {
-        var p = this._action.components['playerList'].playerInfo[dat[0]];
         InfoBox.actionResult({
-            content: 'This player has been murdered',
-            number: p[0],
-            name: p[1],
-            className: 'info_client_result_werewolf',
+            content: 'You did nothing this night',
+            className: 'info_client_result_witch_hideNumber',
             callback: function() {
                 this._action.hide();
             }.bind(this)
         });
-    }
+    } 
 };
 
 Witch.prototype.update = function (aliveListArr, dat){

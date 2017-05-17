@@ -13,57 +13,55 @@ var Action = {
 require('./Client.less');
 require('./Action.less');
 
-var Werewolf = function () {
+var Seer = function () {
     Basic.call(this);
     this.code = ROLEDATA.Code;
     this.name = ROLEDATA.Name;
     this.description = ROLEDATA.Description;
     this.instruction = ROLEDATA.Instruction;
 };
-Werewolf.prototype = Object.create(Basic.prototype);
-Werewolf.prototype.constructor = Werewolf;
+Seer.prototype = Object.create(Basic.prototype);
+Seer.prototype.constructor = Seer;
 
-Werewolf.prototype.active = function (aliveListArr, dat){
+Seer.prototype.active = function (aliveListArr, dat){
     if (!this.alive) return;
     if (!this.actived){
         this.actived = true;
         InfoBox.phase({
-            title: 'Werewolf',
-            content: 'Choose the victim with your companions.',
-            className: 'info_client_phase_werewolf'
+            title: 'Seer',
+            content: 'Expose the real role of the werewolvies.',
+            className: 'info_client_phase_seer'
         });
         this._action.show();
         this._action.components['playerList'].reset({
             playerAlive: aliveListArr,
             isAvailable: true,
-            className: 'action_playerList_werewolf',
-            content: 'Choose a victim. The player will be attacked after all werewolf choosing the same target.'
+            className: 'action_playerList_seer',
+            content: 'Choose a player to see whether this one is a werewolf or not.'
         });
         this._action.components['playerList'].show();
     }
-    this._action.components['playerList'].update({
-        werewolf: dat[0],
-        vote: dat[1]
-    });
+    this._action.components['playerList'].update();
 };
 
-Werewolf.prototype.actionResult = function (dat){
+Seer.prototype.actionResult = function (dat){
     this.inactive();
     if (dat[0]==-1){
         InfoBox.actionResult({
-            content: 'You did not murder anyone this night',
-            className: 'info_client_result_werewolf_hideNumber',
+            content: 'You did not see anyone',
+            className: 'info_client_result_seer_hideNumber',
             callback: function() {
                 this._action.hide();
             }.bind(this)
         });
     } else {
-        let p = this._playerInfo[dat[0]];
+        let p = this._playerInfo[dat[0]],
+            isGood = dat[1]==0;
         InfoBox.actionResult({
-            content: 'This player has been murdered',
+            content: 'This player is '+(isGood?'NOT ':'')+'a werewolf',
             number: p[0],
             name: p[1],
-            className: 'info_client_result_werewolf',
+            className: isGood?'info_client_result_seer_good':'info_client_result_seer_bad',
             callback: function() {
                 this._action.hide();
             }.bind(this)
@@ -71,12 +69,12 @@ Werewolf.prototype.actionResult = function (dat){
     }
 };
 
-Werewolf.prototype.initInfoPanel = function (container){
+Seer.prototype.initInfoPanel = function (container){
     Basic.prototype.initInfoPanel.call(this,container);
-    this._html['wrap'].classList.add('_roleInfo_werewolf');
+    this._html['wrap'].classList.add('_roleInfo_seer');
 };
 
-Werewolf.prototype.initActionPanel = function (actionPanel, playerInfo){
+Seer.prototype.initActionPanel = function (actionPanel, playerInfo){
     Basic.prototype.initActionPanel.call(this,actionPanel, playerInfo);
     let playerList = new Action.PlayerList(this.playerIdx, playerInfo, 'Choose your target');
     let that = this;
@@ -93,4 +91,4 @@ Werewolf.prototype.initActionPanel = function (actionPanel, playerInfo){
     });
 };
 
-module.exports = Werewolf;
+module.exports = Seer;

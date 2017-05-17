@@ -6,6 +6,7 @@ Role[ROLECODE.NONE] = require('./Role.Basic/Client.js');
 Role[ROLECODE.VILLAGER] = require('./Role.Villager/Client.js');
 Role[ROLECODE.WEREWOLF] = require('./Role.Werewolf/Client.js');
 Role[ROLECODE.WITCH] = require('./Role.Witch/Client.js');
+Role[ROLECODE.SEER] = require('./Role.Seer/Client.js');
 
 var RoleFacory = function (roleId){
     if (!Role.hasOwnProperty(roleId)) throw new Error('Unexpect Role: '+roleId);

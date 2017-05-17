@@ -66,7 +66,7 @@ PlayerList.prototype.update = function (opts){
 };
 
 PlayerList.prototype._update = function (){
-    if (this._playerAliveArr==null||this._voteArr==null) return;
+    if (this._playerAliveArr==null) return;
     let _html = this.html['playerList'];
     for (let i in _html['player']){
         if (this._playerAliveArr[i]==='1') _html['player'][i].inner.classList.add(CSS.alive);
