@@ -113,7 +113,6 @@ Witch.prototype._showPotionBad = function (aliveListArr, canPoison, isHealed){
     this._action.components['potionBad'].show();
 };
 
-
 Witch.prototype.actionResult = function (dat){
     this.inactive();
     if (dat[0]!=-1){

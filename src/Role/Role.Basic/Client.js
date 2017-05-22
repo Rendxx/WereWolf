@@ -64,7 +64,7 @@ Basic.prototype.active = function (aliveListArr, dat){
 Basic.prototype.inactive = function (){
     this.actived = false;
     this._action.hide();
-    InfoBox.hide();
+    //InfoBox.hide();
 };
 
 /**
@@ -75,11 +75,13 @@ Basic.prototype.inactive = function (){
 Basic.prototype.update = function (aliveListArr, dat){
     var t = aliveListArr[this.playerIdx]==='1';
     if (t===false && this.alive){
-        InfoBox.alert2({
+        InfoBox.phase({
             title: 'You Are Dead',
             content: 'Rest In Peace',
             className: 'info_client_phase_dead'
         });
+    } else{
+
     }
     this.alive = t;
 };
@@ -116,6 +118,7 @@ Basic.prototype.initInfoPanel = function (container){
 Basic.prototype.initActionPanel = function (actionPanel, playerInfo){
     this._action = actionPanel;
     this._playerInfo = playerInfo;
+    this._action.reset({});
 };
 
 /**

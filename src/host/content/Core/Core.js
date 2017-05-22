@@ -5,7 +5,6 @@
     - It keeps sending game data to renderer, server and clients.
     - It monitors game process and decides the next status of the game.
 */
-﻿
 
 var ACTION = require('GLOBAL/content/ActionCode.js');
 var ROLECODE = require('GLOBAL/content/RoleCode.js');
