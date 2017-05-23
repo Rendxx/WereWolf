@@ -6,6 +6,7 @@ var Data = {
     Name: 'Basic',
     Description: 'This is a basic role. Descrip the role function here in HTML format.',
     Instruction: 'Tell player about what he can do in simple words.',
+    Portrait: require('./Image/Portrait.png'),
     Status:{
         /* name: number */
     }

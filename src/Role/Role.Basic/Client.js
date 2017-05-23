@@ -27,7 +27,7 @@ Basic.prototype.constructor = Basic;
 
 /**
  * setup basic player data
- * @param playerIdx player index
+ * @param {number} playerIdx player index
  */
 Basic.prototype.setup = function (playerIdx){
     this.playerIdx = playerIdx;
@@ -51,8 +51,8 @@ Basic.prototype.dayTime = function (){
 /**
  * Show and update action panel.
  * Be triggered when this player active at night.
- * @param aliveListArr alive list of all player
- * @param dat action data
+ * @param {array} aliveListArr alive list of all player
+ * @param {object} dat action data
  */
 Basic.prototype.active = function (aliveListArr, dat){
     this.actived = true;
@@ -69,8 +69,8 @@ Basic.prototype.inactive = function (){
 
 /**
  * Update player status.
- * @param aliveListArr alive list of all player
- * @param dat palyer status
+ * @param {array} aliveListArr alive list of all player
+ * @param {object} dat palyer status
  */
 Basic.prototype.update = function (aliveListArr, dat){
     var t = aliveListArr[this.playerIdx]==='1';
@@ -88,14 +88,14 @@ Basic.prototype.update = function (aliveListArr, dat){
 
 /**
  * Show action result panel.
- * @param dat action result
+ * @param {object} dat action result
  */
 Basic.prototype.actionResult = function (dat){
 };
 
 /**
  * Init information panel.
- * @param container container for information panel
+ * @param {dom} container container for information panel
  */
 Basic.prototype.initInfoPanel = function (container){
     let wrap = Util.CreateDom('<div class="_roleInfo"></div>', container);
@@ -112,8 +112,8 @@ Basic.prototype.initInfoPanel = function (container){
 
 /**
  * Init action panel.
- * @param actionPanel actionPanel instance
- * @param playerInfo all player information
+ * @param {Panel.Action} actionPanel actionPanel instance
+ * @param {array} playerInfo all player information
  */
 Basic.prototype.initActionPanel = function (actionPanel, playerInfo){
     this._action = actionPanel;

@@ -5,9 +5,13 @@ var Basic = function (sendFunction) {
     this.name = '';
     this.icon = '';
     this.description = '';
+    this.timeout = 60000;
+    this.skip = false;
+
+
     this.playerList = [];
     this.phasePlayerIdx = [];
-    this.number = 1;
+    this.playerNumber = 1;
     this._CharacterClass = null;
 
     this._setuped = false;
@@ -22,7 +26,7 @@ Basic.prototype.constructor = Basic;
  */
 Basic.prototype.increasePlayer = function (){
     if (this._setuped) return;
-    this.number++;
+    this.playerNumber++;
 };
 
 /**
@@ -31,7 +35,7 @@ Basic.prototype.increasePlayer = function (){
  */
 Basic.prototype.decreasePlayer = function (){
     if (this._setuped) return;
-    this.number--;
+    this.playerNumber--;
 };
 
 /**
@@ -44,6 +48,7 @@ Basic.prototype.setup = function (playerList){
     for (let i=0;i<playerList.length;i++){
         if (playerList[i] instanceof this._CharacterClass){
             this.phasePlayerIdx.push(i);
+            playerList[i].onAction = this.actionHandler.bind(this);
         }
     }
     this._setuped = true;
@@ -53,7 +58,7 @@ Basic.prototype.setup = function (playerList){
  * Reset the phase
  */
 Basic.prototype.reset = function (number, playerList){
-    this.number = number;
+    this.playerNumber = number;
     this.setup(playerList);
 };
 
@@ -75,6 +80,13 @@ Basic.prototype.inactive = function (){
  * Update message
  */
 Basic.prototype.update = function (){
+    if (!this._setuped) return;
+};
+
+/**
+ * Handle action from player
+ */
+Basic.prototype.actionHandler = function (playerIdx, dat){
     if (!this._setuped) return;
 };
 
