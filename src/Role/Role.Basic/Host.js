@@ -19,7 +19,6 @@ var Basic = function () {
     this.alive = true;
     this.actived = false;
     this._aliveList = null;
-    this.attr = 0;
 
     this.onAction = null;
 };
@@ -31,7 +30,6 @@ Basic.prototype.constructor = Basic;
  * @param {number} attr attribute bit-array
  */
 Basic.prototype.setAttr = function (attr){
-    this.attr = attr;
 };
 
 /**
@@ -43,6 +41,18 @@ Basic.prototype.setup = function (player){
     this.player.onAction = function (playerIdx, dat){
         this.onAction && this.onAction(playerIdx, dat);
     };
+};
+
+/**
+ * reset Role instance
+ * @param {object} opts role data options
+ */
+Basic.prototype.reset = function (opts){
+    this.setup(opts.player);
+    this.alive = opts.alive;
+    this.actived = opts.actived;
+    this._aliveList = opts.aliveList;
+    this.status = opts.status;
 };
 
 /**

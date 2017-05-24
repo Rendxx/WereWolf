@@ -14,4 +14,15 @@ var Werewolf = function () {
 Werewolf.prototype = Object.create(Basic);
 Werewolf.prototype.constructor = Werewolf;
 
+/**
+ * Update player status. 
+ * @param {object} opts {werewolf: [], vote:[]}
+ */
+Werewolf.prototype.updateStatus = function (opts){
+    this.status = [
+        opts.werewolf,
+        opts.vote
+    ];
+};
+
 module.exports = Werewolf;
