@@ -20,6 +20,7 @@ require('./Render.Main.less');
 var HTML = {
     panel: '<div class="panelList"></div>',
     action: '<div class="actions"></div>',
+    refreshBtn: '<div class="refreshBtn"></div>'
 };
 
 var CSS = {
@@ -141,6 +142,15 @@ var Main = function (container) {
         container.innerHTML = '';
         html['panel'] = Util.CreateDom(HTML.panel, container);
         html['action'] = Util.CreateDom(HTML.action, container);
+        html['refreshBtn'] = Util.CreateDom(HTML.refreshBtn, container);
+        html['refreshBtn'].addEventListener('click', function(e){
+            InfoBox.check({
+                content: 'Do you want to refresh your page?',
+                callbackYes: function (){
+                    window.location.reload();
+                }
+            });
+        },false);
     };
 
     var resize = function (){
