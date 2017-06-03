@@ -29,9 +29,9 @@
       role=role||2;
       window.msg('2|4|HOST|1|[5,[6,"高俊敏",'+role+'],'+JSON.stringify(playerInfo)+']');
     },
-    update2 : function (id){
+    update2 : function (phase){
       phase=phase||3;
-      window.msg('2|5|HOST|2|[0,3,0,'+playerStatus+',[],[]]');
+      window.msg('2|5|HOST|2|[0,'+phase+',0,'+playerAlive+',[],[]]');
     },
     update : {
       0: function (){   // not active

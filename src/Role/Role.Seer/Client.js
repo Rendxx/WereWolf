@@ -80,11 +80,21 @@ Seer.prototype.initActionPanel = function (actionPanel, playerInfo){
     let that = this;
     playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
-        that.onActionEnd && that.onActionEnd([idx]);
+        InfoBox.check({
+            content: 'Do you want to check <br/><b>['+number+'] '+name+'</b>?',
+            callbackYes: function (){
+                that.onActionEnd && that.onActionEnd([idx]);
+            }
+        });
     };
     playerList.onAbstain = function (){
         if (!that.actived) return;
-        that.onActionEnd && that.onActionEnd([-1]);
+        InfoBox.check({
+            content: 'Do you want to skip this turn?',
+            callbackYes: function (){
+                that.onActionEnd && that.onActionEnd([-1]);
+            }
+        });
     };
     this._action.reset({
         'playerList': playerList
