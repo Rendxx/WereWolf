@@ -10,6 +10,7 @@ var Idiot = function () {
     this.description = ROLEDATA.Description;
     this.instruction = ROLEDATA.Instruction;
     this.portrait = ROLEDATA.Portrait;
+    this.isGood = ROLEDATA.IsGood;
 
     this.status = [0]; // [exposed?1:0]
 };
@@ -21,7 +22,7 @@ Idiot.prototype.constructor = Hunter;
  * @param {object} opts {exposed: true/false}
  */
 Idiot.prototype.updateStatus = function (opts){
-    this.status[0] = opts.exposed?1:0;
+    if (opts.hasOwnProperty('exposed')) this.status[0] = opts['exposed']?1:0;
 };
 
 module.exports = Idiot;

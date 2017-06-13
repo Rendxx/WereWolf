@@ -6,6 +6,7 @@ var Data = {
     Name: 'Werewolf',
     Description: 'Wake up at night and murder somebody.',
     Instruction: 'Wake up at night and murder somebody.',
+    IsGood: false,
     Status:{
         /* name: number */
     }

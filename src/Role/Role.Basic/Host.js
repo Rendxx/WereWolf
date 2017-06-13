@@ -13,6 +13,7 @@ var Basic = function () {
     this.description = ROLEDATA.Description;
     this.instruction = ROLEDATA.Instruction;
     this.portrait = ROLEDATA.Portrait;
+    this.isGood = ROLEDATA.IsGood;
 
     this.status = null;
     this.player = null;

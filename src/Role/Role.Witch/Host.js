@@ -11,6 +11,7 @@ var Witch = function () {
     this.description = ROLEDATA.Description;
     this.instruction = ROLEDATA.Instruction;
     this.portrait = ROLEDATA.Portrait;
+    this.isGood = ROLEDATA.IsGood;
 
     this.status = [1,1,0,0];  // [good potion #, bad potion #, can self-healing, can self-healing 1st night]
 };
@@ -29,6 +30,11 @@ Witch.prototype.setAttr = function (attr){
 Witch.prototype.updateStatus = function (opts){
     if (opts.hasOwnProperty('good')) this.status[0] = opts['good'];
     if (opts.hasOwnProperty('bad')) this.status[1] = opts['bad'];
+};
+
+Witch.prototype.goodPotionNumber = function (){
+    this.status[2] = ((attr&ATTR.SELF_HEAL)>0)?1:0;
+    this.status[3] = ((attr&ATTR.SELF_HEAL_NIGHT_ONE)>0)?1:0;
 };
 
 module.exports = Witch;

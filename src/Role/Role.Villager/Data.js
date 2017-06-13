@@ -6,6 +6,7 @@ var Data = {
     Name: 'Villager',
     Description: 'You don\'t have any special power except thinking and the right to vote.',
     Instruction: '',
+    IsGood: true,
     Status:{}
 };
 

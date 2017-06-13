@@ -6,6 +6,7 @@ var Data = {
     Name: 'Seer',
     Description: 'Check whether a player is a werewolf or not.',
     Instruction: 'Check whether a player is a werewolf or not.',
+    IsGood: true,
     Status:{
         /* name: number */
     }

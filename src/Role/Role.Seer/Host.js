@@ -10,6 +10,7 @@ var Seer = function () {
     this.description = ROLEDATA.Description;
     this.instruction = ROLEDATA.Instruction;
     this.portrait = ROLEDATA.Portrait;
+    this.isGood = ROLEDATA.IsGood;
 
     this.status = [];   // list of [playerIdx, werewolf?1:0]
 };

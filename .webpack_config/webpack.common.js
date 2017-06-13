@@ -66,6 +66,11 @@ module.exports = {
         test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
         exclude: /node_modules/,
         use: ['file-loader?name=../Font/[name].[ext]']
+      },
+      {
+        test: /\.mp3$/,
+        exclude: /node_modules/,
+        use: ['file-loader?name=../Sound/[name].[ext]']
       }
     ]
   },
