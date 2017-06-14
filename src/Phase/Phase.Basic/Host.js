@@ -2,6 +2,7 @@
 
 var DATA = require('./Data.js');
 var ATTR = require('../PhaseAttr.js');
+var Role = require('ROLE/Role.Host.js');
 
 var Basic = function (phaseManager) {
     this._phaseManager = phaseManager;
@@ -14,6 +15,12 @@ var Basic = function (phaseManager) {
     this.aliveNumber = 0;
     this.actionDat = {};
     this.onActionComplete = null;
+
+    if (this.data.Role.length>0){
+        for (let i=0;i<this.data.MinPlayer;i++){
+            this.characters.push(Role(this.data.Role[0]));
+        }
+    }
 };
 Basic.prototype = Object.create(null);
 Basic.prototype.constructor = Basic;
@@ -22,10 +29,10 @@ Basic.prototype.constructor = Basic;
  * Increase the player of phase number by 1
  * Only available before setup
  */
-Basic.prototype.addCharacter = function (){
-    if (this._setuped) return;
-    if (this._CharacterClass === null) return;
-    this.characters.push(new this._CharacterClass());
+Basic.prototype.addCharacter = function (roleIdx){
+    if (this._setuped || this.characters.length>=this.data.MaxPlayer) return;
+    if (roleIdx>=this.data.Role.length || roleIdx<0) return;
+    this.characters.push(Role(this.data.Role[roleIdx]));
 };
 
 /**
@@ -33,7 +40,7 @@ Basic.prototype.addCharacter = function (){
  * Only available before setup
  */
 Basic.prototype.removeCharacter = function (idx){
-    if (this._setuped) return;
+    if (this._setuped || this.characters.length<=this.data.MinPlayer) return;
     if (idx<0 || idx>= this.characters.length) return;
     this.characters.splice(idx,1);
 };

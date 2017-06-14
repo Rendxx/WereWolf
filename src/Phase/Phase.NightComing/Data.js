@@ -12,6 +12,8 @@ var Data = {
             loop: false,
             volume: 1
         }),
+    MinPlayer: 0,
+    MaxPlayer: 0,
     Timeout: 0,
     Action: ATTR.ACTION.NO,
     Role:[]
