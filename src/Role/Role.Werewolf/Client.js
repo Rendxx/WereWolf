@@ -25,6 +25,10 @@ Werewolf.prototype.constructor = Werewolf;
 
 Werewolf.prototype.active = function (aliveListArr, dat){
     if (!this.alive) return;
+    let actionDat = {
+        werewolf: dat[0],
+        vote: dat[1]
+    };
     if (!this.actived){
         this.actived = true;
         InfoBox.phase({
@@ -41,10 +45,7 @@ Werewolf.prototype.active = function (aliveListArr, dat){
         });
         this._action.components['playerList'].show();
     }
-    this._action.components['playerList'].update({
-        werewolf: dat[0],
-        vote: dat[1]
-    });
+    this._action.components['playerList'].update(actionDat);
 };
 
 Werewolf.prototype.actionResult = function (dat){

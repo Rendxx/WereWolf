@@ -46,8 +46,7 @@ WereWolf.prototype.actionHandler = function (playerIdx, dat){
     }
     this.actionDat.vote[playerIdx] = targetIdx;
     for (let i=0;i<this.characters.length;i++){
-        this.characters[i].updateState(this.actionDat);
-        this.characters[i].active(this.data.Id);
+        this.characters[i].active(this.data.Id, this.actionDat);
     }
     
     // check whether complete
@@ -59,7 +58,8 @@ WereWolf.prototype.actionHandler = function (playerIdx, dat){
     }
     if (vote[val] === this.aliveNumber) {
         this.characters[i].actionResult(this.data.Id, [val]);
-        this.onActionComplete && this.onActionComplete();
+    this.characters[0].actionResult([val]);
+    this.onActionComplete && this.onActionComplete();
     }    
 };
 module.exports = WereWolf;

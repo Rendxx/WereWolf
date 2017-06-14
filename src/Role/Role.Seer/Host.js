@@ -17,6 +17,14 @@ var Seer = function () {
 Seer.prototype = Object.create(Basic);
 Seer.prototype.constructor = Seer;
 
+Seer.prototype.active = function (phase, actionDat){
+    let dat = [
+        actionDat.seer,
+        actionDat.vote
+    ];
+    Basci.prototype.active.call(this, phase, dat);
+};
+
 /**
  * Update player status. 
  * @param {object} opts {playerIdx: is werewolf}

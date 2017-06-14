@@ -1,6 +1,9 @@
 var ATTR = {
-    SELF_HEAL: 1<<0,
-    SELF_HEAL_NIGHT_ONE: 1<<1
+    SELFHEAL:{
+        NO:0,
+        NIGHTONE:1,
+        ALWAYS:2
+    }
 };
 
 module.exports = ATTR;

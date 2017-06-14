@@ -40,8 +40,7 @@ Seer.prototype.actionHandler = function (playerIdx, dat){
     }
     this.actionDat.vote[playerIdx] = targetIdx;
     for (let i=0;i<this.characters.length;i++){
-        this.characters[i].updateState(this.actionDat);
-        this.characters[i].active(this.data.Id);
+        this.characters[i].active(this.data.Id, this.actionDat);
     }
     
     // check whether complete

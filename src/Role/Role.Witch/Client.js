@@ -10,7 +10,6 @@ var Action = {
     PlayerList : require('CLIENT/content/Action/Action.PlayerList.js'),
     SinglePlayer : require('CLIENT/content/Action/Action.SinglePlayer.js')
 };
-var ATTR = require('./Attr.js');
 
 require('./Client.less');
 require('./Action.less');

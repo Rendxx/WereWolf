@@ -40,6 +40,7 @@ Basic.prototype.setAttr = function (attr){
 Basic.prototype.setup = function (player){
     this.player = player;
     this.player.onAction = function (playerIdx, dat){
+        if (!this.alive) return;
         this.onAction && this.onAction(playerIdx, dat);
     };
 };
@@ -57,20 +58,6 @@ Basic.prototype.reset = function (opts){
 };
 
 /**
- * Send inactive message. 
- * @param {number} phase phase id
- */
-Basic.prototype.inactive = function (phase){
-    this.actived = ACTIVECODE.NO;
-    this.player.update({
-        phase: phase,
-        actived: this.actived,
-        alive: this._aliveList,
-        status: this.status
-    });
-};
-
-/**
  * Send active message. 
  * @param {number} phase phase id
  * @param {object} actionDat action data
@@ -83,6 +70,20 @@ Basic.prototype.active = function (phase, actionDat){
         alive: this._aliveList,
         status: this.status,
         action: actionDat
+    });
+};
+
+/**
+ * Send inactive message. 
+ * @param {number} phase phase id
+ */
+Basic.prototype.inactive = function (phase){
+    this.actived = ACTIVECODE.NO;
+    this.player.update({
+        phase: phase,
+        actived: this.actived,
+        alive: this._aliveList,
+        status: this.status
     });
 };
 
@@ -115,6 +116,14 @@ Basic.prototype.updateAliveList = function (aliveList){
  * @param {object} opts
  */
 Basic.prototype.updateStatus = function (opts){
+};
+
+/**
+ * Set the player alive or not. 
+ * @param {boolean} isAlive
+ */
+Basic.prototype.setAlive = function (isAlive){
+    this.alive = isAlive;
 };
 
 /**
