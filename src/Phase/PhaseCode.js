@@ -1,6 +1,5 @@
 var PHASE = {
-    NONE: -1,
-    INIT: 0,
+    BASIC: 0,
     DAY: 1,
     NIGHTCOMING: 2,
     WEREWOLF: 3,
@@ -8,9 +7,10 @@ var PHASE = {
     WITCH: 5,
     HUNTER: 6,
     IDIOT: 7,
-    ELDER: 8,
-    PREDAY: 9,
-    END: 10
+    VILLAGER: 8,
+    ELDER: 9,
+    SUNRAISE: 10,
+    END: 11
 };
 
 module.exports = PHASE;
