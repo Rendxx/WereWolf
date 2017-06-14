@@ -23,4 +23,11 @@ Werewolf.prototype.active = function (phase, actionDat){
     Basci.prototype.active.call(this, phase, dat);
 };
 
+Werewolf.prototype.actionResult = function (phase, rstDat){
+    let dat = [
+        rstDat.victim
+    ];
+    Basci.prototype.actionResult.call(this, phase, dat);
+};
+
 module.exports = Werewolf;

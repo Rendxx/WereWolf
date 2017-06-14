@@ -58,7 +58,9 @@ WereWolf.prototype.actionHandler = function (playerIdx, dat){
     }
     if (vote[val] === this.aliveNumber) {
         this.characters[i].actionResult(this.data.Id, [val]);
-    this.characters[0].actionResult([val]);
+    this.characters[0].actionResult({
+        victim: val
+    });
     this.onActionComplete && this.onActionComplete();
     }    
 };

@@ -34,4 +34,12 @@ Seer.prototype.updateStatus = function (opts){
         this.status.push([i, opts[i]?1:0]);
 };
 
+Seer.prototype.actionResult = function (phase, rstDat){
+    let dat = [
+        rstDat.testIdx,
+        rstDat.isBad?1:0
+    ];
+    Basci.prototype.actionResult.call(this, phase, dat);
+};
+
 module.exports = Seer;

@@ -46,18 +46,21 @@ Seer.prototype.actionHandler = function (playerIdx, dat){
     // check whether complete
     let vote = {};
     let val = -1;
-    let targetRst = -1;
+    let isBad = false;
     for (let key in this.actionDat.vote) {
         val = this.actionDat.vote[key];
         vote[val]= (vote[val]||0)+1;
     }
     if (vote[val] === this.aliveNumber) {
         if (val===-1){
-            targetRst = -1;
+            isBad = false;
         } else {
-            targetRst = this.characters[val].isGood ? 0 : 1;
+            isBad = !this.characters[val].isGood;
         }
-        this.characters[i].actionResult(this.data.Id, [val, targetRst]);
+        this.characters[i].actionResult(this.data.Id, {
+            testIdx:val, 
+            isBad:isBad
+        });
         this.onActionComplete && this.onActionComplete();
     }    
 };
