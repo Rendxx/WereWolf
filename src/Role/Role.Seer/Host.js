@@ -17,12 +17,12 @@ var Seer = function () {
 Seer.prototype = Object.create(Basic);
 Seer.prototype.constructor = Seer;
 
-Seer.prototype.active = function (phase, actionDat){
+Seer.prototype.active = function (generalDat, actionDat){
     let dat = [
         actionDat.seer,
         actionDat.vote
     ];
-    Basci.prototype.active.call(this, phase, dat);
+    Basci.prototype.active.call(this, generalDat, dat);
 };
 
 /**

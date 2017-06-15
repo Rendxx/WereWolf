@@ -3,8 +3,8 @@
 var Basic= require('../Phase.Basic/Host.js');
 var DATA = require('./Data.js');
 
-var Villager = function (phaseManager) {
-    Basic.call(this);
+var Villager = function (dataPkg) {
+    Basic.call(this, dataPkg);
     this.data = DATA;
 };
 Villager.prototype = Object.create(Basic);

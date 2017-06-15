@@ -3,8 +3,8 @@
 var Basic= require('../Phase.Basic/Host.js');
 var DATA = require('./Data.js');
 
-var NightComing = function (phaseManager) {
-    Basic.call(this);
+var NightComing = function (dataPkg) {
+    Basic.call(this, dataPkg);
     this.data = DATA;
 };
 NightComing.prototype = Object.create(Basic);

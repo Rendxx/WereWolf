@@ -3,8 +3,8 @@
 var Basic= require('../Phase.Basic/Host.js');
 var DATA = require('./Data.js');
 
-var WereWolf = function (phaseManager) {
-    Basic.call(this);
+var WereWolf = function (dataPkg) {
+    Basic.call(this, dataPkg);
     this.data = DATA;
     
     this.actionDat = {
@@ -22,6 +22,15 @@ WereWolf.prototype.setup = function (playerList){
         this.actionDat.werewolf.push(playerList[i].playerIdx);
     }
 };
+
+WereWolf.prototype.reset = function (characters){
+    Basic.prototype.setup.reset(this, characters);
+    this.actionDat.werewolf = [];
+    for (let i=0; i<this.characters.length; i++){
+        this.actionDat.werewolf.push(this.characters[i].player.playerIdx);
+    }
+};
+
 
 WereWolf.prototype.active = function (){
     if (!this._setuped) return;
@@ -44,9 +53,10 @@ WereWolf.prototype.actionHandler = function (playerIdx, dat){
             return 0;
         }
     }
+    this.generalDat.aliveList = this.dataPkg.getAliveStr();
     this.actionDat.vote[playerIdx] = targetIdx;
     for (let i=0;i<this.characters.length;i++){
-        this.characters[i].active(this.data.Id, this.actionDat);
+        this.characters[i].active(this.generalDat, this.actionDat);
     }
     
     // check whether complete
@@ -57,7 +67,7 @@ WereWolf.prototype.actionHandler = function (playerIdx, dat){
         vote[val]= (vote[val]||0)+1;
     }
     if (vote[val] === this.aliveNumber) {
-        this.characters[i].actionResult(this.data.Id, [val]);
+        this.characters[i].actionResult(this.generalDat, [val]);
     this.characters[0].actionResult({
         victim: val
     });

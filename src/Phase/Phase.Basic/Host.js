@@ -4,8 +4,8 @@ var DATA = require('./Data.js');
 var ATTR = require('../PhaseAttr.js');
 var Role = require('ROLE/Role.Host.js');
 
-var Basic = function (phaseManager) {
-    this._phaseManager = phaseManager;
+var Basic = function (dataPkg) {
+    this.dataPkg = dataPkg;
 
     this.data = DATA;
     this.characters = [];
@@ -14,6 +14,10 @@ var Basic = function (phaseManager) {
     this._actionCountDownFunc = null;
     this.aliveNumber = 0;
     this.actionDat = {};
+    this.generalDat = {
+        phase: this.data.Id,
+        aliveList: this.dataPkg.getAliveStr()
+    };
     this.onActionComplete = null;
 
     if (this.data.Role.length>0){
@@ -50,12 +54,27 @@ Basic.prototype.removeCharacter = function (idx){
  */
 Basic.prototype.setup = function (playerList){
     if (this._setuped) return;
-    if (playerList.length!==characters.length) throw new Error('Player number not match.');
+    if (playerList.length!==this.characters.length) throw new Error('Player number not match.');
     for (let i=0; i<playerList.length; i++){
-        characters[i].setup(playerList[i]);
-        characters[i].onAction = this.actionHandler.bind(this);
+        this.characters[i].setup(playerList[i]);
+        this.characters[i].onAction = this.actionHandler.bind(this);
     }
     this._setuped = true;
+};
+
+/**
+ * Reset phase
+ */
+Basic.prototype.reset = function (characters){
+    this.characters = characters;
+
+    this._setuped = true;
+    this.actionDat = {};
+    this.aliveNumber = 0;
+    this.generalDat = {
+        phase: this.data.Id,
+        aliveList: this.dataPkg.getAliveStr()
+    };
 };
 
 /**
@@ -82,10 +101,11 @@ Basic.prototype.active = function (){
                 this._actionCountDownFunc = null;
             },this.data.Timeout);
         }
+        this.generalDat.aliveList = this.dataPkg.getAliveStr();
         this.aliveNumber = 0;
         for (let i=0;i<this.characters.length;i++){
             if (this.characters[i].alive) this.aliveNumber++;
-            this.characters[i].active(this.data.Id, this.actionDat);
+            this.characters[i].active(this.generalDat, this.actionDat);
         }
     }
 };
@@ -99,9 +119,9 @@ Basic.prototype.inactive = function (){
         clearTimeout(this._actionCountDownFunc);
         this._actionCountDownFunc = null;
     }
-    
+    this.generalDat.aliveList = this.dataPkg.getAliveStr();
     for (let i=0;i<this.characters.length;i++){
-        this.characters[i].inactive(this.data.Id);
+        this.characters[i].inactive(this.generalDat);
     }
 };
 

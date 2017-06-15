@@ -19,7 +19,6 @@ var Basic = function () {
     this.player = null;
     this.alive = true;
     this.actived = false;
-    this._aliveList = null;
 
     this.onAction = null;
 };
@@ -47,27 +46,37 @@ Basic.prototype.setup = function (player){
 
 /**
  * reset Role instance
- * @param {object} opts role data options
+ * @param {object} dat role data options
  */
-Basic.prototype.reset = function (opts){
+Basic.prototype.reset = function (dat){
     this.setup(opts.player);
-    this.alive = opts.alive;
-    this.actived = opts.actived;
-    this._aliveList = opts.aliveList;
+    this.alive = opts.alive==1;
+    this.actived = opts.actived==1;
     this.status = opts.status;
 };
 
 /**
+ * get Role instance data
+ */
+Basic.prototype.getData = function (){
+    return [
+        this.alive ? 1: 0,
+        this.actived ? 1: 0,
+        this.status,
+    ];
+};
+
+/**
  * Send active message. 
- * @param {number} phase phase id
+ * @param {object} generalDat general data
  * @param {object} actionDat action data
  */
-Basic.prototype.active = function (phase, actionDat){
+Basic.prototype.active = function (generalDat, actionDat){
     this.actived = ACTIVECODE.YES;
     this.player.update({
-        phase: phase,
+        phase: generalDat.phase,
+        alive: generalDat.aliveList,
         actived: this.actived,
-        alive: this._aliveList,
         status: this.status,
         action: actionDat
     });
@@ -75,40 +84,32 @@ Basic.prototype.active = function (phase, actionDat){
 
 /**
  * Send inactive message. 
- * @param {number} phase phase id
+ * @param {object} generalDat general data
  */
-Basic.prototype.inactive = function (phase){
+Basic.prototype.inactive = function (generalDat){
     this.actived = ACTIVECODE.NO;
     this.player.update({
-        phase: phase,
+        phase: generalDat.phase,
+        alive: generalDat.aliveList,
         actived: this.actived,
-        alive: this._aliveList,
         status: this.status
     });
 };
 
 /**
  * Send action result message. 
- * @param {number} phase phase id
+ * @param {object} generalDat general data
  * @param {object} rstDat result data
  */
-Basic.prototype.actionResult = function (phase, rstDat){
+Basic.prototype.actionResult = function (generalDat, rstDat){
     this.actived = ACTIVECODE.RESULT;
     this.player.update({
-        phase: phase,
+        phase: generalDat.phase,
+        alive: generalDat.aliveList,
         actived: this.actived,
-        alive: this._aliveList,
         status: this.status,
         result: rstDat
     });
-};
-
-/**
- * Update alive list. 
- * @param {string} aliveList
- */
-Basic.prototype.updateAliveList = function (aliveList){
-    this._aliveList = aliveList;
 };
 
 /**

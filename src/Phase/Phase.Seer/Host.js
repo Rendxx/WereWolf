@@ -3,8 +3,8 @@
 var Basic= require('../Phase.Basic/Host.js');
 var DATA = require('./Data.js');
 
-var Seer = function (phaseManager) {
-    Basic.call(this);
+var Seer = function (dataPkg) {
+    Basic.call(this, dataPkg);
     this.data = DATA;
 };
 Seer.prototype = Object.create(Basic);
@@ -29,9 +29,9 @@ Seer.prototype.actionHandler = function (playerIdx, dat){
     if (targetIdx===-1){
         isBad = false;
     } else {
-        isBad = !this.characters[targetIdx].isGood;
+        isBad = !this.dataPkg.getCharacter(targetIdx).isGood;
     }
-    this.characters[0].actionResult(this.data.Id, {
+    this.characters[0].actionResult(this.generalDat, {
         testIdx:targetIdx, 
         isBad:isBad
     });

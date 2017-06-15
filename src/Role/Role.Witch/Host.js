@@ -22,20 +22,20 @@ Witch.prototype.setAttr = function (attr) {
     if (opts.hasOwnProperty('SELFHEAL')) this.status[2] = opts['SELFHEAL'];
 };
 
-Witch.prototype.active = function (phase, actionDat){
+Witch.prototype.active = function (generalDat, actionDat){
     let dat = [
         actionDat.canHeal?1:0,
         actionDat.victim
     ];
-    Basci.prototype.active.call(this, phase, dat);
+    Basci.prototype.active.call(this, generalDat, dat);
 };
 
-Witch.prototype.actionResult = function (phase, rstDat){
+Witch.prototype.actionResult = function (generalDat, rstDat){
     let dat = [
         rstDat.healIdx,
         rstDat.poisonIdx
     ];
-    Basci.prototype.actionResult.call(this, phase, dat);
+    Basci.prototype.actionResult.call(this, generalDat, dat);
 };
 
 /**

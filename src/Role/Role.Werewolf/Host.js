@@ -15,19 +15,19 @@ var Werewolf = function () {
 Werewolf.prototype = Object.create(Basic);
 Werewolf.prototype.constructor = Werewolf;
 
-Werewolf.prototype.active = function (phase, actionDat){
+Werewolf.prototype.active = function (generalDat, actionDat){
     let dat = [
         actionDat.werewolf,
         actionDat.vote
     ];
-    Basci.prototype.active.call(this, phase, dat);
+    Basci.prototype.active.call(this, generalDat, dat);
 };
 
-Werewolf.prototype.actionResult = function (phase, rstDat){
+Werewolf.prototype.actionResult = function (generalDat, rstDat){
     let dat = [
         rstDat.victim
     ];
-    Basci.prototype.actionResult.call(this, phase, dat);
+    Basci.prototype.actionResult.call(this, generalDat, dat);
 };
 
 module.exports = Werewolf;

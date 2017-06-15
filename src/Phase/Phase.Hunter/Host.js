@@ -3,8 +3,8 @@
 var Basic= require('../Phase.Basic/Host.js');
 var DATA = require('./Data.js');
 
-var Hunter = function (phaseManager) {
-    Basic.call(this);
+var Hunter = function (dataPkg) {
+    Basic.call(this, dataPkg);
     this.data = DATA;
 };
 Hunter.prototype = Object.create(Basic);
