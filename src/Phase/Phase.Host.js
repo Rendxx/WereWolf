@@ -13,9 +13,9 @@ Phase[PHASECODE.VILLAGER] = require('./Phase.Villager/Host.js');
 Phase[PHASECODE.WEREWOLF] = require('./Phase.Werewolf/Host.js');
 Phase[PHASECODE.WITCH] = require('./Phase.Witch/Host.js');
 
-var PhaseFacory = function (phaseManager, phaseId){
+var PhaseFacory = function (phaseId, dataPkg){
     if (!Phase.hasOwnProperty(phaseId)) throw new Error('Unexpect Phase: '+phaseId);
-    return new Phase[phaseId](phaseManager);
+    return new Phase[phaseId](dataPkg);
 };
 
 module.exports = PhaseFacory;
