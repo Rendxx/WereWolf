@@ -67,8 +67,7 @@
                 left: 0;
             }
 
-            &:after {
-                content: '';
+            ._portrait {
                 display: block;
                 position: absolute;
                 top: 10px;
@@ -80,48 +79,6 @@
                 background-position: center center;
                 background-repeat: no-repeat;
                 background-size: contain;
-            }
-
-            &.Villager {
-                &:after {
-                    background-image: url('~GLOBAL/design/Role/villager.png');
-                }
-            }
-
-            &.Werewolf {
-                &:after {
-                    background-image: url('~GLOBAL/design/Role/werewolf.png');
-                }
-            }
-
-            &.Seer {
-                &:after {
-                    background-image: url('~GLOBAL/design/Role/seer.png');
-                }
-            }
-
-            &.Witch {
-                &:after {
-                    background-image: url('~GLOBAL/design/Role/witch.png');
-                }
-            }
-
-            &.Hunter {
-                &:after {
-                    background-image: url('~GLOBAL/design/Role/hunter.png');
-                }
-            }
-
-            &.Idiot {
-                &:after {
-                    background-image: url('~GLOBAL/design/Role/idiot.png');
-                }
-            }
-
-            &.Elder {
-                &:after {
-                    background-image: url('~GLOBAL/design/Role/elder.png');
-                }
             }
         }
 
@@ -273,7 +230,7 @@
                     display: none;
                 }
 
-                &:after{
+                ._portrait{
                   border-bottom:0;
                 }
 
