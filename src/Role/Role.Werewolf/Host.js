@@ -1,14 +1,13 @@
 "use strict";
 
 var Basic= require('../Role.Basic/Host.js');
-var ROLEDATA = require('./Data.js');
 
 var Werewolf = function () {
     Basic.call(this);
-    this._setData(ROLEDATA);
 };
 Werewolf.prototype = Object.create(Basic.prototype);
 Werewolf.prototype.constructor = Werewolf;
+Werewolf.DATA = require('./Data.js');
 
 Werewolf.prototype.active = function (generalDat, actionDat){
     let dat = [

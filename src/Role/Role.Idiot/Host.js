@@ -1,16 +1,14 @@
 "use strict";
 
 var Basic= require('../Role.Basic/Host.js');
-var ROLEDATA = require('./Data.js');
 
 var Idiot = function () {
     Basic.call(this);
-    this._setData(ROLEDATA);
 
     this.status = [0]; // [exposed?1:0]
 };
 Idiot.prototype = Object.create(Basic.prototype);
-Idiot.prototype.constructor = Idiot;
+Idiot.DATA = require('./Data.js');
 
 /**
  * Update player status.

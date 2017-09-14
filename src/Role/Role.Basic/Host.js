@@ -1,6 +1,5 @@
 "use strict";
 
-var ROLEDATA = require('./Data.js');
 var ATTR = require('./Attr.js');
 var ACTIVECODE = require('GLOBAL/content/ActiveCode.js');
 
@@ -8,8 +7,7 @@ var ACTIVECODE = require('GLOBAL/content/ActiveCode.js');
  * Role instance for host.
  */
 var Basic = function () {
-    this._setData(ROLEDATA);
-
+    this.data = this.constructor.DATA;
     this.status = null;
     this.player = null;
     this.alive = true;
@@ -19,20 +17,7 @@ var Basic = function () {
 };
 Basic.prototype = Object.create(null);
 Basic.prototype.constructor = Basic;
-
-/**
- * set role data
- * @param {object} data role data package
- */
-Basic.prototype._setData = function (data){
-    this.code = data.Code;
-    this.name = data.Name;
-    this.description = data.Description;
-    this.instruction = data.Instruction;
-    this.portrait = data.Portrait;
-    this.isGood = data.IsGood;
-};
-
+Basic.DATA = require('./Data.js');
 
 /**
  * set role attribute
@@ -62,6 +47,14 @@ Basic.prototype.reset = function (player, dat){
     this.alive = (dat[0]==1);
     this.actived = (dat[1]==1);
     this.status = dat[2];
+};
+
+/**
+ * get role metadata
+ * @param {object} data role metadata package
+ */
+Basic.prototype.getMetadata = function (){
+  return this.constructor.DATA;
 };
 
 /**

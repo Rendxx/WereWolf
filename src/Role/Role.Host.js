@@ -12,7 +12,7 @@ Role[ROLECODE.ELDER] = require('./Role.Elder/Host.js');
 
 var RoleFactory = function (roleId){
     if (!Role.hasOwnProperty(roleId)) throw new Error('Unexpect Role: '+roleId);
-    return new Role[roleId]();
+    return Role[roleId];
 };
 
 RoleFactory.CODE = ROLECODE;

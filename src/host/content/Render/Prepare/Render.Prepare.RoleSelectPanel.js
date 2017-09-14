@@ -45,18 +45,18 @@ var RoleSelection = function(container) {
     this.onCancel && this.onCancel();
   };
 
-  this.addRole = function(roleCode) {
+  this.addRole = function(roleData) {
     if (roleCache.length >= playerNumber) return;
-    roleCache.push(roleCode);
+    roleCache.push(roleData);
     roleCache.sort((a, b) => {
-      return a.code - b.code
+      return a.Code - b.Code
     });
     render();
   };
 
-  this.removeRole = function(roleCode) {
+  this.removeRole = function(roleData) {
     if (roleCache.length === 0) return;
-    var idx = roleCache.indexOf(roleCode);
+    var idx = roleCache.indexOf(roleData);
     roleCache.splice(idx, 1);
     render();
   };
@@ -77,12 +77,12 @@ var RoleSelection = function(container) {
     }
   };
 
-  var addRoleItem = function(role) {
+  var addRoleItem = function(roleData) {
     var ele = $(HTML.roleItem).appendTo(_html['roleList']);
-    ele.children('span').text(role.name);
-    ele.children('._portrait').css('background-image', 'url('+role.portrait+')');
+    ele.children('span').text(roleData.Name);
+    ele.children('._portrait').css('background-image', 'url(' + roleData.Portrait + ')');
     ele.click(function(e) {
-      that.removeRole(role);
+      that.removeRole(roleData);
       return false;
     });
   };
@@ -122,7 +122,9 @@ var RoleSelection = function(container) {
       console.log(roleCache);
       // console.log(output);
 
-      that.onFinish && that.onFinish(roleCache);
+      that.onFinish && that.onFinish(roleCache.map(d => {
+        return d.Code;
+      }));
     });
 
     _html['roleList'] = $(HTML.roleList).appendTo(_html['inner']);
@@ -130,21 +132,19 @@ var RoleSelection = function(container) {
     _html['selectionInner'] = $(HTML.selectionInner).appendTo(_html['selection']);
     _html['selectionRole'] = [];
     for (var roleKey in ROLECODE) {
-      const code = ROLECODE[roleKey];
-      addSelection(code, Role(code));
+      addSelection(Role(ROLECODE[roleKey]).DATA);
     }
   };
 
-  var addSelection = function(code, role) {
+  var addSelection = function(roleData) {
     var ele = $(HTML.roleItem).appendTo(_html['selectionInner']);
-    ele.children('span').text(role.name);
-    ele.children('._portrait').css('background-image', 'url('+role.portrait+')');
-    console.log(role.portrait)
+    ele.children('span').text(roleData.Name);
+    ele.children('._portrait').css('background-image', 'url(' + roleData.Portrait + ')');
     ele.click(function(e) {
-      that.addRole(Role(code));
+      that.addRole(roleData);
       return false;
     });
-    _html['selectionRole'][code] = ele;
+    _html['selectionRole'][roleData.Code] = ele;
   };
 
   var _init = function() {

@@ -2,16 +2,15 @@
 
 var Basic = require('../Role.Basic/Host.js');
 var ATTR = require('./Attr.js');
-var ROLEDATA = require('./Data.js');
 
 var Witch = function () {
     Basic.call(this);
-    this._setData(ROLEDATA);
 
     this.status = [1, 1, 0];  // [good potion #, bad potion #, self-healing]
 };
 Witch.prototype = Object.create(Basic.prototype);
 Witch.prototype.constructor = Witch;
+Witch.DATA = require('./Data.js');
 
 Witch.prototype.setAttr = function (attr) {
     if (opts.hasOwnProperty('SELFHEAL')) this.status[2] = opts['SELFHEAL'];

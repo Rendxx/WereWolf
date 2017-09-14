@@ -1,3 +1,4 @@
+
 var ROLECODE = {
   //NONE:0,
   VILLAGER:1,

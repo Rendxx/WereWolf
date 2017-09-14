@@ -1,16 +1,15 @@
 "use strict";
 
 var Basic= require('../Role.Basic/Host.js');
-var ROLEDATA = require('./Data.js');
 
 var Seer = function () {
     Basic.call(this);
-    this._setData(ROLEDATA);
 
     this.status = [];   // list of [playerIdx, werewolf?1:0]
 };
 Seer.prototype = Object.create(Basic.prototype);
 Seer.prototype.constructor = Seer;
+Seer.DATA = require('./Data.js');
 
 Seer.prototype.active = function (generalDat, actionDat){
     let dat = [
