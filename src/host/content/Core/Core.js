@@ -12,7 +12,8 @@ var ROLEDATA = require('GLOBAL/content/RoleData.js');
 var MSGCODE = require('GLOBAL/content/MessageCode.js');
 var PHASECODE = require('GLOBAL/content/PhaseCode.js');
 var ACTIVECODE = require('GLOBAL/content/ActiveCode.js');
-var Charactor = require('./Charactor.js');
+var Role = require('ROLE/Role.Host.js');
+var Player = require('./Player.js')
 
 var Core = function(opts) {
     "use strick";
@@ -22,8 +23,7 @@ var Core = function(opts) {
         _players = null,
         _playersId = null,
         _playerMap = null, // hash table player base info
-        _playerIDXtoID = null,
-        _playerIDtoIDX = null;
+        _playerIDXtoID = null
 
     var _msg;
     var _send;
@@ -128,35 +128,27 @@ var Core = function(opts) {
             _players = [];
             _playersId = [];
             _playerMap = [];
-            _playerIDtoIDX = {};
             _playerIDXtoID = {};
             playerList=[];
             playerNum = basicDat.length;
 
+            var infoList = setupData[1];
             for (var i = 0; i < basicDat.length; i++) {
                 var id = basicDat[i][0];
                 var name = basicDat[i][1];
                 var idx = basicDat[i][2];
-                var playerObj = {
-                    id: id,
-                    name: name,
-                    idx: idx
-                }
+                var number = infoList[i][1];
+                var playerObj = new Player(id, number, name, idx);
                 _players[idx] = playerObj;
                 _playersId[idx] = (id);
                 _playerMap[playerObj.id] = playerObj;
-                _playerIDtoIDX[playerObj.id] = playerObj.idx;
                 _playerIDXtoID[playerObj.idx] = playerObj.id;
             }
 
-            var infoList = setupData[1];
+            var numberList = [];
             for (var i = 0; i < infoList.length; i++) {
-                var number = infoList[i][0];
-                var name = infoList[i][1];
                 var role = infoList[i][2];
-                var idx = i;
-                var clientName = basicDat[i].name;
-                addCharacter(idx, number, name, role);
+                addCharacter(_players[i], role);
             }
         }
         if (gameData != null) {
@@ -190,7 +182,6 @@ var Core = function(opts) {
         _players = [];
         _playersId = [];
         _playerMap = {};
-        _playerIDtoIDX = {};
         _playerIDXtoID = {};
         playerList=[];
         _gameData.dayNum=0;
@@ -202,22 +193,21 @@ var Core = function(opts) {
 
         for (var i = 0, count = playerData.length; i < count; i++) {
             if (playerData[i] == null) continue;
+            const id = playerData[i].id;
+            const number = _gameData.clientNumber[id];
+            const name = playerData[i].name;
+            const idx = i;
 
-            var playerObj = {
-                id: playerData[i].id,
-                idx: i,
-                name: playerData[i].name
-            }
+            var playerObj = new Player(id, number, name, idx);
             _players.push(playerObj);
             _playersId.push(playerObj.id);
-            _playerIDtoIDX[playerObj.id] = playerObj.idx;
             _playerIDXtoID[playerObj.idx] = playerObj.id;
             // changed
             _playerMap[playerObj.id] = playerObj;
         }
 
         for (var i = 0, count = _players.length; i < count; i++) {
-            addCharacter(_players[i].idx, _gameData.clientNumber[_players[i].id], _players[i].name, roleDistribute[i]);
+            addCharacter(_players[i], roleDistribute[i]);
         }
         GetAliveStatus(true);
 
@@ -325,22 +315,10 @@ var Core = function(opts) {
         return allPlayerList;
     };
 
-    var addCharacter = function (idx, number, name, role){
-        var p = new Charactor(idx, number, name, role);
-        if (role == ROLECODE.WITCH) {
-            _gameData.witchID = idx;
-            p.status = [1, 1];
-        } else if (role == ROLECODE.SEER) {
-            _gameData.seerID = idx;
-            p.status = [-1, -1];
-        } else if (role == ROLECODE.HUNTER) {
-            _gameData.hunterID = idx;
-            p.status = [1];
-        } else if (role == ROLECODE.IDIOT) {
-            p.status = [1];
-        }
-
-        playerList[idx] = p;
+    var addCharacter = function (player, roleCode){
+        var p = new (Role(roleCode))();
+        p.setup(player);
+        playerList[player.playerIdx] = p;
         console.log(playerList);
     };
 
@@ -655,7 +633,7 @@ var Core = function(opts) {
         _msg={};
 
         _msg[MSGCODE.CLIENT.DECISION] = function(clientId, dat) {
-            GamePhase[GamePhaseOrder[_gameData.phaseIdx]](_playerIDtoIDX[clientId], dat);
+            GamePhase[GamePhaseOrder[_gameData.phaseIdx]](_player[clientId].playerIdx, dat);
         };
     };
 
