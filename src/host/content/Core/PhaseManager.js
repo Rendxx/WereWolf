@@ -9,7 +9,6 @@ var PhaseManager = function () {
     this.roundNumber = 0;
     this.roundData = {};
     this.phaseIdx = 0;
-    this._setuped = false;
 
     this.onPhaseStart = null;
     this.onRoundStart = null;
@@ -28,17 +27,8 @@ var PhaseManager = function () {
 PhaseManager.prototype = Object.create(null);
 PhaseManager.prototype.constructor = PhaseManager;
 
-PhaseManager.prototype.add = function (phaseId) {
-    if (this._setuped) return;
-};
-
-PhaseManager.prototype.remove = function (idx) {
-    if (this._setuped) return;
-};
-
 PhaseManager.prototype.setup = function (playerList) {
-    if (this._setuped) return;
-    this._setuped = true;
+    this.playerList = playerList;
 };
 
 PhaseManager.prototype.reset = function (basicData, gameData, playerList) {
@@ -68,8 +58,6 @@ PhaseManager.prototype.reset = function (basicData, gameData, playerList) {
         this.phaseList[i] = Phase(phaseCode[i], this._dataPkg);
         this.phaseList[i].reset(characterGrp[i]);
     }
-
-    this._setuped = true;
 };
 
 PhaseManager.prototype.getBasicData = function () {

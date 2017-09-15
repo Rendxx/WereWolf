@@ -30,36 +30,15 @@ Basic.prototype = Object.create(null);
 Basic.prototype.constructor = Basic;
 
 /**
- * Increase the player of phase number by 1
- * Only available before setup
- */
-Basic.prototype.addCharacter = function (roleIdx){
-    if (this._setuped || this.characters.length>=this.data.MaxPlayer) return;
-    if (roleIdx>=this.data.Role.length || roleIdx<0) return;
-    this.characters.push(Role(this.data.Role[roleIdx]));
-};
-
-/**
- * Remove the selected charactor instance
- * Only available before setup
- */
-Basic.prototype.removeCharacter = function (idx){
-    if (this._setuped || this.characters.length<=this.data.MinPlayer) return;
-    if (idx<0 || idx>= this.characters.length) return;
-    this.characters.splice(idx,1);
-};
-
-/**
  * Setup all player in this phase
  */
 Basic.prototype.setup = function (playerList){
-    if (this._setuped) return;
-    if (playerList.length!==this.characters.length) throw new Error('Player number not match.');
+    this.playerList = playerList;
     for (let i=0; i<playerList.length; i++){
-        this.characters[i].setup(playerList[i]);
-        this.characters[i].onAction = this.actionHandler.bind(this);
+        if (playerList[i].getMetadata().Code in this.data.Role){
+            this.characters[i].onAction = this.actionHandler.bind(this);
+        }
     }
-    this._setuped = true;
 };
 
 /**

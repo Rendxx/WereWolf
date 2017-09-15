@@ -8,8 +8,6 @@ var Data = {
     Description: '',
     Icon: null,
     Sound: null,
-    MinPlayer: 0,
-    MaxPlayer: 0,
     Timeout: 0,
     Action: ATTR.SKIP,
     Role:[]

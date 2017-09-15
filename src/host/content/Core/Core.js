@@ -20,10 +20,7 @@ var Core = function(opts) {
     // property -----------------------------------------------
     var that = this,
         start = false,
-        _players = null,
-        _playersId = null,
-        _playerMap = null, // hash table player base info
-        _playerIDXtoID = null
+        _players = null;
 
     var _msg;
     var _send;
@@ -170,9 +167,6 @@ var Core = function(opts) {
             setup the game with player data and initial options.
             then send the setup data out
         */
-        _gameData.clientNumber = para.clientNumber;
-
-        _gameData.phaseIdx = -1;
         console.log("playerdata");
         console.log(playerData);
 
@@ -180,13 +174,6 @@ var Core = function(opts) {
         console.log(para);
 
         _players = [];
-        _playersId = [];
-        _playerMap = {};
-        _playerIDXtoID = {};
-        playerList=[];
-        _gameData.dayNum=0;
-
-        playerNum = playerData.length;
 
         // random give player roles
         var roleDistribute = shuffleRole(para.roleList);
@@ -200,10 +187,6 @@ var Core = function(opts) {
 
             var playerObj = new Player(id, number, name, idx);
             _players.push(playerObj);
-            _playersId.push(playerObj.id);
-            _playerIDXtoID[playerObj.idx] = playerObj.id;
-            // changed
-            _playerMap[playerObj.id] = playerObj;
         }
 
         for (var i = 0, count = _players.length; i < count; i++) {
@@ -222,8 +205,6 @@ var Core = function(opts) {
             ]);
         }
         phaseIncreament(0);
-
-        console.log("setup", JSON.stringify(_playerMap));
     };
 
     // game ------------------------------------------------
@@ -243,7 +224,6 @@ var Core = function(opts) {
         /* TODO: game renew */
         start = false;
         _players = null;
-        _playerMap = null;
     };
 
     this.pause = function() {
