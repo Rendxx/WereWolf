@@ -3,7 +3,7 @@
     You can set game options while waiting for other players.
 */
 
-var RoleSelectPanel = require('./Render.Prepare.RoleSelectPanel.js');
+var CharacterSelectPanel = require('./Render.Prepare.CharacterSelectPanel.js');
 var PlayerList = require('./Render.Prepare.PlayerList.js');
 require('./Render.Prepare.less');
 
@@ -26,11 +26,11 @@ var Prepare = function (container, opts_in) {
     };
 
     var cache_client = null;
-    var roleSelectPanel=null,
+    var characterSelectPanel=null,
         playerList=null;
     var setupOpt = {
-        roleArrange:[],
-        roleList:[]
+        characterArrange:[],
+        characterList:[]
     };
 
     // Callback -------------------------------------
@@ -87,22 +87,22 @@ var Prepare = function (container, opts_in) {
         // start btn
         html['startBtn'] = $(HTML.startBtn).appendTo(html['container']);
         html['startBtn'].click(function () {
-            roleSelectPanel.show(playerList.playerNumber);
+            characterSelectPanel.show(playerList.playerNumber);
         });
     };
 
     var _init = function (opts_in) {
         _setupHtml();
-        roleSelectPanel = new RoleSelectPanel(container);
+        characterSelectPanel = new CharacterSelectPanel(container);
         playerList= new PlayerList(container);
         _onStart = opts_in && opts_in.onStart;
 
-        roleSelectPanel.onFinish = function (roleList){
+        characterSelectPanel.onFinish = function (characterList){
             console.log('FINISH ------------------------');
-            console.log(roleList);
+            console.log(characterList);
             console.log('');
             setupOpt = {
-                roleList:roleList,
+                characterList:characterList,
                 clientNumber: playerList.getClientNumber()
             };
             _onStart && _onStart();
