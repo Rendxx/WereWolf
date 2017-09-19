@@ -1,21 +1,59 @@
 "use strict";
-var PHASECODE = require('./PhaseCode.js');
 
-var Phase = {};
-Phase[PHASECODE.BASIC] = require('./Phase.Basic/Host.js');
-Phase[PHASECODE.DAY] = require('./Phase.Day/Host.js');
-Phase[PHASECODE.HUNTER] = require('./Phase.Hunter/Host.js');
-Phase[PHASECODE.IDIOT] = require('./Phase.Idiot/Host.js');
-Phase[PHASECODE.NIGHTCOMING] = require('./Phase.NightComing/Host.js');
-Phase[PHASECODE.SEER] = require('./Phase.Seer/Host.js');
-Phase[PHASECODE.SUNRAISE] = require('./Phase.SunRaise/Host.js');
-Phase[PHASECODE.VILLAGER] = require('./Phase.Villager/Host.js');
-Phase[PHASECODE.WEREWOLF] = require('./Phase.Werewolf/Host.js');
-Phase[PHASECODE.WITCH] = require('./Phase.Witch/Host.js');
+var PHASE_ATTR = require('./PHASE_ATTR.js');
 
-var PhaseFacory = function (phaseId, dataPkg){
-    if (!Phase.hasOwnProperty(phaseId)) throw new Error('Unexpect Phase: '+phaseId);
-    return new Phase[phaseId](dataPkg);
+var Phase = function(data) {
+  this.data = data;
+
+  this.characters = [];
+  this.enabled = false;
+  var _actionCountDownFunc = null;
+
+  this.setup = function(characterList) {
+    for (let i = 0; i < characterList.length; i++) {
+      const code = characterList[i].data.Code;
+      if (this.data.Role.hasOwnProperty(code)) {
+        this.characters.push(characterList[i]);
+      }
+    }
+    this.enabled = this.characters.length > 0;
+  };
+
+  this.active = function() {
+    if (_actionCountDownFunc !== null) {
+      clearTimeout(_actionCountDownFunc);
+      _actionCountDownFunc = null;
+    }
+    if (this.data.Action === PHASE_ATTR.ACTION.SKIP) {
+      this.onActionComplete && this.onActionComplete();
+    } else if (this.data.Action === PHASE_ATTR.ACTION.NO) {
+      if (this.data.Sound !== null) this.data.Sound.play();
+      _actionCountDownFunc = setTimeout(function() {
+        this.onActionComplete && this.onActionComplete();
+        _actionCountDownFunc = null;
+      }, 5000);
+    } else {
+      if (this.data.Timeout > 0) {
+        _actionCountDownFunc = setTimeout(function() {
+          this.onActionComplete && this.onActionComplete();
+          _actionCountDownFunc = null;
+        }, this.data.Timeout);
+      }
+
+      let aliveNumber = 0;
+      for (let i = 0; i < this.characters.length; i++) {
+        if (this.characters[i].alive) aliveNumber++;
+        this.characters[i].active(this.generalDat, this.actionDat);
+      }
+
+      if (aliveNumber===0){
+        _actionCountDownFunc = setTimeout(function() {
+          this.onActionComplete && this.onActionComplete();
+          _actionCountDownFunc = null;
+        }, 3000);
+      }
+    }
+  };
 };
 
-module.exports = PhaseFacory;
+module.exports = Phase;

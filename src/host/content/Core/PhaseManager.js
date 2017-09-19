@@ -1,6 +1,6 @@
 "use strict";
 var PHASE_LIST = require('PHASE/PHASE_LIST.js');
-var Phase = require('PHASE/Phase.Host.js');
+var Phase = require('PHASE/Phase.Data.js');
 
 var PhaseManager = function () {
     this.phaseList = [];
