@@ -139,7 +139,13 @@ var Core = function(opts) {
 
   var _createPhase = function (){
     const phaseManager = new PhaseManager();
-    phaseManager.onUpdated = function (){
+    phaseManager.onPhaseEnd = function (){
+      this.onUpdated([
+        phaseManager.getData(),
+        characterManager.getData(),
+      ]);
+    }.bind(this);
+    phaseManager.onRoundEnd = function (){
       this.onUpdated([
         phaseManager.getData(),
         characterManager.getData(),
