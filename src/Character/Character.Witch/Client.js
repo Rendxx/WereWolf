@@ -21,6 +21,7 @@ var Witch = function () {
     this.description = ROLEDATA.Description;
     this.instruction = ROLEDATA.Instruction;
     this.potion = [1, 1];
+    this.tmpHeal = -1;
 };
 Witch.prototype = Object.create(Basic.prototype);
 Witch.prototype.constructor = Witch;
@@ -44,6 +45,7 @@ Witch.prototype.active = function (aliveListArr, dat){
 };
 
 Witch.prototype._showPotionGood = function (aliveListArr, canHeal, victim){
+  this.tmpHeal = -1;
     if (this.potion[0]===0){
         this._action.components['potionGood'].update({
             className: 'action_singlePlayer_witch_noPotion',
@@ -74,6 +76,7 @@ Witch.prototype._showPotionGood = function (aliveListArr, canHeal, victim){
             name: p[1],
             isAvailable: true,
             onYes: function (){
+                this.tmpHeal = victim;
                 this._showPotionBad(aliveListArr, false, true);
             }.bind(this),
             onNo: function (){
@@ -144,7 +147,7 @@ Witch.prototype.actionResult = function (dat){
                 this._action.hide();
             }.bind(this)
         });
-    } 
+    }
 };
 
 Witch.prototype.update = function (aliveListArr, dat){
@@ -171,11 +174,11 @@ Witch.prototype.initActionPanel = function (actionPanel, playerInfo){
     let potionBad = new Action.PlayerList(this.playerIdx, playerInfo, 'Choose your target');
     potionBad.onSelect = function (idx, number, name){
         if (!this.actived) return;
-        this.onActionEnd && this.onActionEnd([idx]);
+        this.onActionEnd && this.onActionEnd([-1, idx]);
     }.bind(this);
     potionBad.onAbstain = function (){
         if (!this.actived) return;
-        this.onActionEnd && this.onActionEnd([-1]);
+        this.onActionEnd && this.onActionEnd([this.tmpHeal, -1]);
     }.bind(this);
     this._action.reset({
         'potionGood': potionGood,

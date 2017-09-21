@@ -16,7 +16,16 @@ Seer.prototype.active = function(generalDat, actionDat) {
     actionDat.seer,
     actionDat.vote
   ];
-  Basci.prototype.active.call(this, generalDat, dat);
+  Basic.prototype.active.call(this, generalDat, dat);
+};
+
+Seer.prototype.onAction = function(actionDat) {
+  const playerIdx = actionDat[0];
+  const isGood = this.characterManager.list[playerIdx].isGood()?0:1;
+  const rst = [playerIdx,isGood];
+  this.phaseManager.roundData['seer'] = rst;
+  this.actionResult(rst);
+  this.phaseManager.nextPhase();
 };
 
 /**
@@ -26,14 +35,6 @@ Seer.prototype.active = function(generalDat, actionDat) {
 Seer.prototype.updateStatus = function(opts) {
   for (let i in opts)
     this.status.push([i, opts[i] ? 1 : 0]);
-};
-
-Seer.prototype.actionResult = function(phase, rstDat) {
-  let dat = [
-    rstDat.testIdx,
-    rstDat.isBad ? 1 : 0
-  ];
-  Basci.prototype.actionResult.call(this, phase, dat);
 };
 
 module.exports = Seer;

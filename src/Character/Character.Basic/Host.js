@@ -2,6 +2,7 @@
 
 var ATTR = require('./Attr.js');
 var ACTIVECODE = require('GLOBAL/content/ActiveCode.js');
+var CHARACTER_TYPE = require('../CHARACTER_TYPE.js');
 
 /**
  * Role instance for host.
@@ -14,8 +15,6 @@ var Basic = function(characterManager, phaseManager) {
   this.actived = false;
   this.characterManager = characterManager;
   this.phaseManager = phaseManager;
-
-  this.onAction = null;
 };
 Basic.prototype = Object.create(null);
 Basic.prototype.constructor = Basic;
@@ -35,8 +34,8 @@ Basic.prototype.setup = function(player) {
   this.player = player;
   this.player.onAction = function(playerIdx, dat) {
     if (!this.alive) return;
-    this.onAction && this.onAction(playerIdx, dat);
-  };
+    this.onAction(dat);
+  }.bind(this);
 };
 
 /**
@@ -59,6 +58,12 @@ Basic.prototype.getMetadata = function() {
 };
 
 /**
+ * handle character action
+ * @param {object} data action data
+ */
+Basic.prototype.onAction = function(data) {};
+
+/**
  * get Role instance data
  */
 Basic.prototype.getData = function() {
@@ -71,14 +76,13 @@ Basic.prototype.getData = function() {
 
 /**
  * Send active message.
- * @param {object} generalDat general data
  * @param {object} actionDat action data
  */
-Basic.prototype.active = function(generalDat, actionDat) {
+Basic.prototype.active = function(actionDat) {
   this.actived = ACTIVECODE.YES;
   this.player.update({
-    phase: generalDat.phase,
-    alive: generalDat.aliveList,
+    phase: this.phaseManager.phaseIdx,
+    alive: this.characterManager.getAliveStr(),
     actived: this.actived,
     status: this.status,
     action: actionDat
@@ -87,13 +91,12 @@ Basic.prototype.active = function(generalDat, actionDat) {
 
 /**
  * Send inactive message.
- * @param {object} generalDat general data
  */
-Basic.prototype.inactive = function(generalDat) {
+Basic.prototype.inactive = function() {
   this.actived = ACTIVECODE.NO;
   this.player.update({
-    phase: generalDat.phase,
-    alive: generalDat.aliveList,
+    phase: this.phaseManager.phaseIdx,
+    alive: this.characterManager.getAliveStr(),
     actived: this.actived,
     status: this.status
   });
@@ -101,14 +104,13 @@ Basic.prototype.inactive = function(generalDat) {
 
 /**
  * Send action result message.
- * @param {object} generalDat general data
  * @param {object} rstDat result data
  */
-Basic.prototype.actionResult = function(generalDat, rstDat) {
+Basic.prototype.actionResult = function(rstDat) {
   this.actived = ACTIVECODE.RESULT;
   this.player.update({
-    phase: generalDat.phase,
-    alive: generalDat.aliveList,
+    phase: this.phaseManager.phaseIdx,
+    alive: this.characterManager.getAliveStr(),
     actived: this.actived,
     status: this.status,
     result: rstDat
@@ -127,6 +129,11 @@ Basic.prototype.updateStatus = function(opts) {};
  */
 Basic.prototype.setAlive = function(isAlive) {
   this.alive = isAlive;
+};
+
+
+Basic.prototype.isGood = function() {
+  return this.data.Type !== CHARACTER_TYPE.WEREWOLF;
 };
 
 /**

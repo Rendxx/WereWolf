@@ -14,14 +14,13 @@ Werewolf.prototype.active = function(generalDat, actionDat) {
     actionDat.werewolf,
     actionDat.vote
   ];
-  Basci.prototype.active.call(this, generalDat, dat);
+  Basic.prototype.active.call(this, generalDat, dat);
 };
 
-Werewolf.prototype.actionResult = function(generalDat, rstDat) {
-  let dat = [
-    rstDat.victim
-  ];
-  Basci.prototype.actionResult.call(this, generalDat, dat);
+Werewolf.prototype.onAction = function(actionDat) {
+  this.phaseManager.roundData['werewolf'] = actionDat[0];
+  this.actionResult(actionDat);
+  this.phaseManager.nextPhase();
 };
 
 module.exports = Werewolf;

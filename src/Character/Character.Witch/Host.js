@@ -21,15 +21,15 @@ Witch.prototype.active = function(generalDat, actionDat) {
     actionDat.canHeal ? 1 : 0,
     actionDat.victim
   ];
-  Basci.prototype.active.call(this, generalDat, dat);
+  Basic.prototype.active.call(this, generalDat, dat);
 };
 
-Witch.prototype.actionResult = function(generalDat, rstDat) {
-  let dat = [
-    rstDat.healIdx,
-    rstDat.poisonIdx
-  ];
-  Basci.prototype.actionResult.call(this, generalDat, dat);
+Witch.prototype.onAction = function(actionDat) {
+  const healIdx = actionDat[0];
+  const poisonIdx = actionDat[1];
+  this.phaseManager.roundData['witch'] = actionDat;
+  this.actionResult(actionDat);
+  this.phaseManager.nextPhase();
 };
 
 /**

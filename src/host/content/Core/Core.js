@@ -69,16 +69,10 @@ var Core = function(opts) {
       characterManager.setup(playerList, characterCode, phaseManager);
     }
     if (gameData != null) {
-      var aliveList = gameData[1];
-      var statusList = gameData[3];
-      cacheAlive = gameData[2];
-      _gameData = gameData[5];
-      for (var i = 0; i < playerList.length; i++) {
-        playerList[i].alive = (aliveList[i] === '1');
-        playerList[i].status = statusList[i];
-      }
-      GetAliveStatus(false);
-      if (_gameData.passed === 1) phaseIncreament(0);
+      var phaseData = gameData[0];
+      var characterData = gameData[1];
+      phaseManager.reset(phaseData);
+      characterManager.reset(characterData);
     }
   };
 
@@ -95,7 +89,7 @@ var Core = function(opts) {
 
     _players = [];
 
-    var characterCode = para.characterList;
+    var characterCode = _shuffle(para.characterList);
     var playerSetupData = [];
     for (var i = 0, count = playerData.length; i < count; i++) {
       if (playerData[i] == null) continue;
@@ -141,17 +135,29 @@ var Core = function(opts) {
     const phaseManager = new PhaseManager();
     phaseManager.onPhaseEnd = function (){
       this.onUpdated([
-        phaseManager.getData(),
-        characterManager.getData(),
+        phaseManager.getGameData(),
+        characterManager.getGameData(),
       ]);
     }.bind(this);
     phaseManager.onRoundEnd = function (){
       this.onUpdated([
-        phaseManager.getData(),
-        characterManager.getData(),
+        phaseManager.getGameData(),
+        characterManager.getGameData(),
       ]);
     }.bind(this);
     return phaseManager;
+  };
+
+  var _shuffle = function(input) {
+    var output = [];
+    var copy = input.slice();
+
+    for (var i = input.length; i > 0; i--) {
+      var k = ~~(Math.random() * i);
+      output.push(copy[k]);
+      copy[k] = copy[i - 1];
+    }
+    return output;
   };
 
   // game ------------------------------------------------

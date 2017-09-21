@@ -45,10 +45,16 @@ PhaseManager.prototype.getGameData = function() {
   ];
 };
 
-PhaseManager.prototype.phaseEnd = function() {
+PhaseManager.prototype.nextPhase = function() {
   this.phaseIdx = (this.phaseIdx + 1) % this.phaseList.length;
+  if (this.phaseIdx === 0) {
+    this.roundData = {};
+    this.roundNumber++;
+  }
   this.onPhaseEnd();
-  if (this.phaseIdx === 0) this.onRoundEnd();
+  if (this.phaseIdx === 0) {
+    this.onRoundEnd();
+  }
 };
 
 module.exports = PhaseManager;
