@@ -34,7 +34,8 @@ Witch.prototype.active = function() {
 Witch.prototype.onAction = function(actionDat) {
   const healIdx = actionDat[0];
   const poisonIdx = actionDat[1];
-  this.phaseManager.roundData['witch'] = actionDat;
+  this.phaseManager.roundData['witchHeal'] = actionDat[0];
+  this.phaseManager.roundData['witchPoison'] = actionDat[1];
   this.actionResult(actionDat);
   this.phaseManager.nextPhase();
 };

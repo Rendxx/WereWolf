@@ -135,9 +135,16 @@ Basic.prototype.setAlive = function(isAlive) {
   this.alive = isAlive;
 };
 
-
 Basic.prototype.isGood = function() {
   return this.data.Type !== CHARACTER_TYPE.WEREWOLF;
+};
+
+Basic.prototype.werewolfKill = function() {
+  this.setAlive(false);
+};
+
+Basic.prototype.witchPoison = function() {
+  this.setAlive(false);
 };
 
 /**

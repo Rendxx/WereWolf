@@ -26,15 +26,13 @@
       window.msg('1|2|SERVER|8|{"clients":'+JSON.stringify(obj)+'}');
     },
     update : {
-        1: function (id, target){   // wolf
+        wolf: function (id, target){   // wolf
             window.msg('2|4|c'+id+'|3|[1,['+target+']]');
         },
-        2: function (target){   // seer
-            var id = 3;
+        seer: function (id, target){   // seer
             window.msg('2|4|c'+id+'|3|[1,['+target+']]');
         },
-        3: function (heal, poison){   // witch
-            var id = 4;
+        witch: function (id, heal, poison){   // witch
             window.msg('2|4|c'+id+'|3|[1,['+heal+','+poison+']]');
         },
     },
@@ -61,9 +59,9 @@
   console.log("%c test.reset2() ", 'color: #003399;');
   console.log("%c test.add(3) ", 'color: #003399;');
   console.log('');
-  console.log("%c test.update[1](6,3)", 'color: #003399;');
-  console.log("%c test.update[2](6)", 'color: #003399;');
-  console.log("%c test.update[3](-1,-1)", 'color: #003399;');
+  console.log("%c test.update.wolf(6,3)", 'color: #003399;');
+  console.log("%c test.update.seer(1,6)", 'color: #003399;');
+  console.log("%c test.update.witch(1, -1,-1)", 'color: #003399;');
   console.groupEnd();
   console.log('');
 })();

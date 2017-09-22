@@ -10,7 +10,6 @@ var PhaseManager = function() {
   this.roundData = {};
   this.phaseIdx = 0;
   this.onPhaseEnd = null;
-  this.onRoundEnd = null;
 };
 PhaseManager.prototype = Object.create(null);
 PhaseManager.prototype.constructor = PhaseManager;
@@ -50,14 +49,28 @@ PhaseManager.prototype.getGameData = function() {
 PhaseManager.prototype.nextPhase = function() {
   this.phaseIdx = (this.phaseIdx + 1) % this.phaseList.length;
   if (this.phaseIdx === 0) {
-    this.roundData = {};
-    this.roundNumber++;
-  }
-  this.onPhaseEnd();
-  if (this.phaseIdx === 0) {
-    this.onRoundEnd();
+    this.roundStart();
+  } else {
+    this.onPhaseEnd();
   }
   this.phaseList[this.phaseIdx].active();
+};
+
+PhaseManager.prototype.roundStart = function() {
+  this.roundNumber++;
+  // werewolf & witch heal
+  if (this.roundData['werewolf'] != null && this.roundData['werewolf'] != -1 && this.roundData['werewolf'] != this.roundData['witchHeal']) {
+    const victim = this.roundData['werewolf'];
+    this.characterList[victim].werewolfKill();
+  }
+  // witch poison
+  if (this.roundData['witchPoison'] != null && this.roundData['witchPoison'] != -1) {
+    const victim = this.roundData['witchPoison'];
+    this.characterList[victim].witchPoison();
+  }
+
+  this.roundData = {};
+  this.onPhaseEnd();
 };
 
 module.exports = PhaseManager;

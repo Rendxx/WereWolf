@@ -47,6 +47,16 @@ var Core = function(opts) {
     */
   };
 
+  this.action = function(clientId, dat) {
+      /* TODO:
+          will be fired when a client takes a move.
+          analysis the action data and handle this change.
+      */
+      console.log(clientId, dat);
+      if (dat == null || _players[clientId]==null) return;
+      _players[clientId].receiveAction(dat);
+  };
+
   // callback ------------------------------------------
   this.onUpdated = null; // (gameData): becalled when game updates
   this.onSetuped = null; // (setupData): be called when game setups
@@ -65,8 +75,8 @@ var Core = function(opts) {
       const characterCode = setupData[1];
       phaseManager = _createPhase();
       characterManager = new CharacterManager();
-      var playerList = _createPlayer(playerSetupData);
-      characterManager.setup(playerList, characterCode, phaseManager);
+      _players = _createPlayer(playerSetupData);
+      characterManager.setup(_players, characterCode, phaseManager);
       phaseManager.setup(characterManager.list);
     }
     if (gameData != null) {
@@ -88,8 +98,6 @@ var Core = function(opts) {
     console.log("para");
     console.log(para);
 
-    _players = [];
-
     var characterCode = _shuffle(para.characterList);
     var clientNumber = para.clientNumber;
     var playerSetupData = [];
@@ -103,8 +111,8 @@ var Core = function(opts) {
     }
     phaseManager = _createPhase();
     characterManager = new CharacterManager();
-    var playerList = _createPlayer(playerSetupData);
-    characterManager.setup(playerList, characterCode, phaseManager);
+    _players = _createPlayer(playerSetupData);
+    characterManager.setup(_players, characterCode, phaseManager);
     phaseManager.setup(characterManager.list);
 
     that.onSetuped([playerSetupData, characterCode]);
@@ -125,7 +133,7 @@ var Core = function(opts) {
   };
 
   var _createPlayer = function(playerSetupData) {
-    let playerList = [];
+    let playerMap = {};
     for (var i = 0, count = playerSetupData.length; i < count; i++) {
       const id = playerSetupData[i][0];
       const number = playerSetupData[i][1];
@@ -134,20 +142,14 @@ var Core = function(opts) {
 
       var p = new Player(id, number, name, idx);
       p.onUpdate = this.clientUpdate.bind(this);
-      playerList.push(p);
+      playerMap[id]=p;
     }
-    return playerList;
+    return playerMap;
   }.bind(this);
 
   var _createPhase = function() {
     const phaseManager = new PhaseManager();
     phaseManager.onPhaseEnd = function() {
-      this.onUpdated([
-        phaseManager.getGameData(),
-        characterManager.getGameData(),
-      ]);
-    }.bind(this);
-    phaseManager.onRoundEnd = function() {
       this.onUpdated([
         phaseManager.getGameData(),
         characterManager.getGameData(),

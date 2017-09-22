@@ -4,10 +4,11 @@ var CharacterManager = function() {
   this.list = [];
 
   this.setup = function(players, characterCode, phase) {
-    for (let i = 0; i < players.length; i++) {
-      var character = new(Character(characterCode[i]))(this, phase);
-      character.setup(players[i]);
-      this.list[i] = character;
+    for (let id in players) {
+      var p = players[id];
+      var character = new(Character(characterCode[p.playerIdx]))(this, phase);
+      character.setup(p);
+      this.list[p.playerIdx] = character;
     }
   };
 
