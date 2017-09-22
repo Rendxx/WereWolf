@@ -36,7 +36,7 @@ var Core = function(opts) {
 
     },
     win: function(isVillager) {
-      phaseManager.win(isVillager);
+      win(isVillager);
     }
   }; /* TODO: this is a package of hander for Render.Main */
 
@@ -48,13 +48,13 @@ var Core = function(opts) {
   };
 
   this.action = function(clientId, dat) {
-      /* TODO:
-          will be fired when a client takes a move.
-          analysis the action data and handle this change.
-      */
-      console.log(clientId, dat);
-      if (dat == null || _players[clientId]==null) return;
-      _players[clientId].receiveAction(dat);
+    /* TODO:
+        will be fired when a client takes a move.
+        analysis the action data and handle this change.
+    */
+    console.log(clientId, dat);
+    if (dat == null || _players[clientId] == null) return;
+    _players[clientId].receiveAction(dat);
   };
 
   // callback ------------------------------------------
@@ -142,7 +142,7 @@ var Core = function(opts) {
 
       var p = new Player(id, number, name, idx);
       p.onUpdate = this.clientUpdate.bind(this);
-      playerMap[id]=p;
+      playerMap[id] = p;
     }
     return playerMap;
   }.bind(this);
@@ -170,6 +170,16 @@ var Core = function(opts) {
     return output;
   }.bind(this);
 
+  var win = function(isVillager) {
+    that.onUpdated([
+      phaseManager.getGameData(),
+      characterManager.getGameData(),
+      isVillager ? 1 : 0,
+    ]);
+
+    _onEnd && _onEnd();
+    start = false;
+  };
   // game ------------------------------------------------
   this.start = function() {
     /* TODO: game start */

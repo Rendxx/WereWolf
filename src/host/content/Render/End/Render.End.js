@@ -46,7 +46,7 @@ var End = function (container, opts) {
     this.updateGame = function (gameData) {
         /* TODO: do nothing */
         if (gameData==null) return;
-        var villager = gameData[3];
+        var villager = gameData[2];
         if (villager){
           html['villager'].show();
           html['werewolf'].hide();
