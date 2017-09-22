@@ -47,7 +47,7 @@ var Phase = function(data) {
       _actionCountDownFunc = setTimeout(function() {
         this.onActionComplete && this.onActionComplete();
         _actionCountDownFunc = null;
-      }.bind(this), 5000);
+      }.bind(this), 8000);
     } else {
       if (this.data.Timeout > 0) {
         _actionCountDownFunc = setTimeout(function() {
@@ -62,7 +62,7 @@ var Phase = function(data) {
         this.characters[i].active();
       }
 
-      if (aliveNumber === 0) {
+      if (aliveNumber === 0 && this.characters.length > 0) {
         _actionCountDownFunc = setTimeout(function() {
           this.onActionComplete && this.onActionComplete();
           _actionCountDownFunc = null;
@@ -73,7 +73,7 @@ var Phase = function(data) {
 
   var _playSound = function() {
     setTimeout(function() {
-      this.data.Sound.play();
+      this.data.Sound && this.data.Sound.play();
     }.bind(this), 2000);
   }.bind(this);
 };
