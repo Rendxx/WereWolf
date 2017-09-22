@@ -24,6 +24,7 @@ PhaseManager.prototype.setup = function(characterList) {
 
   for (let i = 0; i < PHASE_LIST.length; i++) {
     const p = new Phase(PHASE_DATA[PHASE_LIST[i]]);
+    p.onActionComplete = this.nextPhase.bind(this);
     p.setup(characterList);
     if (p.enabled) {
       this.phaseList.push(p);
@@ -42,6 +43,7 @@ PhaseManager.prototype.getGameData = function() {
     this.roundNumber,
     this.roundData,
     this.phaseIdx,
+    this.phaseList[this.phaseIdx].data.Code,
   ];
 };
 
@@ -55,6 +57,7 @@ PhaseManager.prototype.nextPhase = function() {
   if (this.phaseIdx === 0) {
     this.onRoundEnd();
   }
+  this.phaseList[this.phaseIdx].active();
 };
 
 module.exports = PhaseManager;

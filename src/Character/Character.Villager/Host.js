@@ -1,6 +1,6 @@
 "use strict";
 
-var Basic = require('../Role.Basic/Host.js');
+var Basic = require('../Character.Basic/Host.js');
 
 var Villager = function(characterManager, phaseManager) {
   Basic.call(this, characterManager, phaseManager);

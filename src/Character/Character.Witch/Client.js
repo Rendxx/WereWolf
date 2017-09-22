@@ -1,6 +1,6 @@
 "use strict";
 
-var Basic= require('../Role.Basic/Client.js');
+var Basic= require('../Character.Basic/Client.js');
 var Util = require('SRC/Util.js');
 var ROLEDATA = require('./Data.js');
 var INFO = require('CLIENT/content/InfoBox/Info.Content.js');

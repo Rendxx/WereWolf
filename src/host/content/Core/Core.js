@@ -6,7 +6,6 @@
     - It monitors game process and decides the next status of the game.
 */
 
-var Role = require('ROLE/Role.Host.js');
 var CharacterManager = require('./CharacterManager.js');
 var PhaseManager = require('./PhaseManager.js');
 var Player = require('./Player.js');
@@ -22,12 +21,13 @@ var Core = function(opts) {
   var _send;
   var phaseManager = null;
   var characterManager = null;
+  var _onEnd = null;
 
   // message -----------------------------------------------
   this.send = null; /* TODO: this.send(code, content): This function should be set by Host-Manager, it is used to send message out */
   this.handler = {
-    skip: function() {
-      phaseManager.skip();
+    nextPhase: function() {
+      phaseManager.nextPhase();
     },
     setAlive: function(playerIdx, isAlive) {
       characterManager.list[playerIdx].setAlive(isAlive);
@@ -67,6 +67,7 @@ var Core = function(opts) {
       characterManager = new CharacterManager();
       var playerList = _createPlayer(playerSetupData);
       characterManager.setup(playerList, characterCode, phaseManager);
+      phaseManager.setup(characterManager.list);
     }
     if (gameData != null) {
       var phaseData = gameData[0];
@@ -90,11 +91,12 @@ var Core = function(opts) {
     _players = [];
 
     var characterCode = _shuffle(para.characterList);
+    var clientNumber = para.clientNumber;
     var playerSetupData = [];
     for (var i = 0, count = playerData.length; i < count; i++) {
       if (playerData[i] == null) continue;
       const id = playerData[i].id;
-      const number = _gameData.clientNumber[id];
+      const number = clientNumber[id];
       const name = playerData[i].name;
       const idx = i;
       playerSetupData.push([id, number, name, idx]);
@@ -103,6 +105,7 @@ var Core = function(opts) {
     characterManager = new CharacterManager();
     var playerList = _createPlayer(playerSetupData);
     characterManager.setup(playerList, characterCode, phaseManager);
+    phaseManager.setup(characterManager.list);
 
     that.onSetuped([playerSetupData, characterCode]);
 
@@ -114,6 +117,11 @@ var Core = function(opts) {
         playerSetupData
       ]);
     }
+
+    this.onUpdated([
+      phaseManager.getGameData(),
+      characterManager.getGameData(),
+    ]);
   };
 
   var _createPlayer = function(playerSetupData) {
@@ -129,24 +137,24 @@ var Core = function(opts) {
       playerList.push(p);
     }
     return playerList;
-  };
+  }.bind(this);
 
-  var _createPhase = function (){
+  var _createPhase = function() {
     const phaseManager = new PhaseManager();
-    phaseManager.onPhaseEnd = function (){
+    phaseManager.onPhaseEnd = function() {
       this.onUpdated([
         phaseManager.getGameData(),
         characterManager.getGameData(),
       ]);
     }.bind(this);
-    phaseManager.onRoundEnd = function (){
+    phaseManager.onRoundEnd = function() {
       this.onUpdated([
         phaseManager.getGameData(),
         characterManager.getGameData(),
       ]);
     }.bind(this);
     return phaseManager;
-  };
+  }.bind(this);
 
   var _shuffle = function(input) {
     var output = [];
@@ -158,7 +166,7 @@ var Core = function(opts) {
       copy[k] = copy[i - 1];
     }
     return output;
-  };
+  }.bind(this);
 
   // game ------------------------------------------------
   this.start = function() {

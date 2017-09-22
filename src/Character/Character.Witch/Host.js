@@ -1,6 +1,6 @@
 "use strict";
 
-var Basic = require('../Role.Basic/Host.js');
+var Basic = require('../Character.Basic/Host.js');
 var ATTR = require('./Attr.js');
 
 var Witch = function(characterManager, phaseManager) {
@@ -16,12 +16,19 @@ Witch.prototype.setAttr = function(attr) {
   if (opts.hasOwnProperty('SELFHEAL')) this.status[2] = opts['SELFHEAL'];
 };
 
-Witch.prototype.active = function(generalDat, actionDat) {
+Witch.prototype.active = function() {
   let dat = [
-    actionDat.canHeal ? 1 : 0,
-    actionDat.victim
+    0,
+    -1
   ];
-  Basic.prototype.active.call(this, generalDat, dat);
+  let actionDat = this.phaseManager.roundData;
+  let victim = actionDat.werewolf || -1;
+  if (this.goodPotionNumber>0) {
+    dat[1] = victim;
+    dat[0] = this.canHeal(victim)? 1: 0;
+  }
+
+  this.sendActive(dat);
 };
 
 Witch.prototype.onAction = function(actionDat) {
@@ -57,8 +64,9 @@ Witch.prototype.useBadPotion = function() {
   this.status[1]--;
 };
 
-Witch.prototype.canHeal = function(roundNumber, playerIdx) {
+Witch.prototype.canHeal = function(playerIdx) {
   if (this.status[0] <= 0 || playerIdx === -1) return false;
+  let roundNumber = this.phaseManager.roundNumber;
   if (playerIdx === this.player.playerIdx) {
     if (this.status[2] === ATTR.SELFHEAL.NO) return false;
     else if (this.status[2] === ATTR.SELFHEAL.NIGHTONE && roundNumber > 1) return false;
@@ -66,7 +74,7 @@ Witch.prototype.canHeal = function(roundNumber, playerIdx) {
   return true;
 };
 
-Witch.prototype.canPoison = function(roundNumber, playerIdx) {
+Witch.prototype.canPoison = function(playerIdx) {
   return (this.status[1] > 0 && playerIdx !== -1);
 };
 

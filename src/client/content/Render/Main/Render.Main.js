@@ -7,7 +7,7 @@ var MSGCODE = require('GLOBAL/content/MessageCode.js');
 var ACTIVECODE = require('GLOBAL/content/ActiveCode.js');
 var PHASE = require('GLOBAL/content/PhaseCode.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
-var Role = require('ROLE/Role.Client.js');
+var Character = require('CHARACTER/Character.Client.js');
 var PanelManager = require('CLIENT/content/Panel/PanelManager.js');
 var Panel = {
     Status: require('CLIENT/content/Panel/Panel.Status.js'),

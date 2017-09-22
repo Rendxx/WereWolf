@@ -5,7 +5,7 @@ var CharacterManager = function() {
 
   this.setup = function(players, characterCode, phase) {
     for (let i = 0; i < players.length; i++) {
-      var character = new(Character(characterCode[i]))(phase);
+      var character = new(Character(characterCode[i]))(this, phase);
       character.setup(players[i]);
       this.list[i] = character;
     }

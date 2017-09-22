@@ -6,4 +6,4 @@ var PHASE_ATTR = {
     }
 };
 
-module.exports = PHASE;
+module.exports = PHASE_ATTR;

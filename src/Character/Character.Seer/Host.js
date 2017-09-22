@@ -1,6 +1,6 @@
 "use strict";
 
-var Basic = require('../Role.Basic/Host.js');
+var Basic = require('../Character.Basic/Host.js');
 
 var Seer = function(characterManager, phaseManager) {
   Basic.call(this, characterManager, phaseManager);
@@ -10,14 +10,6 @@ var Seer = function(characterManager, phaseManager) {
 Seer.prototype = Object.create(Basic.prototype);
 Seer.prototype.constructor = Seer;
 Seer.DATA = require('./Data.js');
-
-Seer.prototype.active = function(generalDat, actionDat) {
-  let dat = [
-    actionDat.seer,
-    actionDat.vote
-  ];
-  Basic.prototype.active.call(this, generalDat, dat);
-};
 
 Seer.prototype.onAction = function(actionDat) {
   const playerIdx = actionDat[0];

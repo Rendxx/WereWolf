@@ -78,15 +78,19 @@ Basic.prototype.getData = function() {
  * Send active message.
  * @param {object} actionDat action data
  */
-Basic.prototype.active = function(actionDat) {
-  this.actived = ACTIVECODE.YES;
-  this.player.update({
-    phase: this.phaseManager.phaseIdx,
-    alive: this.characterManager.getAliveStr(),
-    actived: this.actived,
-    status: this.status,
-    action: actionDat
-  });
+Basic.prototype.active = function() {
+  this.sendActive([]);
+};
+
+Basic.prototype.sendActive = function(actionDat) {
+ this.actived = ACTIVECODE.YES;
+ this.player.update({
+   phase: this.phaseManager.phaseIdx,
+   alive: this.characterManager.getAliveStr(),
+   actived: this.actived,
+   status: this.status,
+   action: actionDat
+ });
 };
 
 /**

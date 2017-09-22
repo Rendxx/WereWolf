@@ -1,4 +1,4 @@
-const PHASE_CODE = = require('./PHASE_CODE.js');
+const PHASE_CODE = require('./PHASE_CODE.js');
 var PHASE_LIST = [
   PHASE_CODE.DAY,
   PHASE_CODE.NIGHTCOMING,

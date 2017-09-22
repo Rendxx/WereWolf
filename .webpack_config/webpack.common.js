@@ -81,6 +81,7 @@ module.exports = {
       HOST: root + '/../src/host',
       GLOBAL: root + '/../src/global',
       CHARACTER: root + '/../src/Character',
+      PHASE: root + '/../src/Phase',
     },
     extensions: ['.js', '.json', '.less']
   }

@@ -1,6 +1,6 @@
 "use strict";
 
-var Basic= require('../Role.Basic/Client.js');
+var Basic= require('../Character.Basic/Client.js');
 var ROLEDATA = require('./Data.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 var INFO2 = require('./Info.js');
@@ -34,7 +34,7 @@ Hunter.prototype.update = function (aliveListArr, dat){
                 className: 'info_client_phase_dead info_client_phase_dead_notshot'
             });
         }
-    } 
+    }
     this.alive = t;
 };
 

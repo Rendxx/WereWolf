@@ -1,12 +1,11 @@
-var ROLECODE = require('GLOBAL/content/RoleCode.js');
-var ROLEDATA = require('GLOBAL/content/RoleData.js');
+var Character = require('CHARACTER/Character.Host.js');
 var ACTIVECODE = require('GLOBAL/content/ActiveCode.js');
-var PHASECODE = require('GLOBAL/content/PhaseCode.js');
 var INFO = require('HOST/content/InfoBox/Info.Content.js');
+var PHASE_DATA = require('PHASE/PHASE_DATA.js');
 var InfoBox = require('HOST/content/InfoBox/InfoBox.js');
-var PHASEMESSAGE = require('./PhaseMessage.js');
 
 require('./Render.Main.PlayerPanel.less');
+require('./PhaseMessage.less');
 
 var HTML = {
     wrap: '<div class="_playerList"></div>',
@@ -15,11 +14,16 @@ var HTML = {
     hide: '<div class="_hide"></div>',
     space: '<div class="_space"></div>',
     start: '<div class="_playerList_start">START</div>',
-    skip: '<div class="_title_btn _skip">Skip</div>',
+    skip: '<div class="_title_btn _skip">Next Phase</div>',
     status: '<div class="_title_btn _status">Status</div>',
     end: '<div class="_title_btn _end">End</div>',
     roleVisible: '<div class="_title_btn _roleVisible">RoleList</div>',
-    message: '<div class="_message"></div>',
+    message: '<div class="_message">'+
+               '<div class="phase_message">'+
+                 '<div class="_phase_message_icon"></div>'+
+                 '<div class="_phase_message_text"></div>'+
+               '</div>'+
+              '</div>',
     statusPanel:'<div class="_statusPanel">'+
                   '<div class="_innerWrap">'+
                     '<div class="_block _witch">'+
@@ -56,42 +60,33 @@ var PlayerPanel = function(container) {
     var playerNum = 0;
     var playerAlive = [];
     var _playerInfo = null;
-    var _basicData = null;
-    var _phase = PHASECODE.NONE;
     var isRoleVisible = false;
     var status = {};
 
     // Callback ------------------------------
     this.onChange = null;
-    this.onSkip = null;
-    that.onSetStatus = null;
-    that.onEnd = null;
+    this.onNextPhase = null;
+    this.onSetStatus = null;
+    this.onEnd = null;
 
     // Public --------------------------------
-    this.reset = function(basicData, playerInfo) {
-        _basicData = basicData;
+    this.reset = function(playerInfo, roleInfo) {
         _playerInfo = playerInfo;
-        playerNum = _basicData.length;
+        playerNum = playerInfo.length;
         setupHtml();
-        setupPlayer(_basicData, _playerInfo);
-        _phase= PHASECODE.NONE;
+        setupPlayer(playerInfo, roleInfo);
         resize();
     };
 
-    this.update = function(phase, aliveList, aliveListVisible, statusList) {
-        _phase = phase;
+    this.update = function(phaseCode, aliveList) {
         for (var i=0;i<playerNum;i++){
-            playerAlive[i] = aliveList[i]==='1';
-            if (aliveListVisible[i]==='1') html['player'][i].wrap.addClass(CSS.alive);
+            playerAlive[i] = aliveList[i];
+            if (playerAlive[i]) html['player'][i].wrap.addClass(CSS.alive);
             else html['player'][i].wrap.removeClass(CSS.alive);
         }
 
-        if (!PHASEMESSAGE.hasOwnProperty(phase)) {
-            html['message'].empty();
-        } else {
-            html['message'].html(PHASEMESSAGE[phase]);
-        }
-        updateStatus(statusList);
+        html['message-icon'].css('background-image', 'url(' + PHASE_DATA[phaseCode].Icon + ')');
+        html['message-text'].text(PHASE_DATA[phaseCode].Name);
     };
 
     this.show = function (){
@@ -110,23 +105,14 @@ var PlayerPanel = function(container) {
     };
 
     // Private ---------------------------------------
-    var updateStatus = function (statusList){
-        for (var i=0;i<_playerInfo.length;i++){
-
-            status[_playerInfo[i][2]] = statusList[i];
-        }
-        if (status[ROLECODE.WITCH]){
-            html['witch_potion'][0].text(status[ROLECODE.WITCH][0]===1?'Yes':'No');
-            html['witch_potion'][1].text(status[ROLECODE.WITCH][1]===1?'Yes':'No');
-        }
-    };
-
     var setupHtml = function() {
         html['container'].empty();
         html['wrap'] = $(HTML.wrap).appendTo(html['container']);
         html['title'] = $(HTML.title).appendTo(html['wrap']);
         html['inner'] = $(HTML.inner).appendTo(html['wrap']);
         html['message'] = $(HTML.message).appendTo(html['inner']);
+        html['message-icon'] = html['message'].find('._phase_message_icon');
+        html['message-text'] = html['message'].find('._phase_message_text');
         //html['start'] = $(HTML.start).appendTo(html['inner']);
         html['skip'] = $(HTML.skip).appendTo(html['title']);
         html['status'] = $(HTML.status).appendTo(html['title']);
@@ -138,7 +124,7 @@ var PlayerPanel = function(container) {
             InfoBox.check({
                 content: 'Do you want to SKIP this phase',
                 callbackYes: function() {
-                    that.onSkip&&that.onSkip();
+                    that.onNextPhase&&that.onNextPhase();
                 }
             });
         });
@@ -156,7 +142,6 @@ var PlayerPanel = function(container) {
         });
 
         html['status'].click(function(){
-            html['statusPanel'].fadeIn(200);
         });
 
         html['end'].click(function(){
@@ -164,16 +149,16 @@ var PlayerPanel = function(container) {
         });
     };
 
-    var setupPlayer = function(basicData, playerInfo) {
+    var setupPlayer = function(playerInfo, roleInfo) {
         html['player'] = [];
         for (var i=0;i<playerNum;i++){
-            addPlayer(i,basicData[i][1]);
+            addPlayer(i,playerInfo[i][2]);
         }
         if (playerInfo!=null){
             for (var i=0;i<playerNum;i++){
                 html['player'][i]['wrap'].unbind('click');
                 if (playerInfo[i]==null) continue;
-                setPlayerInfo(i, playerInfo[i][0],playerInfo[i][1],playerInfo[i][2]);
+                setPlayerInfo(i, playerInfo[i][1],playerInfo[i][2],roleInfo[i]);
             }
         }
         resize();
@@ -182,7 +167,7 @@ var PlayerPanel = function(container) {
     var setPlayerInfo = function (idx, number, name, role){
         html['player'][idx]['number'].text(number);
         html['player'][idx]['name'].text(name);
-        html['player'][idx]['role'].addClass(ROLEDATA[role].name);
+        html['player'][idx]['role'].css('background-image', 'url(' + Character(role).DATA.Portrait + ')');
 
         html['player'][idx]['wrap'].click(function(){
             var alive = playerAlive[idx]!==true;
@@ -218,27 +203,7 @@ var PlayerPanel = function(container) {
     };
 
     var setupPanel = function (){
-        html['statusPanel'] = $(HTML.statusPanel).appendTo(html['wrap']);
         html['endPanel'] = $(HTML.endPanel).appendTo(html['wrap']);
-        html['witch_potion'] = [
-          html['statusPanel'].find('._status_btn._potion_heal'),
-          html['statusPanel'].find('._status_btn._potion_poison')
-        ];
-
-        html['witch_potion'][0].click(function(e){
-            e.stopPropagation();
-            that.onSetStatus && that.onSetStatus (ROLECODE.WITCH, [1-status[ROLECODE.WITCH][0], status[ROLECODE.WITCH][1]]);
-            return false;
-        });
-
-        html['witch_potion'][1].click(function(e){
-            e.stopPropagation();
-            that.onSetStatus && that.onSetStatus (ROLECODE.WITCH, [status[ROLECODE.WITCH][0], 1-status[ROLECODE.WITCH][1]]);
-            return false;
-        });
-        html['statusPanel'].click(function(){
-            html['statusPanel'].fadeOut(200);
-        });
 
         html['endPanel'].find('._end_btn._villager').click(function(e){
             e.stopPropagation();
@@ -290,8 +255,8 @@ var PlayerPanel = function(container) {
         }
         if (_playerInfo!=null && _playerInfo.length>0){
           orderList.sort(function(a, b){
-              var number_a = _playerInfo[a][0]||0;
-              var number_b = _playerInfo[b][0]||0;
+              var number_a = _playerInfo[a][1]||0;
+              var number_b = _playerInfo[b][1]||0;
               return number_a-number_b;
           });
         }
