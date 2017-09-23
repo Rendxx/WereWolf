@@ -13,7 +13,7 @@ var CharacterManager = function() {
   };
 
   this.reset = function(characterData) {
-    for (let i = 0; i < players.length; i++) {
+    for (let i = 0; i < characterData.length; i++) {
       this.list[i].reset(characterData[i]);
     }
   };

@@ -42,8 +42,7 @@ Basic.prototype.setup = function(player) {
  * reset Role instance
  * @param {object} dat role data options
  */
-Basic.prototype.reset = function(player, dat) {
-  this.setup(player);
+Basic.prototype.reset = function(dat) {
   this.alive = (dat[0] == 1);
   this.actived = (dat[1] == 1);
   this.status = dat[2];

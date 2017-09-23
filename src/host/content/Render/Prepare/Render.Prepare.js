@@ -92,6 +92,7 @@ var Prepare = function (container, opts_in) {
     };
 
     var _init = function (opts_in) {
+      console.log(opts_in)
         _setupHtml();
         characterSelectPanel = new CharacterSelectPanel(container);
         playerList= new PlayerList(container);
