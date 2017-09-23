@@ -66,7 +66,7 @@ var Main = function (container) {
         var playerInfo = setupData[2];
 
         if (roleInstance!=null) roleInstance.dispose();
-        roleInstance = Role(initData[2]);
+        roleInstance = Character(initData[2]);
         roleInstance.setup(playerIdx);
         roleInstance.onActionEnd = function (idx){
           _send[MSGCODE.CLIENT.DECISION](idx);
