@@ -9,6 +9,15 @@ module.exports = webpackMerge(commonConfig, {
     output: {
         path: root+ '/../public/Content',
         filename: '[name].min.js'
+    }
+});
+
+/*
+module.exports = webpackMerge(commonConfig, {
+    devtool: 'source-map',
+    output: {
+        path: root+ '/../public/Content',
+        filename: '[name].min.js'
     },
 
     plugins: [
@@ -16,3 +25,4 @@ module.exports = webpackMerge(commonConfig, {
         new webpack.optimize.UglifyJsPlugin()
     ]
 });
+*/
