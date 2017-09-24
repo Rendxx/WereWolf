@@ -119,8 +119,8 @@ var Core = function(opts) {
 
     for (var i = 0; i < characterManager.list.length; i++) {
       const c = characterManager.list[i];
-      that.clientSetup([playerSetupData[i].id], [
-        playerSetupData[i].idx,
+      that.clientSetup([playerSetupData[i][0]], [
+        playerSetupData[i][3],
         c.getMetadata().Code,
         playerSetupData
       ]);

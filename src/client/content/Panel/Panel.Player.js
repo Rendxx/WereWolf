@@ -51,7 +51,7 @@ PlayerPanel.prototype._setupHtml = function() {
 PlayerPanel.prototype._setupPlayer = function(playerInfo) {
     var number = [];
     for (var i=0;i<playerInfo.length;i++) number[i]=i;
-    number.sort((a,b)=>{return playerInfo[a][0] - playerInfo[b][0];});
+    number.sort((a,b)=>{return playerInfo[a].number - playerInfo[b].number;});
 
     var that = this;
     var addPlayer = function (idx, number, name){
@@ -64,11 +64,10 @@ PlayerPanel.prototype._setupPlayer = function(playerInfo) {
     this.html['player'] = [];
     for (var i=0;i<playerInfo.length;i++){
         var k = number[i];
-        this.html['player'][k] = addPlayer(k, playerInfo[k][0],playerInfo[k][1]);
+        this.html['player'][k] = addPlayer(k, playerInfo[k].number,playerInfo[k].name);
     }
     this.html['space2'] = Util.CreateDom(HTML.space, this.html['wrap']);
     this.html['space2'].classList.add(CSS.end);
 };
 
 module.exports = PlayerPanel;
-

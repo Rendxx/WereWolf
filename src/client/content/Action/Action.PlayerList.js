@@ -1,6 +1,5 @@
 var Util = require('SRC/Util.js');
 var Basic = require('./Action.Basic.js');
-var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 require('./Action.PlayerList.less');
 
 var CSS = {
@@ -158,7 +157,7 @@ PlayerList.prototype._setupPlayerList = function(container) {
   if (size * 3 > this.width) size = ~~(this.width / 3);
 
   let w = ~~(this.width / size) - 2,
-    h = (this.playerInfo.length - w * 2 + 1) >> 1,
+    h = Math.max((this.playerInfo.length - w * 2 + 1) >> 1, 3),
     n = (w + h) * 2,
     idx = 0;
 
@@ -214,12 +213,12 @@ PlayerList.prototype._setupPlayerList = function(container) {
   for (let i = 0; i < this.playerInfo.length; i++) number[i] = i;
   let that = this;
   number.sort(function(a, b) {
-    return that.playerInfo[a][0] - that.playerInfo[b][0];
+    return that.playerInfo[a].number - that.playerInfo[b].number;
   });
 
   for (let i = 0; i < this.playerInfo.length; i++) {
     let k = number[i];
-    _html['player'][k] = this._addPlayer(k, this.playerInfo[k][0], this.playerInfo[k][1], _html['slot'][i], this.onSelect);
+    _html['player'][k] = this._addPlayer(k, this.playerInfo[k].number, this.playerInfo[k].name, _html['slot'][i], this.onSelect);
   }
   _html['player']['-1'] = this._addAbstain(_html['slot'][-1], this.onAbstain);
 
@@ -284,12 +283,7 @@ PlayerList.prototype._addPlayer = function(idx, number, name, pkg, onSelect) {
 
   Util.BindClick(pkg['inner'], function() {
     if (!pkg['inner'].classList.contains(CSS.alive)) return false;
-    InfoBox.check({
-      content: 'Do you want to target this player [' + number + '] ' + name + '?',
-      callbackYes: function() {
-        onSelect && onSelect(idx, number, name);
-      }
-    });
+    onSelect && onSelect(idx, number, name);
   });
   return pkg;
 };
@@ -301,12 +295,7 @@ PlayerList.prototype._addAbstain = function(pkg, onSelect) {
   pkg['inner'].classList.remove(CSS.empty);
 
   Util.BindClick(pkg['inner'], function() {
-    InfoBox.check({
-      content: 'Do you want to abstain?',
-      callbackYes: function() {
-        onSelect && onSelect();
-      }
-    });
+    onSelect && onSelect();
   });
   return pkg;
 };

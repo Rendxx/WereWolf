@@ -62,17 +62,18 @@ var Main = function (container) {
         /* TODO: initialize the game */
         if (setupData==null) return;
         var playerIdx = setupData[0];
-        var initData = setupData[1];
-        var playerInfo = setupData[2];
+        var characterCode = setupData[1];
+        var playerInfo = _parsePlayerInfo(setupData[2]);
+        var initData = playerInfo[playerIdx];
 
         if (roleInstance!=null) roleInstance.dispose();
-        roleInstance = Character(initData[2]);
+        roleInstance = Character(characterCode);
         roleInstance.setup(playerIdx);
         roleInstance.onActionEnd = function (idx){
           _send[MSGCODE.CLIENT.DECISION](idx);
         };
 
-        statusPanel.reset(initData[0],initData[1]);
+        statusPanel.reset(initData.number,initData.name);
         playerPanel.reset(playerInfo);
         roleInstance.initActionPanel(actionPanel, playerInfo);
         roleInstance.initInfoPanel(statusPanel.html['role']);
@@ -88,6 +89,22 @@ var Main = function (container) {
     };
 
     // Private ---------------------------------------
+    var _parsePlayerInfo = function (playerInfoArr){
+      var p = [];
+      for (let i=0;i<playerInfoArr.length;i++){
+        var id = playerInfoArr[i][0];
+        var number = playerInfoArr[i][1];
+        var name = playerInfoArr[i][2];
+        var idx = playerInfoArr[i][3];
+        p[idx] = {
+          id:id,
+          number:number,
+          name:name,
+          idx:idx,
+        }
+      }
+      return p;
+    };
 
     // Message ---------------------------------------
     var _setupMsg = function (){

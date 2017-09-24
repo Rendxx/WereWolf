@@ -63,8 +63,8 @@ Seer.prototype.actionResult = function (dat){
             isGood = dat[1]==0;
         InfoBox.actionResult({
             content: 'This player is '+(isGood?'NOT ':'')+'a werewolf',
-            number: p[0],
-            name: p[1],
+            number: p.number,
+            name: p.name,
             className: isGood?'info_client_result_seer_good':'info_client_result_seer_bad',
             callback: function() {
                 this._action.hide();

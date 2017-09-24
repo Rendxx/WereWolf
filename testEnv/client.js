@@ -2,16 +2,25 @@
 (function(){
   var playerNum = 6;
   var playerInfo = [
-    [1, '王狗能'],
-    [2, '雕胸'],
-    [3, '土豪'],
-    [4, '包包包'],
-    [5, '小红帽'],
-    [6, '高俊敏'],
-    [7, '皇马球迷'],
-    [8, '飙车的老司机'],
-    [9, 'Test Player'],
-    [10, '不说话的草莓味'],
+    ['c1', 1, '王狗能', 0],
+    ['c2', 2, '雕胸', 1],
+    ['c3', 3, '土豪', 2],
+    ['c4', 4, '包包包', 3],
+    ['c5', 5, '小红帽', 4],
+    ['c6', 6, '高俊敏', 5],
+    ['c7', 7, '皇马球迷', 6],
+    ['c8', 8, '飙车的老司机', 7],
+    ['c9', 9, 'Test Player', 8],
+    ['c10', 10, '测试玩家 10', 9],
+    ['c11', 11, '测试玩家 11', 10],
+    ['c12', 12, '测试玩家 12', 11],
+    ['c13', 13, '测试玩家 13', 12],
+    ['c14', 14, '测试玩家 14', 13],
+    ['c15', 15, '测试玩家 15', 14],
+    ['c16', 16, '测试玩家 16', 15],
+    ['c17', 17, '测试玩家 17', 16],
+    ['c18', 18, '测试玩家 18', 17],
+    ['c19', 19, '测试玩家 19', 18],
   ];
   var playerAlive =  '1101111101';
   var wolvies = [0,5,6,9];
@@ -25,9 +34,12 @@
     start : function (){
       window.msg('1|3|SERVER|12|null');
     },
-    init : function (role){
+    init : function (role, playerNum, idx){
       role=role||2;
-      window.msg('2|4|HOST|1|[5,[6,"高俊敏",'+role+'],'+JSON.stringify(playerInfo)+']');
+      idx=idx||0;
+      playerNum=playerNum||12;
+      let p = playerInfo.slice(0,playerNum);
+      window.msg('2|4|HOST|1|['+idx+','+role+','+JSON.stringify(p)+']');
     },
     update2 : function (phase){
       phase=phase||3;

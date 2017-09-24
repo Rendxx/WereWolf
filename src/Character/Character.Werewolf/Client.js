@@ -62,8 +62,8 @@ Werewolf.prototype.actionResult = function (dat){
         let p = this._playerInfo[dat[0]];
         InfoBox.actionResult({
             content: 'This player has been murdered',
-            number: p[0],
-            name: p[1],
+            number: p.number,
+            name: p.name,
             className: 'info_client_result_werewolf',
             callback: function() {
                 this._action.hide();
@@ -83,11 +83,21 @@ Werewolf.prototype.initActionPanel = function (actionPanel, playerInfo){
     let that = this;
     playerList.onSelect = function (idx, number, name){
         if (!that.actived) return;
-        that.onActionEnd && that.onActionEnd([idx]);
+        InfoBox.check({
+            content: 'Do you want to kill <br/><b>['+number+'] '+name+'</b>?',
+            callbackYes: function (){
+                that.onActionEnd && that.onActionEnd([idx]);
+            }
+        });
     };
     playerList.onAbstain = function (){
         if (!that.actived) return;
-        that.onActionEnd && that.onActionEnd([-1]);
+        InfoBox.check({
+            content: 'Do you want to skip this turn?',
+            callbackYes: function (){
+                that.onActionEnd && that.onActionEnd([-1]);
+            }
+        });
     };
     this._action.reset({
         'playerList': playerList

@@ -10,6 +10,8 @@ var PhaseManager = function() {
   this.roundData = {};
   this.phaseIdx = 0;
   this.onPhaseEnd = null;
+
+  this._nextPhaseTimeout = null;
 };
 PhaseManager.prototype = Object.create(null);
 PhaseManager.prototype.constructor = PhaseManager;
@@ -46,14 +48,20 @@ PhaseManager.prototype.getGameData = function() {
   ];
 };
 
-PhaseManager.prototype.nextPhase = function() {
-  this.phaseIdx = (this.phaseIdx + 1) % this.phaseList.length;
-  if (this.phaseIdx === 0) {
-    this.roundStart();
-  } else {
-    this.onPhaseEnd();
-  }
-  this.phaseList[this.phaseIdx].active();
+PhaseManager.prototype.nextPhase = function(delay) {
+  if (delay == null) delay = 8000;
+  if (this._nextPhaseTimeout!==null) clearTimeout(this._nextPhaseTimeout);
+
+  this._nextPhaseTimeout = setTimeout(function(){
+    this._nextPhaseTimeout = null;
+    this.phaseIdx = (this.phaseIdx + 1) % this.phaseList.length;
+    if (this.phaseIdx === 0) {
+      this.roundStart();
+    } else {
+      this.onPhaseEnd();
+    }
+    this.phaseList[this.phaseIdx].active();
+  }.bind(this), delay);
 };
 
 PhaseManager.prototype.roundStart = function() {
