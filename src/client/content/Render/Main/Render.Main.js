@@ -142,10 +142,10 @@ var Main = function (container) {
     };
 
     var _setupSend = function (){
-        _send[MSGCODE.CLIENT.DECISION] = function (idx){
+        _send[MSGCODE.CLIENT.DECISION] = function (dat){
             that.message.action([
               MSGCODE.CLIENT.DECISION,
-              idx
+              dat
             ]);
         };
     };

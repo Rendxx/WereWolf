@@ -18,6 +18,7 @@ var Basic = function () {
     this._html = {};
     this._playerInfo = null;
     this._action = null;
+    this._actionStamp = -1;
     this.status = {};
     this.alive = true;
     this.actived = false;
@@ -34,8 +35,8 @@ Basic.prototype.setup = function (playerIdx){
 };
 
 /**
- * Day time. 
- * Be triggered when day come. 
+ * Day time.
+ * Be triggered when day come.
  */
 Basic.prototype.dayTime = function (){
     if (this.alive){
@@ -125,6 +126,6 @@ Basic.prototype.initActionPanel = function (actionPanel, playerInfo){
  * Dispose resource.
  */
 Basic.prototype.dispose=function(){
-}; 
+};
 
 module.exports = Basic;

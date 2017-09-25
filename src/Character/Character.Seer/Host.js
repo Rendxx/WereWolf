@@ -12,7 +12,8 @@ Seer.prototype.constructor = Seer;
 Seer.DATA = require('./Data.js');
 
 Seer.prototype.onAction = function(actionDat) {
-  const playerIdx = actionDat[0];
+  if (!this.phaseManager.checkActionValid(actionDat[0])) return;
+  const playerIdx = actionDat[1];
   const isGood = this.characterManager.list[playerIdx].isGood()?0:1;
   const rst = [playerIdx,isGood];
   this.phaseManager.roundData['seer'] = rst;

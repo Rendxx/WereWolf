@@ -27,7 +27,7 @@ var Core = function(opts) {
   this.send = null; /* TODO: this.send(code, content): This function should be set by Host-Manager, it is used to send message out */
   this.handler = {
     nextPhase: function() {
-      phaseManager.nextPhase();
+      phaseManager.nextPhase(0);
     },
     setAlive: function(playerIdx, isAlive) {
       characterManager.list[playerIdx].setAlive(isAlive);

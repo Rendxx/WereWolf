@@ -10,7 +10,8 @@ Werewolf.prototype.constructor = Werewolf;
 Werewolf.DATA = require('./Data.js');
 
 Werewolf.prototype.onAction = function(actionDat) {
-  this.phaseManager.roundData['werewolf'] = actionDat[0];
+  if (!this.phaseManager.checkActionValid(actionDat[0])) return;
+  this.phaseManager.roundData['werewolf'] = actionDat[1];
   this.actionResult(actionDat);
   this.phaseManager.nextPhase();
 };

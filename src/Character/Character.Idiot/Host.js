@@ -8,6 +8,7 @@ var Idiot = function(characterManager, phaseManager) {
   this.status = [0]; // [exposed?1:0]
 };
 Idiot.prototype = Object.create(Basic.prototype);
+Idiot.prototype.constructor = Idiot;
 Idiot.DATA = require('./Data.js');
 
 /**

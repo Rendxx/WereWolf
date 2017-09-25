@@ -10,6 +10,7 @@ var PhaseManager = function() {
   this.roundData = {};
   this.phaseIdx = 0;
   this.onPhaseEnd = null;
+  this.actionStamp = 0;
 
   this._nextPhaseTimeout = null;
 };
@@ -37,6 +38,7 @@ PhaseManager.prototype.reset = function(gameData) {
   this.roundNumber = gameData[0];
   this.roundData = gameData[1];
   this.phaseIdx = gameData[2];
+  this.actionStamp = gameData[3];
 };
 
 PhaseManager.prototype.getGameData = function() {
@@ -44,6 +46,7 @@ PhaseManager.prototype.getGameData = function() {
     this.roundNumber,
     this.roundData,
     this.phaseIdx,
+    this.actionStamp,
     this.phaseList[this.phaseIdx].data.Code,
   ];
 };
@@ -51,6 +54,7 @@ PhaseManager.prototype.getGameData = function() {
 PhaseManager.prototype.nextPhase = function(delay) {
   if (delay == null) delay = 8000;
   if (this._nextPhaseTimeout!==null) clearTimeout(this._nextPhaseTimeout);
+  this.actionStamp++;
 
   this._nextPhaseTimeout = setTimeout(function(){
     this._nextPhaseTimeout = null;
@@ -80,5 +84,11 @@ PhaseManager.prototype.roundStart = function() {
   this.roundData = {};
   this.onPhaseEnd();
 };
+
+PhaseManager.prototype.checkActionValid = function(actionStamp) {
+  return actionStamp === this.actionStamp;
+};
+
+
 
 module.exports = PhaseManager;
