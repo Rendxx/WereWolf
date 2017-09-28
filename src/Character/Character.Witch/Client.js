@@ -178,7 +178,7 @@ Witch.prototype.initActionPanel = function(actionPanel, playerInfo) {
       callbackYes: function() {
         this._action.hide();
         this.onActionEnd && this.onActionEnd([this._actionStamp, -1, idx]);
-      }
+      }.bind(this)
     });
   }.bind(this);
   potionBad.onAbstain = function() {
@@ -188,7 +188,7 @@ Witch.prototype.initActionPanel = function(actionPanel, playerInfo) {
       callbackYes: function() {
         this._action.hide();
         this.onActionEnd && this.onActionEnd([this._actionStamp, -1, -1]);
-      }
+      }.bind(this)
     });
   }.bind(this);
   this._action.reset({

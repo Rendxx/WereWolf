@@ -89,7 +89,7 @@ Werewolf.prototype.initActionPanel = function(actionPanel, playerInfo) {
       callbackYes: function() {
         this._action.hide();
         that.onActionEnd && that.onActionEnd([this._actionStamp, idx]);
-      }
+      }.bind(that)
     });
   };
   playerList.onAbstain = function() {
@@ -99,7 +99,7 @@ Werewolf.prototype.initActionPanel = function(actionPanel, playerInfo) {
       callbackYes: function() {
         this._action.hide();
         that.onActionEnd && that.onActionEnd([this._actionStamp, -1]);
-      }
+      }.bind(that)
     });
   };
   this._action.reset({

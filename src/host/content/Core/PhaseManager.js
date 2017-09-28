@@ -89,6 +89,9 @@ PhaseManager.prototype.checkActionValid = function(actionStamp) {
   return actionStamp === this.actionStamp;
 };
 
-
+PhaseManager.prototype.actionResult = function(actionData) {
+  this.phaseList[this.phaseIdx].actionResult(actionData);
+  this.nextPhase(8000);
+};
 
 module.exports = PhaseManager;

@@ -78,7 +78,7 @@ Basic.prototype.getData = function() {
  * @param {object} actionDat action data
  */
 Basic.prototype.active = function() {
-  this.sendActive([]);
+  this.sendActive([this.phaseManager.actionStamp]);
 };
 
 Basic.prototype.sendActive = function(actionDat) {

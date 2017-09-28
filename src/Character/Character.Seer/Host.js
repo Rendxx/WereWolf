@@ -17,8 +17,7 @@ Seer.prototype.onAction = function(actionDat) {
   const isGood = this.characterManager.list[playerIdx].isGood()?0:1;
   const rst = [playerIdx,isGood];
   this.phaseManager.roundData['seer'] = rst;
-  this.actionResult(rst);
-  this.phaseManager.nextPhase();
+  this.phaseManager.actionResult(rst);
 };
 
 /**

@@ -47,7 +47,7 @@ var Phase = function(data) {
       _actionCountDownFunc = setTimeout(function() {
         this.onActionComplete && this.onActionComplete();
         _actionCountDownFunc = null;
-      }.bind(this), 8000);
+      }.bind(this), 6000);
     } else {
       if (this.data.Timeout > 0) {
         _actionCountDownFunc = setTimeout(function() {
@@ -58,16 +58,25 @@ var Phase = function(data) {
       _playSound();
       let aliveNumber = 0;
       for (let i = 0; i < this.characters.length; i++) {
-        if (this.characters[i].alive) aliveNumber++;
-        this.characters[i].active();
+        if (this.characters[i].alive) {
+          aliveNumber++;
+          this.characters[i].active();
+        }
       }
 
       if (aliveNumber === 0 && this.characters.length > 0) {
         _actionCountDownFunc = setTimeout(function() {
           this.onActionComplete && this.onActionComplete();
           _actionCountDownFunc = null;
-        }.bind(this), 5000);
+        }.bind(this), 6000);
       }
+    }
+  };
+
+  this.actionResult = function(actionData) {
+    for (let i = 0; i < this.characters.length; i++) {
+      if (this.characters[i].alive)
+        this.characters[i].actionResult(actionData);
     }
   };
 
