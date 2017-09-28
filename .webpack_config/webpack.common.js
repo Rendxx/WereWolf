@@ -8,10 +8,10 @@ const root = path.resolve(__dirname);
 
 
 var styleUrlOptions = {
-    limit: 10000,                 //embed up to 10k size image file into css as data url
-    emitFile: true,              //do not copy file larger than 10k
-    context: root,
-    name: '../Image/[hash].[ext]'    //keep the original filename for those larger than 10k
+  limit: 10000, //embed up to 10k size image file into css as data url
+  emitFile: true, //do not copy file larger than 10k
+  context: root,
+  name: '../Image/[hash].[ext]' //keep the original filename for those larger than 10k
 };
 
 module.exports = {
@@ -24,8 +24,7 @@ module.exports = {
     test: './src/test/Wrap'
   },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
@@ -36,7 +35,7 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: /node_modules/,
-        use: ['style-loader','css-loader']
+        use: ['style-loader', 'css-loader']
       },
       {
         test: /\.less$/,
@@ -60,17 +59,32 @@ module.exports = {
       {
         test: /\.(png|jpg)$/,
         exclude: /node_modules/,
-        use: { loader: 'url-loader', options: styleUrlOptions }
+        use: {
+          loader: 'url-loader',
+          options: styleUrlOptions
+        }
       },
       {
         test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
         exclude: /node_modules/,
-        use: ['file-loader?name=../Font/[name].[ext]']
+        use: [{
+          loader: 'file-loader',
+          options: {
+            context: root,
+            name: '../Font/[name].[ext]'
+          }
+        }]
       },
       {
         test: /\.mp3$/,
         exclude: /node_modules/,
-        use: ['file-loader?name=../Sound/[name].[ext]']
+        use: [{
+          loader: 'file-loader',
+          options: {
+            context: root,
+            name: '../Sound/[name].[ext]'
+          }
+        }]
       }
     ]
   },

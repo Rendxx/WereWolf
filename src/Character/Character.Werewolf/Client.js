@@ -88,7 +88,7 @@ Werewolf.prototype.initActionPanel = function(actionPanel, playerInfo) {
       content: 'Do you want to kill <br/><b>[' + number + '] ' + name + '</b>?',
       callbackYes: function() {
         this._action.hide();
-        that.onActionEnd && that.onActionEnd([idx]);
+        that.onActionEnd && that.onActionEnd([this._actionStamp, idx]);
       }
     });
   };

@@ -91,7 +91,7 @@ var Main = function(container) {
     for (let i = 0; i < characterData.length; i++) {
       aliveList[i] = characterData[i][0] == 1;
     }
-    var phaseCode = phaseData[3];
+    var phaseCode = phaseData[4];
     playerPanel.update(phaseCode, aliveList);
     gameData = null;
   };

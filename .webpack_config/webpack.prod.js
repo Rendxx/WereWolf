@@ -8,8 +8,9 @@ module.exports = webpackMerge(commonConfig, {
     devtool: 'source-map',
     output: {
         path: root+ '/../public/Content',
-        filename: '[name].min.js'
-    }
+        filename: '[name].min.js',
+        publicPath: '/Game/Werewolf/Content/'
+    },
 });
 
 /*
