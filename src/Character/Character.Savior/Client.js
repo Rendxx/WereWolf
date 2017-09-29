@@ -1,0 +1,118 @@
+"use strict";
+
+var Basic = require('../Character.Basic/Client.js');
+var Util = require('SRC/Util.js');
+var ROLEDATA = require('./Data.js');
+var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
+var INFO2 = require('./Info.js');
+var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
+var Action = {
+  PlayerList: require('CLIENT/content/Action/Action.PlayerList.js')
+};
+
+require('./Client.less');
+require('./Action.less');
+
+var Savior = function() {
+  Basic.call(this);
+  this.code = ROLEDATA.Code;
+  this.name = ROLEDATA.Name;
+  this.description = ROLEDATA.Description;
+  this.instruction = ROLEDATA.Instruction;
+  this.lastProtectIdx = -1;
+};
+Savior.prototype = Object.create(Basic.prototype);
+Savior.prototype.constructor = Savior;
+
+Savior.prototype.active = function(aliveListArr, dat) {
+  if (!this.alive) return;
+  this._actionStamp = dat[0];
+  if (!this.actived) {
+    this.actived = true;
+    InfoBox.phase({
+      title: 'Savior',
+      content: 'Choose the player you want to protect.',
+      className: 'info_client_phase_savior'
+    });
+    this._action.show();
+    this._action.components['playerList'].reset({
+      playerAlive: aliveListArr,
+      isAvailable: true,
+      className: 'action_playerList_savior',
+      content: 'Choose a player. The player will be protected from werewolf. However the player will die if being save by Witch'
+    });
+    this._action.components['playerList'].show();
+  }
+  this._action.components['playerList'].update();
+};
+
+Werewolf.prototype.actionResult = function(dat) {
+  this.inactive();
+  if (dat[0] == -1) {
+    InfoBox.actionResult({
+      content: 'You did not protect anyone this night',
+      className: 'info_client_result_savior_hideNumber',
+      callback: function() {
+        this._action.hide();
+      }.bind(this)
+    });
+  } else {
+    let p = this._playerInfo[dat[0]];
+    InfoBox.actionResult({
+      content: 'This player has been protected',
+      number: p.number,
+      name: p.name,
+      className: 'info_client_result_savior',
+      callback: function() {
+        this._action.hide();
+      }.bind(this)
+    });
+  }
+};
+
+Savior.prototype.initInfoPanel = function(container) {
+  Basic.prototype.initInfoPanel.call(this, container);
+  this._html['wrap'].classList.add('_roleInfo_savior');
+};
+
+Savior.prototype.initActionPanel = function(actionPanel, playerInfo) {
+  Basic.prototype.initActionPanel.call(this, actionPanel, playerInfo);
+  let playerList = new Action.PlayerList(this.playerIdx, playerInfo, 'Choose your target');
+  let that = this;
+  playerList.onSelect = function(idx, number, name) {
+    if (!that.actived) return;
+    if (this.lastProtectIdx === idx){
+      InfoBox.alert({
+        content: 'You can not protect <br/><b>[' + number + '] ' + name + '</b> in this night.'
+      });
+    }else{
+      InfoBox.check({
+        content: 'Do you want to protect <br/><b>[' + number + '] ' + name + '</b>?',
+        callbackYes: function() {
+          this._action.hide();
+          that.onActionEnd && that.onActionEnd([this._actionStamp, idx]);
+        }.bind(that)
+      });
+    }
+  };
+  playerList.onAbstain = function() {
+    if (!that.actived) return;
+    InfoBox.check({
+      content: 'Do you want to skip this turn?',
+      callbackYes: function() {
+        this._action.hide();
+        that.onActionEnd && that.onActionEnd([this._actionStamp, -1]);
+      }.bind(that)
+    });
+  };
+  this._action.reset({
+    'playerList': playerList
+  });
+};
+
+Savior.prototype.update = function(aliveListArr, dat) {
+  Basic.prototype.update.call(this, aliveListArr, dat);
+  this.lastProtectIdx = [dat[0]];
+};
+
+module.exports = Savior;
