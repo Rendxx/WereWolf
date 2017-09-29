@@ -54,6 +54,15 @@ Witch.prototype._showPotionGood = function(aliveListArr, canHeal, victim) {
         this._showPotionBad(aliveListArr, true, false);
       }.bind(this)
     });
+  } else if (victim === -1) {
+    this._action.components['potionGood'].update({
+      className: 'action_singlePlayer_witch_cantHeal',
+      content: 'No player was killed.',
+      isAvailable: false,
+      onOk: function() {
+        this._showPotionBad(aliveListArr, true, false);
+      }.bind(this)
+    });
   } else if (canHeal === 0) {
     let p = this._playerInfo[victim];
     this._action.components['potionGood'].update({

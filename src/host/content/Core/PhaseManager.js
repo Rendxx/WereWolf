@@ -52,7 +52,7 @@ PhaseManager.prototype.getGameData = function() {
 };
 
 PhaseManager.prototype.nextPhase = function(delay) {
-  if (delay == null) delay = 8000;
+  if (delay == null) delay = 5000;
   if (this._nextPhaseTimeout!==null) clearTimeout(this._nextPhaseTimeout);
   this.actionStamp++;
 
@@ -91,7 +91,7 @@ PhaseManager.prototype.checkActionValid = function(actionStamp) {
 
 PhaseManager.prototype.actionResult = function(actionData) {
   this.phaseList[this.phaseIdx].actionResult(actionData);
-  this.nextPhase(8000);
+  this.nextPhase(5000);
 };
 
 module.exports = PhaseManager;

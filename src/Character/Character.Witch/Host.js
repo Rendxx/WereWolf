@@ -18,14 +18,15 @@ Witch.prototype.setAttr = function(attr) {
 
 Witch.prototype.active = function() {
   let dat = [
-    0,
-    -1
+    this.phaseManager.actionStamp,
+    0, -1
   ];
   let actionDat = this.phaseManager.roundData;
-  let victim = actionDat.werewolf || -1;
-  if (this.goodPotionNumber>0) {
-    dat[1] = victim;
-    dat[0] = this.canHeal(victim)? 1: 0;
+  let victim = actionDat.werewolf;
+  if (victim == null) victim = -1;
+  if (this.goodPotionNumber() > 0) {
+    dat[2] = victim;
+    dat[1] = this.canHeal(victim) ? 1 : 0;
   }
 
   this.sendActive(dat);
@@ -35,9 +36,20 @@ Witch.prototype.onAction = function(actionDat) {
   if (!this.phaseManager.checkActionValid(actionDat[0])) return;
   const healIdx = actionDat[1];
   const poisonIdx = actionDat[2];
-  this.phaseManager.roundData['witchHeal'] = actionDat[1];
-  this.phaseManager.roundData['witchPoison'] = actionDat[2];
-  this.phaseManager.actionResult([actionDat[1],actionDat[2]]);
+  if (healIdx !== -1 && this.goodPotionNumber() > 0) {
+    this.useGoodPotion();
+    this.phaseManager.roundData['witchHeal'] = actionDat[1];
+  } else {
+    this.phaseManager.roundData['witchHeal'] = -1;
+  }
+  if (poisonIdx !== -1 && this.badPotionNumber() > 0) {
+    this.useBadPotion();
+    this.phaseManager.roundData['witchPoison'] = actionDat[2];
+  } else {
+    this.phaseManager.roundData['witchPoison'] = -1;
+  }
+
+  this.phaseManager.actionResult([actionDat[1], actionDat[2]]);
 };
 
 /**
