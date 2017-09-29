@@ -45,10 +45,10 @@ Witch.prototype.active = function(aliveListArr, dat) {
 };
 
 Witch.prototype._showPotionGood = function(aliveListArr, canHeal, victim) {
-  if (this.potion[0] === 0) {
+  if (this.character[0] === 0) {
     this._action.components['potionGood'].update({
       className: 'action_singlePlayer_witch_noPotion',
-      content: 'You don\'t have potion to heal.',
+      content: 'You don\'t have character to heal.',
       isAvailable: false,
       onOk: function() {
         this._showPotionBad(aliveListArr, true, false);
@@ -79,7 +79,7 @@ Witch.prototype._showPotionGood = function(aliveListArr, canHeal, victim) {
     let p = this._playerInfo[victim];
     this._action.components['potionGood'].update({
       className: 'action_singlePlayer_witch_heal',
-      content: 'Do you want to heal this victim with your healing potion?',
+      content: 'Do you want to heal this victim with your healing character?',
       number: p.number,
       name: p.name,
       isAvailable: true,
@@ -100,21 +100,21 @@ Witch.prototype._showPotionBad = function(aliveListArr, canPoison, isHealed) {
   if (!canPoison) {
     this._action.components['potionBad'].reset({
       className: 'action_singlePlayer_witch_cantPoison',
-      content: 'You have already used a potion tonight.',
+      content: 'You have already used a character tonight.',
       playerAlive: aliveListArr,
       isAvailable: false
     });
-  } else if (this.potion[1] === 0) {
+  } else if (this.character[1] === 0) {
     this._action.components['potionBad'].reset({
       className: 'action_singlePlayer_witch_noPoison',
-      content: 'You don\'t have potion to poison.',
+      content: 'You don\'t have character to poison.',
       playerAlive: aliveListArr,
       isAvailable: false
     });
   } else {
     this._action.components['potionBad'].reset({
       className: 'action_singlePlayer_witch_poison',
-      content: 'You can poison a player with your potion. Choose one from the list or select "cancel" to do nothing.',
+      content: 'You can poison a player with your character. Choose one from the list or select "cancel" to do nothing.',
       playerAlive: aliveListArr,
       isAvailable: true
     });

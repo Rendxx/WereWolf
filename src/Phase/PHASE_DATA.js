@@ -75,6 +75,21 @@ PHASE_DATA[PHASE_CODE.SEER] = {
   Role: [CHARACTER_CODE.SEER]
 };
 
+PHASE_DATA[PHASE_CODE.SAVIOR] = {
+  Code: PHASE_CODE.SAVIOR,
+  Name: 'Seer',
+  Description: '',
+  Icon: require('./Icon/savior.png'),
+  Sound: new Howl({
+    src: require('./Sound/Savior.mp3'),
+    loop: false,
+    volume: 1
+  }),
+  Timeout: 0,
+  Action: PHASE_ATTR.ACTION.YES,
+  Role: [CHARACTER_CODE.SAVIOR]
+};
+
 PHASE_DATA[PHASE_CODE.SUNRAISE] = {
   Code: PHASE_CODE.SUNRAISE,
   Name: 'Sun Raise',

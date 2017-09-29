@@ -9,8 +9,11 @@ var PHASE_CODE = {
     IDIOT: 7,
     VILLAGER: 8,
     ELDER: 9,
-    SUNRAISE: 10,
-    END: 11
+    SAVIOR: 10,
+    KNIGHT: 11,
+    HUNZI: 12,
+    SUNRAISE: 13,
+    END: 14
 };
 
 module.exports = PHASE_CODE;
