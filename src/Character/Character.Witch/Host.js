@@ -22,10 +22,11 @@ Witch.prototype.active = function() {
     0, -1
   ];
   let actionDat = this.phaseManager.roundData;
-  let victim = actionDat.werewolf || -1;
-  if (this.goodPotionNumber>0) {
-    dat[1] = victim;
-    dat[0] = this.canHeal(victim)? 1: 0;
+  let victim = actionDat.werewolf;
+  if (victim == null) victim = -1;
+  if (this.goodPotionNumber() > 0) {
+    dat[2] = victim;
+    dat[1] = this.canHeal(victim) ? 1 : 0;
   }
 
   this.sendActive(dat);
