@@ -70,8 +70,12 @@ PhaseManager.prototype.nextPhase = function(delay) {
 
 PhaseManager.prototype.roundStart = function() {
   this.roundNumber++;
-  // werewolf & witch heal
-  if (this.roundData['werewolf'] != null && this.roundData['werewolf'] != -1 && this.roundData['werewolf'] != this.roundData['witchHeal']) {
+  // werewolf & witch heal & savior
+  if (this.roundData['werewolf'] != null && this.roundData['werewolf'] != -1
+   && (this.roundData['werewolf'] !== this.roundData['witchHeal']
+    && this.roundData['werewolf'] !== this.roundData['savior']
+    || this.roundData['witchHeal'] === this.roundData['savior'])
+  ) {
     const victim = this.roundData['werewolf'];
     this.characterList[victim].werewolfKill();
   }

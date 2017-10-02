@@ -4,7 +4,6 @@ var Basic = require('../Character.Basic/Client.js');
 var Util = require('SRC/Util.js');
 var ROLEDATA = require('./Data.js');
 var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
-var INFO2 = require('./Info.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 var Action = {
   PlayerList: require('CLIENT/content/Action/Action.PlayerList.js')
@@ -46,7 +45,7 @@ Savior.prototype.active = function(aliveListArr, dat) {
   this._action.components['playerList'].update();
 };
 
-Werewolf.prototype.actionResult = function(dat) {
+Savior.prototype.actionResult = function(dat) {
   this.inactive();
   if (dat[0] == -1) {
     InfoBox.actionResult({
@@ -81,7 +80,7 @@ Savior.prototype.initActionPanel = function(actionPanel, playerInfo) {
   let that = this;
   playerList.onSelect = function(idx, number, name) {
     if (!that.actived) return;
-    if (this.lastProtectIdx === idx){
+    if (that.lastProtectIdx === idx){
       InfoBox.alert({
         content: 'You can not protect <br/><b>[' + number + '] ' + name + '</b> in this night.'
       });
@@ -112,7 +111,7 @@ Savior.prototype.initActionPanel = function(actionPanel, playerInfo) {
 
 Savior.prototype.update = function(aliveListArr, dat) {
   Basic.prototype.update.call(this, aliveListArr, dat);
-  this.lastProtectIdx = [dat[0]];
+  this.lastProtectIdx = dat[0];
 };
 
 module.exports = Savior;

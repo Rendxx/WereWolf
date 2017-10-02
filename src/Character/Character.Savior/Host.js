@@ -4,7 +4,7 @@ var Basic = require('../Character.Basic/Host.js');
 
 var Savior = function(characterManager, phaseManager) {
   Basic.call(this, characterManager, phaseManager);
-  this.status = [-1];
+  this.status = [-1]; // [last protected player idx]
 };
 Savior.prototype = Object.create(Basic.prototype);
 Savior.prototype.constructor = Savior;
