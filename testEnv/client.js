@@ -76,6 +76,9 @@
       7: function (){   // elder
         window.msg('2|5|HOST|2|[1,7,1,"'+playerAlive+'",[],[]]');
       },
+      8: function (){   // elder
+        window.msg('2|5|HOST|2|[1,8,1,"'+playerAlive+'",[],[]]');
+      },
     },
     rst : {
         2: function (id){
@@ -91,6 +94,9 @@
           if (k==1) window.msg('2|5|HOST|2|[1,4,2,"'+playerAlive+'",[0,1],[],[1,-1]]');
           else if (k==2) window.msg('2|5|HOST|2|[1,4,2,"'+playerAlive+'",[0,1],[],[-1,1]]');
           else window.msg('2|5|HOST|2|[1,4,2,"'+playerAlive+'",[0,1],[],[-1,-1]]');
+        },
+        5: function (){
+          window.msg('2|5|HOST|2|[1,2,2,"'+playerAlive+'",[],[0],[0]]');
         }
     },
     die : function (gun){

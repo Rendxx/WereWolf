@@ -77,7 +77,7 @@ PHASE_DATA[PHASE_CODE.SEER] = {
 
 PHASE_DATA[PHASE_CODE.SAVIOR] = {
   Code: PHASE_CODE.SAVIOR,
-  Name: 'Seer',
+  Name: 'Savior',
   Description: '',
   Icon: require('./Icon/savior.png'),
   Sound: new Howl({

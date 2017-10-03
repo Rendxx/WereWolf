@@ -1,9 +1,10 @@
-"use strict";
+ "use strict";
 
 var Basic = require('../Character.Basic/Client.js');
 var Util = require('SRC/Util.js');
 var ROLEDATA = require('./Data.js');
 var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
+var INFO2 = require('./Info.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 var Action = {
   PlayerList: require('CLIENT/content/Action/Action.PlayerList.js')

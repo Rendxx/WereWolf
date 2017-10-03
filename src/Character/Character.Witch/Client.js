@@ -48,7 +48,7 @@ Witch.prototype._showPotionGood = function(aliveListArr, canHeal, victim) {
   if (this.potion[0] === 0) {
     this._action.components['potionGood'].update({
       className: 'action_singlePlayer_witch_noPotion',
-      content: 'You don\'t have character to heal.',
+      content: 'You don\'t have potion to heal.',
       isAvailable: false,
       onOk: function() {
         this._showPotionBad(aliveListArr, true, false);
@@ -107,7 +107,7 @@ Witch.prototype._showPotionBad = function(aliveListArr, canPoison, isHealed) {
   } else if (this.potion[1] === 0) {
     this._action.components['potionBad'].reset({
       className: 'action_singlePlayer_witch_noPoison',
-      content: 'You don\'t have character to poison.',
+      content: 'You don\'t have potion to poison.',
       playerAlive: aliveListArr,
       isAvailable: false
     });
