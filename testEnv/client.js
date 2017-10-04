@@ -76,8 +76,11 @@
       7: function (){   // elder
         window.msg('2|5|HOST|2|[1,7,1,"'+playerAlive+'",[],[]]');
       },
-      8: function (){   // elder
+      8: function (){   // savior
         window.msg('2|5|HOST|2|[1,8,1,"'+playerAlive+'",[],[]]');
+      },
+      9: function (){   // savior
+        window.msg('2|5|HOST|2|[1,9,1,"'+playerAlive+'",[],[]]');
       },
     },
     rst : {

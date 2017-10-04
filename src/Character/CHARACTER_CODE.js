@@ -8,6 +8,7 @@ const CHARACTER_CODE = {
   IDIOT:6,
   ELDER:7,
   SAVIOR:8,
+  KNIGHT:9,
 };
 
 module.exports = CHARACTER_CODE;
