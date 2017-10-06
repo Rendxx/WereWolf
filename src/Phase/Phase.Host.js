@@ -30,7 +30,7 @@ var Phase = function(data) {
     }
   };
 
-  this.active = function() {
+  this.active = function(roundNumber) {
     if (_actionCountDownFunc !== null) {
       clearTimeout(_actionCountDownFunc);
       _actionCountDownFunc = null;
@@ -41,6 +41,8 @@ var Phase = function(data) {
     }
 
     if (this.data.Action === PHASE_ATTR.ACTION.SKIP) {
+      this.onActionComplete && this.onActionComplete();
+    } else if (this.data.Action === PHASE_ATTR.ACTION.ONCE && roundNumber>0) {
       this.onActionComplete && this.onActionComplete();
     } else if (this.data.Action === PHASE_ATTR.ACTION.NO) {
       _playSound();

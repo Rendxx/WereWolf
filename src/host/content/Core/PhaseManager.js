@@ -64,7 +64,7 @@ PhaseManager.prototype.nextPhase = function(delay) {
     } else {
       this.onPhaseEnd();
     }
-    this.phaseList[this.phaseIdx].active();
+    this.phaseList[this.phaseIdx].active(this.roundNumber);
   }.bind(this), delay);
 };
 

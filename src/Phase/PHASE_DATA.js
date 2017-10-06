@@ -90,6 +90,21 @@ PHASE_DATA[PHASE_CODE.SAVIOR] = {
   Role: [CHARACTER_CODE.SAVIOR]
 };
 
+PHASE_DATA[PHASE_CODE.HUNZI] = {
+  Code: PHASE_CODE.HUNZI,
+  Name: 'Hunzi',
+  Description: '',
+  Icon: require('./Icon/hunzi.png'),
+  Sound: new Howl({
+    src: require('./Sound/Hunzi.mp3'),
+    loop: false,
+    volume: 1
+  }),
+  Timeout: 0,
+  Action: PHASE_ATTR.ACTION.ONCE,
+  Role: [CHARACTER_CODE.HUNZI]
+};
+
 PHASE_DATA[PHASE_CODE.SUNRAISE] = {
   Code: PHASE_CODE.SUNRAISE,
   Name: 'Sun Raise',
