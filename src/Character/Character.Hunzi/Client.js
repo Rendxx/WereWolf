@@ -60,9 +60,17 @@ Hunzi.prototype.actionResult = function(dat) {
   });
 };
 
+Witch.prototype.update = function(aliveListArr, dat) {
+  Basic.prototype.update.call(this, aliveListArr, dat);
+  this.dad = [dat[0]];
+  this._html['contentWrap'].innerHTML = "You dad is: <b>["+this.dad"]</b>";
+};
+
 Hunzi.prototype.initInfoPanel = function(container) {
   Basic.prototype.initInfoPanel.call(this, container);
   this._html['wrap'].classList.add('_roleInfo_hunzi');
+  let contentWrap = Util.CreateDom('<div></div>', this._html['wrap']);
+  this._html['contentWrap'] = contentWrap;
 };
 
 Hunzi.prototype.initActionPanel = function(actionPanel, playerInfo) {
