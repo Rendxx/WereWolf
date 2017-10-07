@@ -60,16 +60,21 @@ Hunzi.prototype.actionResult = function(dat) {
   });
 };
 
-Witch.prototype.update = function(aliveListArr, dat) {
+Hunzi.prototype.update = function(aliveListArr, dat) {
   Basic.prototype.update.call(this, aliveListArr, dat);
-  this.dad = [dat[0]];
-  this._html['contentWrap'].innerHTML = "You dad is: <b>["+this.dad"]</b>";
+  this.dad = dat[0];
+  if (this.dad === -1) {
+    this._html['contentWrap'].innerHTML = "";
+  } else {
+    let p = this._playerInfo[dat[0]];
+    this._html['contentWrap'].innerHTML = "You dad is: <br/><b>[" + p.number + "] " + p.name + "</b>";
+  }
 };
 
 Hunzi.prototype.initInfoPanel = function(container) {
   Basic.prototype.initInfoPanel.call(this, container);
   this._html['wrap'].classList.add('_roleInfo_hunzi');
-  let contentWrap = Util.CreateDom('<div></div>', this._html['wrap']);
+  let contentWrap = Util.CreateDom('<div style="margin-top:10px"></div>', this._html['wrap']);
   this._html['contentWrap'] = contentWrap;
 };
 
@@ -79,13 +84,19 @@ Hunzi.prototype.initActionPanel = function(actionPanel, playerInfo) {
   let that = this;
   playerList.onSelect = function(idx, number, name) {
     if (!that.actived) return;
-    InfoBox.check({
-      content: 'Do you want to call <br/><b>[' + number + '] ' + name + '</b><br/>"DAD~"?',
-      callbackYes: function() {
-        this._action.hide();
-        that.onActionEnd && that.onActionEnd([this._actionStamp, idx]);
-      }.bind(that)
-    });
+    if (that.playerIdx === idx) {
+      InfoBox.alert({
+        content: 'You need to find someone else (not yourself).'
+      });
+    } else {
+      InfoBox.check({
+        content: 'Do you want to call <br/><b>[' + number + '] ' + name + '</b><br/>"DAD~"?',
+        callbackYes: function() {
+          this._action.hide();
+          that.onActionEnd && that.onActionEnd([this._actionStamp, idx]);
+        }.bind(that)
+      });
+    }
   };
   playerList.onAbstain = function() {
     if (!that.actived) return;

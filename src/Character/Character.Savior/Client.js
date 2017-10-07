@@ -75,9 +75,22 @@
    }
  };
 
+ Savior.prototype.update = function(aliveListArr, dat) {
+   Basic.prototype.update.call(this, aliveListArr, dat);
+   this.lastProtectIdx = dat[0];
+   if (this.lastProtectIdx === -1) {
+     this._html['contentWrap'].innerHTML = "You did not protect anyone last night.";
+   } else {
+     let p = this._playerInfo[dat[0]];
+     this._html['contentWrap'].innerHTML = "You protected:<br/><b>[" + p.number + "] " + p.name + "</b>";
+   }
+ };
+
  Savior.prototype.initInfoPanel = function(container) {
    Basic.prototype.initInfoPanel.call(this, container);
    this._html['wrap'].classList.add('_roleInfo_savior');
+   let contentWrap = Util.CreateDom('<div style="margin-top:10px"></div>', this._html['wrap']);
+   this._html['contentWrap'] = contentWrap;
  };
 
  Savior.prototype.initActionPanel = function(actionPanel, playerInfo) {
@@ -113,11 +126,6 @@
    this._action.reset({
      'playerList': playerList
    });
- };
-
- Savior.prototype.update = function(aliveListArr, dat) {
-   Basic.prototype.update.call(this, aliveListArr, dat);
-   this.lastProtectIdx = dat[0];
  };
 
  module.exports = Savior;

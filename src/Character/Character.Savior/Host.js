@@ -12,7 +12,7 @@ Savior.DATA = require('./Data.js');
 
 Savior.prototype.onAction = function(actionDat) {
   if (!this.phaseManager.checkActionValid(actionDat[0])) return;
-  this.status[0] = actionDat[0];
+  this.status[0] = actionDat[1];
   this.phaseManager.roundData['savior'] = actionDat[1];
   this.phaseManager.actionResult([actionDat[1]]);
 };

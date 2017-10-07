@@ -79,8 +79,11 @@
       8: function (){   // savior
         window.msg('2|5|HOST|2|[1,8,1,"'+playerAlive+'",[],[]]');
       },
-      9: function (){   // savior
+      9: function (){   // knight
         window.msg('2|5|HOST|2|[1,9,1,"'+playerAlive+'",[],[]]');
+      },
+      10: function (k){   // hunzi
+        window.msg('2|5|HOST|2|[1,10,1,"'+playerAlive+'",['+k+'],[]]');
       },
     },
     rst : {
