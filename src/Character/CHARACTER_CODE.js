@@ -10,6 +10,7 @@ const CHARACTER_CODE = {
   SAVIOR:8,
   KNIGHT:9,
   HUNZI:10,
+  WEREWOLFKING:11,
 };
 
 module.exports = CHARACTER_CODE;

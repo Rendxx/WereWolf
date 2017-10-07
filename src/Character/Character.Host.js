@@ -12,6 +12,7 @@ Character[CHARACTER_CODE.ELDER] = require('./Character.Elder/Host.js');
 Character[CHARACTER_CODE.SAVIOR] = require('./Character.Savior/Host.js');
 Character[CHARACTER_CODE.KNIGHT] = require('./Character.Knight/Host.js');
 Character[CHARACTER_CODE.HUNZI] = require('./Character.Hunzi/Host.js');
+Character[CHARACTER_CODE.WEREWOLFKING] = require('./Character.WerewolfKing/Host.js');
 
 var RoleFactory = function (roleId){
     if (!Character.hasOwnProperty(roleId)) throw new Error('Unexpect Character: '+roleId);
