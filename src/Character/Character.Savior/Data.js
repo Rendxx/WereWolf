@@ -4,7 +4,7 @@ var CHARACTER_TYPE = require('../CHARACTER_TYPE.js');
 
 var Data = {
     Code: CHARACTER_CODE.SAVIOR,
-    Type: CHARACTER_TYPE.SAVIOR,
+    Type: CHARACTER_TYPE.SPECIAL,
     Name: 'Savior',
     Description: 'Protect somebody from werewolf.',
     Instruction: 'Protect somebody from werewolf.',
