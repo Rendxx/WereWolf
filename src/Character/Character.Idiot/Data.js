@@ -8,7 +8,8 @@ var Data = {
     Name: 'Idiot',
     Description: 'You are can not be voted to die, instead, you shows your role to everybody. After that, you can no longer vote,, but you can talk whenever you want.',
     Instruction: 'Can not be voted to die.',
-    Portrait: require('./Image/Portrait.png')
+    Portrait: require('./Image/Portrait.png'),
+    CssName: 'idiot'
 };
 
 module.exports = Data;

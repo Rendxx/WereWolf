@@ -8,8 +8,8 @@ var Data = {
     Name: 'Knight',
     Description: 'You can put a player to a trial. The player will be killes if he/she is a werewolf. This will end this turn. Otherwise you will die.',
     Instruction: 'You can put a player to a trial. The player will be killes if he/she is a werewolf. This will end this turn. Otherwise you will die.',
-    IsGood: true,
-    Portrait: require('./Image/Portrait.png')
+    Portrait: require('./Image/Portrait.png'),
+    CssName: 'knight'
 };
 
 module.exports = Data;

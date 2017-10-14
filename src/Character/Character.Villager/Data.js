@@ -8,8 +8,8 @@ var Data = {
     Name: 'Villager',
     Description: 'You don\'t have any special power except thinking and the right to vote.',
     Instruction: '',
-    IsGood: true,
-    Portrait: require('./Image/Portrait.png')
+    Portrait: require('./Image/Portrait.png'),
+    CssName: 'villager'
 };
 
 module.exports = Data;

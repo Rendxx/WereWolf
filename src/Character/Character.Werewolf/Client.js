@@ -2,7 +2,6 @@
 
 var Basic = require('../Character.Basic/Client.js');
 var Util = require('SRC/Util.js');
-var ROLEDATA = require('./Data.js');
 var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
 var INFO2 = require('./Info.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
@@ -15,13 +14,10 @@ require('./Action.less');
 
 var Werewolf = function() {
   Basic.call(this);
-  this.code = ROLEDATA.Code;
-  this.name = ROLEDATA.Name;
-  this.description = ROLEDATA.Description;
-  this.instruction = ROLEDATA.Instruction;
 };
 Werewolf.prototype = Object.create(Basic.prototype);
 Werewolf.prototype.constructor = Werewolf;
+Werewolf.DATA = require('./Data.js');
 
 Werewolf.prototype.active = function(aliveListArr, dat) {
   if (!this.alive) return;

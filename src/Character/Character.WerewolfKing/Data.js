@@ -8,8 +8,8 @@ var Data = {
     Name: 'Werewolf King',
     Description: 'Wake up at night and murder somebody. You can kill one player when self-sacrifice in day time.',
     Instruction: 'Wake up at night and murder somebody. You can kill one player when self-sacrifice in day time.',
-    IsGood: false,
-    Portrait: require('./Image/Portrait.png')
+    Portrait: require('./Image/Portrait.png'),
+    CssName: 'werewolfking'
 };
 
 module.exports = Data;

@@ -8,7 +8,8 @@ var Data = {
     Name: 'Hun Zi',
     Description: 'Find your dad on the 1st night. You will be on the same side.',
     Instruction: 'Find your dad on the 1st night. You will be on the same side.',
-    Portrait: require('./Image/Portrait.png')
+    Portrait: require('./Image/Portrait.png'),
+    CssName: 'hunzi'
 };
 
 module.exports = Data;

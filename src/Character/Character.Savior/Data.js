@@ -8,8 +8,8 @@ var Data = {
     Name: 'Savior',
     Description: 'Protect somebody from werewolf.',
     Instruction: 'Protect somebody from werewolf.',
-    IsGood: true,
-    Portrait: require('./Image/Portrait.png')
+    Portrait: require('./Image/Portrait.png'),
+    CssName: 'savior'
 };
 
 module.exports = Data;

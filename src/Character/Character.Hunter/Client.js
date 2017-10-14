@@ -1,21 +1,16 @@
 "use strict";
 
 var Basic= require('../Character.Basic/Client.js');
-var ROLEDATA = require('./Data.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
 var INFO2 = require('./Info.js');
-require('./Client.less');
 
 var Hunter = function () {
     Basic.call(this);
-    this.code = ROLEDATA.Code;
-    this.name = ROLEDATA.Name;
-    this.description = ROLEDATA.Description;
-    this.instruction = ROLEDATA.Instruction;
     this.canShot = true;
 };
 Hunter.prototype = Object.create(Basic.prototype);
 Hunter.prototype.constructor = Hunter;
+Hunter.DATA = require('./Data.js');
 
 Hunter.prototype.update = function (aliveListArr, dat){
     this.canShot = dat[0]===1;

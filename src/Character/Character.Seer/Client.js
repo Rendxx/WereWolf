@@ -2,7 +2,6 @@
 
 var Basic = require('../Character.Basic/Client.js');
 var Util = require('SRC/Util.js');
-var ROLEDATA = require('./Data.js');
 var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
 var INFO2 = require('./Info.js');
 var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
@@ -10,18 +9,14 @@ var Action = {
   PlayerList: require('CLIENT/content/Action/Action.PlayerList.js')
 };
 
-require('./Client.less');
 require('./Action.less');
 
 var Seer = function() {
   Basic.call(this);
-  this.code = ROLEDATA.Code;
-  this.name = ROLEDATA.Name;
-  this.description = ROLEDATA.Description;
-  this.instruction = ROLEDATA.Instruction;
 };
 Seer.prototype = Object.create(Basic.prototype);
 Seer.prototype.constructor = Seer;
+Seer.DATA = require('./Data.js');
 
 Seer.prototype.active = function(aliveListArr, dat) {
   if (!this.alive) return;

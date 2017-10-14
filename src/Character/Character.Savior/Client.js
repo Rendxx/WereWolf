@@ -2,7 +2,6 @@
 
  var Basic = require('../Character.Basic/Client.js');
  var Util = require('SRC/Util.js');
- var ROLEDATA = require('./Data.js');
  var INFO = require('CLIENT/content/InfoBox/Info.Content.js');
  var INFO2 = require('./Info.js');
  var InfoBox = require('CLIENT/content/InfoBox/InfoBox.js');
@@ -10,19 +9,15 @@
    PlayerList: require('CLIENT/content/Action/Action.PlayerList.js')
  };
 
- require('./Client.less');
  require('./Action.less');
 
  var Savior = function() {
    Basic.call(this);
-   this.code = ROLEDATA.Code;
-   this.name = ROLEDATA.Name;
-   this.description = ROLEDATA.Description;
-   this.instruction = ROLEDATA.Instruction;
    this.lastProtectIdx = -1;
  };
  Savior.prototype = Object.create(Basic.prototype);
  Savior.prototype.constructor = Savior;
+ Savior.DATA = require('./Data.js');
 
  Savior.prototype.update = function(aliveListArr, dat) {
    Basic.prototype.update.call(this, aliveListArr, dat);

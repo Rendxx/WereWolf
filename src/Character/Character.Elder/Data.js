@@ -8,7 +8,8 @@ var Data = {
     Name: 'Elder',
     Description: 'Werewolf should attack you twice to kill you. All the special characters will lose their ability if you are dead and not killed by werewolf.',
     Instruction: '',
-    Portrait: require('./Image/Portrait.png')
+    Portrait: require('./Image/Portrait.png'),
+    CssName: 'elder'
 };
 
 module.exports = Data;

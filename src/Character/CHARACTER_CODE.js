@@ -6,7 +6,7 @@ const CHARACTER_CODE = {
   WITCH:4,
   HUNTER:5,
   IDIOT:6,
-  ELDER:7,
+  //ELDER:7,
   SAVIOR:8,
   KNIGHT:9,
   HUNZI:10,

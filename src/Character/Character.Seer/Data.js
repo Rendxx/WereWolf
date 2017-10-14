@@ -8,7 +8,8 @@ var Data = {
     Name: 'Seer',
     Description: 'Check whether a player is a werewolf or not.',
     Instruction: 'Check whether a player is a werewolf or not.',
-    Portrait: require('./Image/Portrait.png')
+    Portrait: require('./Image/Portrait.png'),
+    CssName: 'seer'
 };
 
 module.exports = Data;

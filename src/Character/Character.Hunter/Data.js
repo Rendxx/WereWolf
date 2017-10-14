@@ -8,7 +8,8 @@ var Data = {
     Name: 'Hunter',
     Description: 'You can shot someone when you die if you are not killed by poison.',
     Instruction: 'Shot someone when you die.',
-    Portrait: require('./Image/Portrait.png')
+    Portrait: require('./Image/Portrait.png'),
+    CssName: 'hunter'
 };
 
 module.exports = Data;

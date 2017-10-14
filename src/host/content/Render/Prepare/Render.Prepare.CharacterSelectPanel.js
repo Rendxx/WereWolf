@@ -99,7 +99,9 @@ var CharacterSelection = function(container) {
     _html['ok'] = $(HTML.ok).appendTo(_html['title']);
     _html['ok'].click(function() {
       // if cache not contain all player info, return
-      if (playerNumber - characterCache.length > 0 || playerNumber === 0) return false;
+      // if (playerNumber - characterCache.length > 0 || playerNumber === 0) return false;
+      // use the previous one if thief exist
+      if (playerNumber !== characterCache.length || playerNumber === 0) return false;
 
       // ================= move to core ==================
       // var characterMap = {};
@@ -122,6 +124,7 @@ var CharacterSelection = function(container) {
       console.log(characterCache);
       // console.log(output);
 
+      that.hide();
       that.onFinish && that.onFinish(characterCache.map(d => {
         return d.Code;
       }));
