@@ -26,7 +26,7 @@ Hunzi.prototype.active = function(aliveListArr, dat) {
     this.actived = true;
     InfoBox.phase({
       title: 'Hunzi',
-      content: 'Find your dad :)',
+      content: 'Find your dad.',
       className: 'info_client_phase_hunzi'
     });
     this._action.show();
@@ -34,7 +34,7 @@ Hunzi.prototype.active = function(aliveListArr, dat) {
       playerAlive: aliveListArr,
       isAvailable: true,
       className: 'action_playerList_hunzi',
-      content: 'Find your dad :)'
+      content: 'Find your dad.'
     });
     this._action.components['playerList'].show();
   }
@@ -45,7 +45,7 @@ Hunzi.prototype.actionResult = function(dat) {
   this.inactive();
   let p = this._playerInfo[dat[0]];
   InfoBox.actionResult({
-    content: 'This player is your dad :) You are on the same side!',
+    content: 'This player is your dad! You are on the same side now!',
     number: p.number,
     name: p.name,
     className: 'info_client_result_hunzi',
@@ -62,7 +62,7 @@ Hunzi.prototype.update = function(aliveListArr, dat) {
     this._html['contentWrap'].innerHTML = "";
   } else {
     let p = this._playerInfo[dat[0]];
-    this._html['contentWrap'].innerHTML = "You dad is: <br/><b>[" + p.number + "] " + p.name + "</b>";
+    this._html['contentWrap'].innerHTML = "Your dad is: <br/><b>[" + p.number + "] " + p.name + "</b>";
   }
 };
 
