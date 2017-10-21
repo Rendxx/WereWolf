@@ -4,6 +4,7 @@
   "dependencies": {
     "jQuery":"*",
     "InfoBox":"*",
-    "howler.js": "*"
+    "howler.js": "*",
+    "r-cookie": "*"
   }
 }
