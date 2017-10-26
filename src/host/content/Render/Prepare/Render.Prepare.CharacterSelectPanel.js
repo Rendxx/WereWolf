@@ -6,7 +6,7 @@ require('./Render.Prepare.CharacterSelectPanel.less');
 var HTML = {
   wrap: '<div class="characterSelectPanel"></div>',
   inner: '<div class="_inner"></div>',
-  title: '<div class="_title"><span>CHARACTER SETTING</span></div>',
+  title: '<div class="_title"></div>',
   remainder: '<div class="_remainder"></div>',
   cancel: '<div class="_cancel">cancel</div>',
   ok: '<div class="_ok">O K</div>',
@@ -91,7 +91,6 @@ var CharacterSelection = function(container) {
     _html['wrap'] = $(HTML.wrap).appendTo(container);
     _html['inner'] = $(HTML.inner).appendTo(_html['wrap']);
     _html['title'] = $(HTML.title).appendTo(_html['inner']);
-    _html['remainder'] = $(HTML.remainder).appendTo(_html['title']);
     _html['cancel'] = $(HTML.cancel).appendTo(_html['title']);
     _html['cancel'].click(function() {
       that.hide();
@@ -130,6 +129,7 @@ var CharacterSelection = function(container) {
       }));
     });
 
+    _html['remainder'] = $(HTML.remainder).appendTo(_html['title']);
     _html['characterList'] = $(HTML.characterList).appendTo(_html['inner']);
     _html['selection'] = $(HTML.selection).appendTo(_html['inner']);
     _html['selectionInner'] = $(HTML.selectionInner).appendTo(_html['selection']);
